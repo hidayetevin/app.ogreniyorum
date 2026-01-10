@@ -1,0 +1,388 @@
+[
+    {
+        "id": "animals",
+        "name": "Hayvanlar",
+        "nameKey": "category.animals.name",
+        "description": "Sevimli hayvan resimleri eşleştir",
+        "descriptionKey": "category.animals.description",
+        "iconPath": "/assets/images/categories/animals-icon.png",
+        "unlockRequirement": 0,
+        "isLocked": false,
+        "levels": [
+            {
+                "id": "animals-1",
+                "categoryId": "animals",
+                "levelNumber": 1,
+                "difficulty": "EASY",
+                "rows": 2,
+                "cols": 2,
+                "pairCount": 2,
+                "starThresholds": {
+                    "threeStars": 6,
+                    "twoStars": 8,
+                    "oneStar": 12
+                },
+                "imagePaths": [
+                    "/assets/images/animals/1.png",
+                    "/assets/images/animals/2.png"
+                ]
+            },
+            {
+                "id": "animals-2",
+                "categoryId": "animals",
+                "levelNumber": 2,
+                "difficulty": "EASY",
+                "rows": 2,
+                "cols": 3,
+                "pairCount": 3,
+                "starThresholds": {
+                    "threeStars": 8,
+                    "twoStars": 12,
+                    "oneStar": 16
+                },
+                "imagePaths": [
+                    "/assets/images/animals/1.png",
+                    "/assets/images/animals/2.png",
+                    "/assets/images/animals/3.png"
+                ]
+            },
+            {
+                "id": "animals-3",
+                "categoryId": "animals",
+                "levelNumber": 3,
+                "difficulty": "MEDIUM",
+                "rows": 3,
+                "cols": 4,
+                "pairCount": 6,
+                "starThresholds": {
+                    "threeStars": 12,
+                    "twoStars": 18,
+                    "oneStar": 24
+                },
+                "imagePaths": [
+                    "/assets/images/animals/1.png",
+                    "/assets/images/animals/2.png",
+                    "/assets/images/animals/3.png",
+                    "/assets/images/animals/4.png",
+                    "/assets/images/animals/5.png",
+                    "/assets/images/animals/6.png"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "fruits",
+        "name": "Meyveler",
+        "nameKey": "category.fruits.name",
+        "description": "Renkli meyveleri eşleştir",
+        "descriptionKey": "category.fruits.description",
+        "iconPath": "/assets/images/categories/fruits-icon.png",
+        "unlockRequirement": 3,
+        "isLocked": true,
+        "levels": [
+            {
+                "id": "fruits-1",
+                "categoryId": "fruits",
+                "levelNumber": 1,
+                "difficulty": "EASY",
+                "rows": 2,
+                "cols": 2,
+                "pairCount": 2,
+                "starThresholds": {
+                    "threeStars": 6,
+                    "twoStars": 8,
+                    "oneStar": 12
+                },
+                "imagePaths": [
+                    "/assets/images/fruits/apple.png",
+                    "/assets/images/fruits/banana.png"
+                ]
+            },
+            {
+                "id": "fruits-2",
+                "categoryId": "fruits",
+                "levelNumber": 2,
+                "difficulty": "MEDIUM",
+                "rows": 3,
+                "cols": 4,
+                "pairCount": 6,
+                "starThresholds": {
+                    "threeStars": 12,
+                    "twoStars": 18,
+                    "oneStar": 24
+                },
+                "imagePaths": [
+                    "/assets/images/fruits/apple.png",
+                    "/assets/images/fruits/banana.png",
+                    "/assets/images/fruits/orange.png",
+                    "/assets/images/fruits/grape.png",
+                    "/assets/images/fruits/strawberry.png",
+                    "/assets/images/fruits/watermelon.png"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "vehicles",
+        "name": "Araçlar",
+        "nameKey": "category.vehicles.name",
+        "description": "Farklı araçları eşleştir",
+        "descriptionKey": "category.vehicles.description",
+        "iconPath": "/assets/images/categories/vehicles-icon.png",
+        "unlockRequirement": 6,
+        "isLocked": true,
+        "levels": [
+            {
+                "id": "vehicles-1",
+                "categoryId": "vehicles",
+                "levelNumber": 1,
+                "difficulty": "EASY",
+                "rows": 2,
+                "cols": 3,
+                "pairCount": 3,
+                "starThresholds": {
+                    "threeStars": 8,
+                    "twoStars": 12,
+                    "oneStar": 16
+                },
+                "imagePaths": [
+                    "/assets/images/vehicles/car.png",
+                    "/assets/images/vehicles/bus.png",
+                    "/assets/images/vehicles/train.png"
+                ]
+            },
+            {
+                "id": "vehicles-2",
+                "categoryId": "vehicles",
+                "levelNumber": 2,
+                "difficulty": "HARD",
+                "rows": 4,
+                "cols": 4,
+                "pairCount": 8,
+                "starThresholds": {
+                    "threeStars": 16,
+                    "twoStars": 24,
+                    "oneStar": 32
+                },
+                "imagePaths": [
+                    "/assets/images/vehicles/car.png",
+                    "/assets/images/vehicles/bus.png",
+                    "/assets/images/vehicles/train.png",
+                    "/assets/images/vehicles/plane.png",
+                    "/assets/images/vehicles/boat.png",
+                    "/assets/images/vehicles/bicycle.png",
+                    "/assets/images/vehicles/motorcycle.png",
+                    "/assets/images/vehicles/helicopter.png"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "space",
+        "name": "Uzay Macerası",
+        "nameKey": "category.space.name",
+        "description": "Yıldızlar ve gezegenler",
+        "descriptionKey": "category.space.description",
+        "iconPath": "/assets/images/categories/space-icon.png",
+        "unlockRequirement": 10,
+        "isLocked": true,
+        "levels": [
+            {
+                "id": "space-1",
+                "categoryId": "space",
+                "levelNumber": 1,
+                "difficulty": "EASY",
+                "rows": 2,
+                "cols": 2,
+                "pairCount": 2,
+                "starThresholds": {
+                    "threeStars": 6,
+                    "twoStars": 8,
+                    "oneStar": 12
+                },
+                "imagePaths": [
+                    "/assets/images/space/1.png",
+                    "/assets/images/space/2.png"
+                ]
+            },
+            {
+                "id": "space-2",
+                "categoryId": "space",
+                "levelNumber": 2,
+                "difficulty": "MEDIUM",
+                "rows": 3,
+                "cols": 4,
+                "pairCount": 6,
+                "starThresholds": {
+                    "threeStars": 12,
+                    "twoStars": 18,
+                    "oneStar": 24
+                },
+                "imagePaths": [
+                    "/assets/images/space/1.png",
+                    "/assets/images/space/2.png",
+                    "/assets/images/space/3.png",
+                    "/assets/images/space/4.png",
+                    "/assets/images/space/5.png",
+                    "/assets/images/space/6.png"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "sea",
+        "name": "Deniz Dünyası",
+        "nameKey": "category.sea.name",
+        "description": "Su altı canlılarını keşfet",
+        "descriptionKey": "category.sea.description",
+        "iconPath": "/assets/images/categories/sea-icon.png",
+        "unlockRequirement": 15,
+        "isLocked": true,
+        "levels": [
+            {
+                "id": "sea-1",
+                "categoryId": "sea",
+                "levelNumber": 1,
+                "difficulty": "EASY",
+                "rows": 2,
+                "cols": 3,
+                "pairCount": 3,
+                "starThresholds": {
+                    "threeStars": 8,
+                    "twoStars": 12,
+                    "oneStar": 16
+                },
+                "imagePaths": [
+                    "/assets/images/sea/1.png",
+                    "/assets/images/sea/2.png",
+                    "/assets/images/sea/3.png"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "dinosaurs",
+        "name": "Dinozorlar",
+        "nameKey": "category.dinosaurs.name",
+        "description": "Tarih öncesi devleri tanı",
+        "descriptionKey": "category.dinosaurs.description",
+        "iconPath": "/assets/images/categories/dinosaurs-icon.png",
+        "unlockRequirement": 20,
+        "isLocked": true,
+        "levels": [
+            {
+                "id": "dinosaurs-1",
+                "categoryId": "dinosaurs",
+                "levelNumber": 1,
+                "difficulty": "MEDIUM",
+                "rows": 3,
+                "cols": 4,
+                "pairCount": 6,
+                "starThresholds": {
+                    "threeStars": 12,
+                    "twoStars": 18,
+                    "oneStar": 24
+                },
+                "imagePaths": [
+                    "/assets/images/dinosaurs/1.png",
+                    "/assets/images/dinosaurs/2.png",
+                    "/assets/images/dinosaurs/3.png",
+                    "/assets/images/dinosaurs/4.png",
+                    "/assets/images/dinosaurs/5.png",
+                    "/assets/images/dinosaurs/6.png"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "feelings",
+        "name": "Duygular",
+        "nameKey": "category.feelings.name",
+        "description": "Duyguları ve mimikleri öğren",
+        "descriptionKey": "category.feelings.description",
+        "iconPath": "/assets/images/categories/feelings-icon.png",
+        "unlockRequirement": 25,
+        "isLocked": true,
+        "levels": [
+            {
+                "id": "feelings-1",
+                "categoryId": "feelings",
+                "levelNumber": 1,
+                "difficulty": "EASY",
+                "rows": 2,
+                "cols": 2,
+                "pairCount": 2,
+                "starThresholds": {
+                    "threeStars": 6,
+                    "twoStars": 8,
+                    "oneStar": 12
+                },
+                "imagePaths": [
+                    "/assets/images/feelings/1.png",
+                    "/assets/images/feelings/2.png"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "jobs",
+        "name": "Meslekler",
+        "nameKey": "category.jobs.name",
+        "description": "Farklı meslekleri tanı",
+        "descriptionKey": "category.jobs.description",
+        "iconPath": "/assets/images/categories/jobs-icon.png",
+        "unlockRequirement": 30,
+        "isLocked": true,
+        "levels": [
+            {
+                "id": "jobs-1",
+                "categoryId": "jobs",
+                "levelNumber": 1,
+                "difficulty": "EASY",
+                "rows": 2,
+                "cols": 3,
+                "pairCount": 3,
+                "starThresholds": {
+                    "threeStars": 8,
+                    "twoStars": 12,
+                    "oneStar": 16
+                },
+                "imagePaths": [
+                    "/assets/images/jobs/1.png",
+                    "/assets/images/jobs/2.png",
+                    "/assets/images/jobs/3.png"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "shapes",
+        "name": "Sayılar ve Şekiller",
+        "nameKey": "category.shapes.name",
+        "description": "Rakamları ve şekilleri eşleştir",
+        "descriptionKey": "category.shapes.description",
+        "iconPath": "/assets/images/categories/shapes-icon.png",
+        "unlockRequirement": 35,
+        "isLocked": true,
+        "levels": [
+            {
+                "id": "shapes-1",
+                "categoryId": "shapes",
+                "levelNumber": 1,
+                "difficulty": "EASY",
+                "rows": 2,
+                "cols": 2,
+                "pairCount": 2,
+                "starThresholds": {
+                    "threeStars": 6,
+                    "twoStars": 8,
+                    "oneStar": 12
+                },
+                "imagePaths": [
+                    "/assets/images/shapes/1.png",
+                    "/assets/images/shapes/2.png"
+                ]
+            }
+        ]
+    }
+]

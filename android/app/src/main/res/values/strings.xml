@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Resim Eşleştirme</string>
+    <string name="title_activity_main">Resim Eşleştirme</string>
+    <string name="package_name">com.cocukoyunu.eslestirme</string>
+    <string name="custom_url_scheme">com.cocukoyunu.eslestirme</string>
+</resources>

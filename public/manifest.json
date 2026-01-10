@@ -1,0 +1,22 @@
+{
+    "name": "Resim Eşleştirme Oyunu",
+    "short_name": "Eşleştirme",
+    "description": "Çocuklar için eğlenceli ve eğitici resim eşleştirme oyunu.",
+    "start_url": "/",
+    "display": "fullscreen",
+    "orientation": "landscape",
+    "background_color": "#2C3E50",
+    "theme_color": "#3498db",
+    "icons": [
+        {
+            "src": "/assets/images/categories/animals-icon.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/assets/images/categories/animals-icon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

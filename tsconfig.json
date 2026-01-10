@@ -1,0 +1,74 @@
+{
+    "compilerOptions": {
+        /* Language and Environment */
+        "target": "ES2020",
+        "lib": [
+            "ES2020",
+            "DOM",
+            "DOM.Iterable"
+        ],
+        "module": "ESNext",
+        "jsx": "preserve",
+        /* Modules */
+        "moduleResolution": "bundler",
+        "resolveJsonModule": true,
+        "allowImportingTsExtensions": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [
+                "src/*"
+            ],
+            "@assets/*": [
+                "src/assets/*"
+            ],
+            "@config/*": [
+                "src/config/*"
+            ],
+            "@core/*": [
+                "src/core/*"
+            ],
+            "@scenes/*": [
+                "src/scenes/*"
+            ],
+            "@ui/*": [
+                "src/ui/*"
+            ],
+            "@utils/*": [
+                "src/utils/*"
+            ],
+            "@types/*": [
+                "src/types/*"
+            ],
+            "@constants/*": [
+                "src/constants/*"
+            ]
+        },
+        /* Emit */
+        "noEmit": true,
+        "sourceMap": true,
+        /* Interop Constraints */
+        "isolatedModules": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "allowSyntheticDefaultImports": true,
+        /* Type Checking - STRICT MODE */
+        "strict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitReturns": true,
+        "noImplicitOverride": true,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": false,
+        /* Completeness */
+        "skipLibCheck": true
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "tests"
+    ]
+}

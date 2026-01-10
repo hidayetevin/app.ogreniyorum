@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="description" content="Çocuklar için eğlenceli resim eşleştirme oyunu" />
+  <meta name="keywords" content="oyun, çocuk, hafıza, eşleştirme, eğitici" />
+  <meta name="author" content="Çocuk Oyunu" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="apple-touch-icon" href="/assets/images/categories/animals-icon.png" />
+  <title>Resim Eşleştirme Oyunu</title>
+  <link rel="stylesheet" href="/src/styles/main.css" />
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').then(reg => {
+          console.log('SW Registered:', reg);
+        }).catch(err => {
+          console.log('SW Registration Failed:', err);
+        });
+      });
+    }
+  </script>
+</head>
+
+<body>
+  <div id="game-outer-container">
+    <div id="game-container"></div>
+
+    <!-- Reklam Alanı (Banner) -->
+    <div id="ad-banner-container">
+      <div class="ad-label">REKLAM</div>
+      <div id="ad-content">
+        <img src="/assets/images/ads/banner_test.png" alt="Test Ad" id="ad-image" />
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>

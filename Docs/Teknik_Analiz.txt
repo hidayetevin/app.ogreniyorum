@@ -1,0 +1,65 @@
+# Projenin Amacı
+4–10 yaş arası çocuklar için web tabanlı, güvenli ve erişilebilir bir resim eşleştirme oyunu geliştirmek. Amaç, görsel hafıza, dikkat ve eşleştirme becerilerini eğlenceli bir deneyimle desteklemek, ebeveyn dostu kontrol seçenekleriyle reklam ve satın alma davranışlarını şeffaf biçimde yönetmektir.
+
+# Teknik Detaylar
+- Dil: JavaScript veya TypeScript (tercih: TypeScript)
+- Oyun motoru: Phaser.js (v3.60+)
+- Araçlar: Vite, ESLint, Prettier
+- Stil: CSS (erişilebilirlik odaklı)
+- Medya: Sprite atlasları, ses dosyaları, JSON konfigürasyon
+- Yerelleştirme: JSON sözlükleri (tr, en)
+- Depolama: LocalStorage
+- Analitik: Minimal, anonim olay kaydı
+- Monetizasyon: Reklam entegrasyonu için soyut katman
+
+# Proje Yapısı
+- src/assets: Görseller, sesler
+- src/config: Kategori ve seviye JSON’ları
+- src/core: Servisler (Audio, Feedback, Storage)
+- src/scenes: MainMenu, CategorySelection, GamePlay, LevelComplete
+- src/ui: HTML overlay’leri (ebeveyn paneli, ayarlar)
+- tests: Birim testleri
+
+# Oyun Tasarımı
+- Durum makinesi: MainMenu → CategorySelection → GamePlay → LevelComplete
+- Veri modelleri: Kategori, Seviye, Kart, Ayarlar, İlerleme
+- Servisler: FeedbackService, AudioService, StorageService, LevelService, AnalyticsService
+
+# To-Do List ve AI Promptları
+
+1. **Proje İskeleti**
+   - Prompt: Vite + TypeScript + Phaser kurulum iskeleti oluştur.
+
+2. **Sahne Altyapısı**
+   - Prompt: MainMenu, CategorySelection, GamePlay, LevelComplete sahneleri için iskelet kodu yaz.
+
+3. **Grid ve Kart Sistemi**
+   - Prompt: rows/cols ve pairCount’a göre kartları oluştur, flip animasyonu ekle.
+
+4. **Feedback ve Ses Servisi**
+   - Prompt: Doğru eşleşmede konfeti ve ses, yanlışta titreme efekti tetikle.
+
+5. **Konfigürasyon ve İçerik**
+   - Prompt: Kategori ve seviye JSON’larını yükle ve doğrula.
+
+6. **UI Overlay ve Ebeveyn Paneli**
+   - Prompt: HTML overlay ile ses aç/kapa, dil seçimi, çocuk kilidi paneli oluştur.
+
+7. **İlerleme ve Ödül Sistemi**
+   - Prompt: Seviye tamamlanınca yıldız ver, kategori kilitlerini yıldız eşiğine bağla.
+
+8. **Testler**
+   - Prompt: Shuffle, eşleşme kontrolü, yanlış eşleşmede kapanma gecikmesi için birim testler yaz.
+
+9. **Performans ve Mobil Uyum**
+   - Prompt: Sprite atlas kullanımı ve dokunma optimizasyonu ekle.
+
+10. **Yayın Hazırlığı**
+   - Prompt: Vite production build, PWA manifesti ve service worker ekle.
+
+# Riskler ve Kalite Kriterleri
+- Performans riski: Düşük cihazlarda animasyon yoğunluğu
+- Girdi hataları: Spam tıklamalar, input kilidi ile yönetilmeli
+- Erişilebilirlik: Renk körlüğü modları, ses kapalıyken görsel geri bildirim
+- Veri bütünlüğü: LocalStorage bozulması için fallback
+- Kalite kriterleri: 60 FPS, hatasız sahne geçişleri, çocuk dostu dil
