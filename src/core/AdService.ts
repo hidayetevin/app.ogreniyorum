@@ -1,3 +1,9 @@
+import {
+    AdMob,
+    BannerAdSize,
+    BannerAdPosition,
+    BannerAdOptions
+} from '@capacitor-community/admob';
 import { AnalyticsService } from './AnalyticsService';
 import { AnalyticsEventType } from '../types/models';
 
@@ -12,15 +18,23 @@ export enum AdType {
 
 /**
  * Service to manage advertisements
- * Ready for AdMob SDK integration
+ * Integrated with AdMob SDK via Capacitor
  */
 export class AdService {
     private static instance: AdService | null = null;
     private analyticsService: AnalyticsService;
+    private isInitialized: boolean = false;
+
+    // Test IDs from Google (Use these during development)
+    private readonly TEST_IDS = {
+        BANNER: 'ca-app-pub-3940256099942544/6300978111',
+        INTERSTITIAL: 'ca-app-pub-3940256099942544/1033173712',
+        REWARDED: 'ca-app-pub-3940256099942544/5224354917',
+    };
 
     private constructor() {
         this.analyticsService = AnalyticsService.getInstance();
-        this.initializeAdMob();
+        this.initialize();
     }
 
     public static getInstance(): AdService {
@@ -31,68 +45,108 @@ export class AdService {
     }
 
     /**
-     * Initialize AdMob SDK (Placeholder for real integration)
+     * Initialize AdMob SDK
      */
-    private initializeAdMob(): void {
-        console.log('AdService: Initializing Ads...');
-        // In a real Play Store app (Capacitor/Cordova), you would initialize AdMob here
-        // Example: AdMob.initialize({ appId: 'YOUR_APP_ID' });
+    private async initialize(): Promise<void> {
+        if (this.isInitialized) return;
+
+        try {
+            console.log('AdService: Initializing AdMob...');
+            await AdMob.initialize({});
+            this.isInitialized = true;
+            console.log('AdService: AdMob Initialized successfully.');
+        } catch (error) {
+            console.error('AdService: Error initializing AdMob:', error);
+        }
     }
 
     /**
      * Shows a banner ad
      */
-    public showBanner(): void {
-        const banner = document.getElementById('ad-banner-container');
-        if (banner) {
-            banner.style.display = 'flex';
+    public async showBanner(): Promise<void> {
+        if (!this.isInitialized) await this.initialize();
+
+        try {
+            const options: BannerAdOptions = {
+                adId: this.TEST_IDS.BANNER,
+                adSize: BannerAdSize.ADAPTIVE_BANNER,
+                position: BannerAdPosition.BOTTOM_CENTER,
+                margin: 0,
+                // npa: true // Set this to true for non-personalized ads
+            };
+
+            await AdMob.showBanner(options);
             this.analyticsService.trackEvent(AnalyticsEventType.AD_SHOW, { type: AdType.BANNER });
+            console.log('AdService: Banner Ad Shown');
+        } catch (error) {
+            console.error('AdService: Error showing banner ad:', error);
         }
     }
 
     /**
      * Hides the banner ad
      */
-    public hideBanner(): void {
-        const banner = document.getElementById('ad-banner-container');
-        if (banner) {
-            banner.style.display = 'none';
+    public async hideBanner(): Promise<void> {
+        try {
+            await AdMob.hideBanner();
+            console.log('AdService: Banner Ad Hidden');
+        } catch (error) {
+            console.error('AdService: Error hiding banner ad:', error);
         }
     }
 
     /**
      * Shows a rewarded video ad
-     * Returns true if the ad was watched successfully
+     * Returns true if the ad was watched successfully and reward was granted
      */
     public async showRewardedAd(): Promise<boolean> {
-        console.log('AdService: Showing Rewarded Ad...');
-        this.analyticsService.trackEvent(AnalyticsEventType.AD_SHOW, { type: AdType.REWARDED });
+        if (!this.isInitialized) await this.initialize();
 
-        // Simulate ad watching logic
-        // In production: return AdMob.showRewardedAd(...);
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                const success = Math.random() > 0.05; // 95% success rate for simulation
-                if (success) {
-                    this.analyticsService.trackEvent(AnalyticsEventType.AD_REWARD, { type: AdType.REWARDED });
-                }
-                resolve(success);
-            }, 2000);
-        });
+        try {
+            console.log('AdService: Preparing Rewarded Ad...');
+
+            await AdMob.prepareRewardVideoAd({
+                adId: this.TEST_IDS.REWARDED,
+            });
+
+            // Using 'any' to avoid SDK version specific type mismatches for AdMobReward/AdReward
+            const reward: any = await AdMob.showRewardVideoAd();
+
+            if (reward && reward.amount > 0) {
+                console.log('AdService: Rewarded Ad Watched Successfully:', reward);
+                this.analyticsService.trackEvent(AnalyticsEventType.AD_REWARD, {
+                    type: AdType.REWARDED,
+                    amount: reward.amount,
+                    currency: reward.type
+                });
+                return true;
+            }
+
+            return false;
+        } catch (error) {
+            console.error('AdService: Error showing rewarded ad:', error);
+            return false;
+        }
     }
 
     /**
      * Shows an interstitial ad
      */
     public async showInterstitialAd(): Promise<void> {
-        console.log('AdService: Showing Interstitial Ad...');
-        this.analyticsService.trackEvent(AnalyticsEventType.AD_SHOW, { type: AdType.INTERSTITIAL });
+        if (!this.isInitialized) await this.initialize();
 
-        // Simulate ad
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve();
-            }, 1000);
-        });
+        try {
+            console.log('AdService: Preparing Interstitial Ad...');
+
+            await AdMob.prepareInterstitial({
+                adId: this.TEST_IDS.INTERSTITIAL,
+            });
+
+            await AdMob.showInterstitial();
+            this.analyticsService.trackEvent(AnalyticsEventType.AD_SHOW, { type: AdType.INTERSTITIAL });
+            console.log('AdService: Interstitial Ad Shown');
+        } catch (error) {
+            console.error('AdService: Error showing interstitial ad:', error);
+        }
     }
 }
