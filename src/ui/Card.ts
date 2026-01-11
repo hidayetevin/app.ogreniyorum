@@ -229,4 +229,29 @@ export class Card extends Phaser.GameObjects.Container {
     public getImagePath(): string {
         return this.imagePath;
     }
+
+    /**
+     * Cleanup - Destroys the card and all its resources
+     */
+    public override destroy(fromScene?: boolean): void {
+        // Remove event listeners
+        this.backRect.off('pointerover');
+        this.backRect.off('pointerout');
+        this.backRect.off('pointerdown');
+
+        // Kill any tweens targeting this card
+        this.scene.tweens.killTweensOf(this);
+
+        // Destroy front image if it exists
+        if (this.frontImage !== null) {
+            this.frontImage.destroy();
+            this.frontImage = null;
+        }
+
+        // Destroy back rectangle
+        this.backRect.destroy();
+
+        // Call parent destroy
+        super.destroy(fromScene);
+    }
 }

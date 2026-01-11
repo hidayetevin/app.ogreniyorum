@@ -1,10 +1,11 @@
+import './styles/main.css';
 import Phaser from 'phaser';
-import { BootScene } from '@scenes/BootScene';
-import { MainMenuScene } from '@scenes/MainMenuScene';
-import { CategorySelectionScene } from '@scenes/CategorySelectionScene';
-import { GamePlayScene } from '@scenes/GamePlayScene';
-import { LevelCompleteScene } from '@scenes/LevelCompleteScene';
-import { GAME_CONFIG, PERFORMANCE } from '@constants/index';
+import { BootScene } from './scenes/BootScene';
+import { MainMenuScene } from './scenes/MainMenuScene';
+import { CategorySelectionScene } from './scenes/CategorySelectionScene';
+import { GamePlayScene } from './scenes/GamePlayScene';
+import { LevelCompleteScene } from './scenes/LevelCompleteScene';
+import { GAME_CONFIG } from '@constants/index';
 
 /**
  * Main Phaser game configuration
@@ -13,7 +14,7 @@ const config: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
     width: GAME_CONFIG.WIDTH,
     height: GAME_CONFIG.HEIGHT,
-    parent: GAME_CONFIG.PARENT,
+    parent: 'game-container',
     backgroundColor: GAME_CONFIG.BACKGROUND_COLOR,
     scene: [BootScene, MainMenuScene, CategorySelectionScene, GamePlayScene, LevelCompleteScene],
     scale: {
@@ -21,11 +22,13 @@ const config: Phaser.Types.Core.GameConfig = {
         autoCenter: Phaser.Scale.CENTER_BOTH,
     },
     fps: {
-        target: PERFORMANCE.TARGET_FPS,
+        target: 60,
         forceSetTimeOut: false,
+        min: 30,
+        smoothStep: true,
     },
     render: {
-        antialias: true,
+        antialias: false, // Disable for better performance
         pixelArt: false,
     },
     physics: {

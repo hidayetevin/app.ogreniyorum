@@ -5,6 +5,8 @@ import { LevelService } from '@core/LevelService';
 import { StorageService } from '@core/StorageService';
 import { LocalizationService } from '@core/LocalizationService';
 import { AudioService } from '@core/AudioService';
+import { AssetLoaderService } from '@core/AssetLoaderService';
+import { LoadingOverlay } from '@ui/LoadingOverlay';
 import type { ICategory } from '../types/models';
 
 /**
@@ -15,6 +17,7 @@ export class CategorySelectionScene extends Scene {
     private storageService: StorageService;
     private localizationService: LocalizationService;
     private audioService: AudioService;
+    private assetLoader: AssetLoaderService;
 
     private scrollContainer: Phaser.GameObjects.Container | null = null;
     private scrollMask: Phaser.Display.Masks.GeometryMask | null = null;
@@ -23,6 +26,7 @@ export class CategorySelectionScene extends Scene {
     private lastY: number = 0;
     private maxScroll: number = 0;
     private startPointerY: number = 0;
+    private loadingOverlay: LoadingOverlay | null = null;
 
     constructor() {
         super({ key: SCENE_KEYS.CATEGORY_SELECTION });
@@ -30,6 +34,7 @@ export class CategorySelectionScene extends Scene {
         this.storageService = StorageService.getInstance();
         this.localizationService = LocalizationService.getInstance();
         this.audioService = AudioService.getInstance();
+        this.assetLoader = AssetLoaderService.getInstance();
     }
 
     /**
@@ -282,17 +287,44 @@ export class CategorySelectionScene extends Scene {
     /**
      * Selects a category and shows its levels
      */
-    private selectCategory(category: ICategory): void {
+    private async selectCategory(category: ICategory): Promise<void> {
         const name = this.localizationService.translate(category.nameKey);
         const lang = this.localizationService.getCurrentLanguage();
         void this.audioService.speak(name, lang === 'tr' ? 'tr-TR' : 'en-US');
 
-        const firstLevel = category.levels[0];
-        if (firstLevel !== undefined) {
-            this.scene.start(SCENE_KEYS.GAME_PLAY, {
-                levelId: firstLevel.id,
-                categoryId: category.id,
-            });
+        // Show loading overlay
+        if (this.loadingOverlay === null) {
+            this.loadingOverlay = new LoadingOverlay(this);
+        }
+        this.loadingOverlay.show();
+
+        try {
+            // Load category assets
+            console.log(`[CategorySelection] Loading assets for ${category.id}`);
+
+            // Simulate progress updates
+            this.loadingOverlay.updateProgress(0.3);
+            await this.assetLoader.loadCategoryAssets(this, category.id);
+            this.loadingOverlay.updateProgress(1.0);
+
+            // Small delay to show completion
+            await new Promise(resolve => setTimeout(resolve, 200));
+
+            // Hide loading
+            this.loadingOverlay.hide();
+
+            // Start game
+            const firstLevel = category.levels[0];
+            if (firstLevel !== undefined) {
+                this.scene.start(SCENE_KEYS.GAME_PLAY, {
+                    levelId: firstLevel.id,
+                    categoryId: category.id,
+                });
+            }
+        } catch (error) {
+            console.error('[CategorySelection] Failed to load assets:', error);
+            this.loadingOverlay.hide();
+            // Could show error message to user here
         }
     }
 }

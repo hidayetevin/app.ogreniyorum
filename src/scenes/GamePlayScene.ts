@@ -459,12 +459,37 @@ export class GamePlayScene extends Scene {
     }
 
     /**
-     * Cleanup
+     * Cleanup - Enhanced to prevent memory leaks
      */
     public shutdown(): void {
+        console.log('[GamePlayScene] Shutting down - cleaning up resources');
+
+        // Destroy all cards
+        this.cards.forEach(card => {
+            card.destroy();
+        });
         this.cards = [];
         this.flippedCards = [];
-        this.isInputLocked = false;
+
+        // Kill all tweens in this scene
+        this.tweens.killAll();
+
+        // Remove event listeners
+        this.input.off('pointerdown');
+        this.input.off('pointermove');
+        this.input.off('pointerup');
+
+        // Cleanup feedback service
         this.feedbackService.cleanup();
+
+        // Clear data
+        this.data.destroy();
+
+        // Reset state
+        this.isInputLocked = false;
+        this.currentLevel = null;
+        this.gameSession = null;
+
+        console.log('[GamePlayScene] Cleanup complete');
     }
 }
