@@ -7,6 +7,7 @@ import { LocalizationService } from '@core/LocalizationService';
 import { FeedbackService } from '@core/FeedbackService';
 import { FeedbackType } from '../types/models';
 import type { ILevelProgress } from '../types/models';
+import { AdService } from '@core/AdService';
 
 /**
  * LevelCompleteScene shows level completion results
@@ -16,6 +17,7 @@ export class LevelCompleteScene extends Scene {
     private levelService: LevelService;
     private localizationService: LocalizationService;
     private feedbackService: FeedbackService;
+    private adService: AdService;
 
     private levelId: string = '';
     private categoryId: string = '';
@@ -28,6 +30,7 @@ export class LevelCompleteScene extends Scene {
         this.levelService = LevelService.getInstance();
         this.localizationService = LocalizationService.getInstance();
         this.feedbackService = FeedbackService.getInstance();
+        this.adService = AdService.getInstance();
     }
 
     /**
@@ -52,6 +55,9 @@ export class LevelCompleteScene extends Scene {
 
         // Background
         this.cameras.main.setBackgroundColor(GAME_CONFIG.BACKGROUND_COLOR);
+
+        // Show banner ad via AdMob
+        void this.adService.showBanner();
 
         // Initialize feedback service
         this.feedbackService.initialize(this);

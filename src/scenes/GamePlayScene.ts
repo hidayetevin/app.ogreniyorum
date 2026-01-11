@@ -86,6 +86,9 @@ export class GamePlayScene extends Scene {
         // Background
         this.cameras.main.setBackgroundColor(GAME_CONFIG.BACKGROUND_COLOR);
 
+        // Show banner ad via AdMob
+        void this.adService.showBanner();
+
         // Initialize feedback service
         this.feedbackService.initialize(this);
 
@@ -382,43 +385,12 @@ export class GamePlayScene extends Scene {
     private async showAd(): Promise<void> {
         this.isInputLocked = true;
 
-        // Show loading or overlay if needed
-        const overlay = this.add.rectangle(
-            GAME_CONFIG.WIDTH / 2,
-            GAME_CONFIG.HEIGHT / 2,
-            GAME_CONFIG.WIDTH,
-            GAME_CONFIG.HEIGHT,
-            0x000000,
-            0.7
-        );
-        overlay.setDepth(200);
-
-        const loadingText = this.add.text(
-            GAME_CONFIG.WIDTH / 2,
-            GAME_CONFIG.HEIGHT / 2,
-            'Reklam Yükleniyor...',
-            {
-                fontSize: '32px',
-                color: '#ffffff'
-            }
-        );
-        loadingText.setOrigin(0.5);
-        loadingText.setDepth(201);
-
         try {
-            // Show interstitial ad
-            // Note: In a real implementation this would wait for the ad to close
-            // AdService's showInterstitialAd should ideally return a Promise that resolves when closed
+            // Show interstitial ad directly
             await this.adService.showInterstitialAd();
-
-            // Artificial delay if ad service is instant/mock
-            await delay(1000);
-
         } catch (error) {
             console.error('Ad failed to show:', error);
         } finally {
-            overlay.destroy();
-            loadingText.destroy();
             this.isInputLocked = false;
         }
     }

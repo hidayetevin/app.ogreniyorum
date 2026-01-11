@@ -6,6 +6,7 @@ import { StorageService } from '@core/StorageService';
 import { LocalizationService } from '@core/LocalizationService';
 import { AudioService } from '@core/AudioService';
 import { AssetLoaderService } from '@core/AssetLoaderService';
+import { AdService } from '@core/AdService';
 import { LoadingOverlay } from '@ui/LoadingOverlay';
 import type { ICategory } from '../types/models';
 
@@ -18,6 +19,7 @@ export class CategorySelectionScene extends Scene {
     private localizationService: LocalizationService;
     private audioService: AudioService;
     private assetLoader: AssetLoaderService;
+    private adService: AdService;
 
     private scrollContainer: Phaser.GameObjects.Container | null = null;
     private scrollMask: Phaser.Display.Masks.GeometryMask | null = null;
@@ -36,6 +38,7 @@ export class CategorySelectionScene extends Scene {
         this.localizationService = LocalizationService.getInstance();
         this.audioService = AudioService.getInstance();
         this.assetLoader = AssetLoaderService.getInstance();
+        this.adService = AdService.getInstance();
     }
 
     /**
@@ -51,6 +54,9 @@ export class CategorySelectionScene extends Scene {
         const headerHeight = 120;
         const footerHeight = 100;
         const bodyHeight = height - headerHeight - footerHeight;
+
+        // Show banner ad via AdMob
+        void this.adService.showBanner();
 
         // Background
         this.cameras.main.setBackgroundColor(GAME_CONFIG.BACKGROUND_COLOR);

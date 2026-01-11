@@ -10,6 +10,7 @@ import { ParentGate } from '@ui/ParentGate';
 import { StorageService } from '@core/StorageService';
 import { LevelService } from '@core/LevelService';
 import { Language } from '../types/models';
+import { AdService } from '@core/AdService';
 
 /**
  * MainMenuScene displays the main menu
@@ -23,6 +24,7 @@ export class MainMenuScene extends Scene {
     private progressBar!: ProgressBar;
     private statsPanel!: StatsPanel;
     private parentGate!: ParentGate;
+    private adService: AdService;
 
     constructor() {
         super({ key: SCENE_KEYS.MAIN_MENU });
@@ -30,6 +32,7 @@ export class MainMenuScene extends Scene {
         this.audioService = AudioService.getInstance();
         this.storageService = StorageService.getInstance();
         this.levelService = LevelService.getInstance();
+        this.adService = AdService.getInstance();
     }
 
     /**
@@ -157,6 +160,9 @@ export class MainMenuScene extends Scene {
                 this.toggleLanguage();
             },
         });
+
+        // Show banner ad via AdMob
+        void this.adService.showBanner();
     }
 
     private async toggleLanguage(): Promise<void> {

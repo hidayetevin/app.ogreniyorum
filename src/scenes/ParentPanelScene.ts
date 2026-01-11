@@ -4,6 +4,7 @@ import { Button } from '@ui/Button';
 import { StorageService } from '@core/StorageService';
 import { LevelService } from '@core/LevelService';
 import { AchievementService } from '@core/AchievementService';
+import { AdService } from '@core/AdService';
 
 /**
  * ParentPanelScene displays statistics and allows progress management
@@ -12,12 +13,14 @@ export class ParentPanelScene extends Scene {
     private storageService: StorageService;
     private levelService: LevelService;
     private achievementService: AchievementService;
+    private adService: AdService;
 
     constructor() {
         super({ key: SCENE_KEYS.PARENT_PANEL });
         this.storageService = StorageService.getInstance();
         this.levelService = LevelService.getInstance();
         this.achievementService = AchievementService.getInstance();
+        this.adService = AdService.getInstance();
     }
 
     /**
@@ -29,6 +32,9 @@ export class ParentPanelScene extends Scene {
 
         // Background
         this.cameras.main.setBackgroundColor(GAME_CONFIG.BACKGROUND_COLOR);
+
+        // Show banner ad via AdMob
+        void this.adService.showBanner();
 
         // Title
         const title = this.add.text(
