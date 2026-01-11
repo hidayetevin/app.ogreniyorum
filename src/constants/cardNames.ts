@@ -2,8 +2,8 @@ export const CARD_NAMES: Record<string, string> = {
     // Animals
     'animals/1.png': 'card.animals.cat',
     'animals/2.png': 'card.animals.dog',
-    'animals/3.png': 'card.animals.bird',
-    'animals/4.png': 'card.animals.rabbit',
+    'animals/3.png': 'card.animals.rabbit',
+    'animals/4.png': 'card.animals.bird',
     'animals/5.png': 'card.animals.fish',
     'animals/6.png': 'card.animals.turtle',
 
@@ -14,6 +14,14 @@ export const CARD_NAMES: Record<string, string> = {
     'fruits/grape.png': 'card.fruits.grape',
     'fruits/strawberry.png': 'card.fruits.strawberry',
     'fruits/watermelon.png': 'card.fruits.watermelon',
+    'fruits/pear.png': 'card.fruits.pear',
+    'fruits/pineapple.png': 'card.fruits.pineapple',
+    'fruits/cherry.png': 'card.fruits.cherry',
+    'fruits/kiwi.png': 'card.fruits.kiwi',
+    'fruits/mango.png': 'card.fruits.mango',
+    'fruits/peach.png': 'card.fruits.peach',
+    'fruits/plum.png': 'card.fruits.plum',
+    'fruits/melon.png': 'card.fruits.melon',
 
     // Vehicles
     'vehicles/car.png': 'card.vehicles.car',
