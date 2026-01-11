@@ -1,0 +1,75 @@
+https://hidayetevin.github.io/app.ogreniyorum/privacy-policy.html
+
+Kısa açıklama:
+Çocuklar için eğlenceli ve eğitici oyunlar! Güvenli, reklamsız öğrenme deneyimi.
+----------------------------------------------------------------
+Uzun açıklama:
+[Uygulama Adı], 4–10 yaş arası çocuklar için özel olarak geliştirilmiş eğitici ve eğlenceli bir mobil uygulamadır.
+
+🎨 RENKLİ ve EĞLENCELİ TASARIM
+Çocukların dikkatini çeken sade ve güvenli arayüz.
+
+🧠 EĞİTİCİ İÇERİK
+- Zihinsel gelişimi destekleyen aktiviteler
+- El-göz koordinasyonu
+- Odaklanma ve problem çözme becerileri
+
+👶 ÇOCUKLARA UYGUN
+- COPPA uyumlu
+- Kişisel veri toplanmaz
+- Güvenli reklamlar (G dereceli)
+
+📱 KOLAY KULLANIM
+- İnternet gerektirmez
+- Karmaşık menüler yok
+- Çocukların tek başına kullanabileceği yapı
+
+[Uygulama Adı], ebeveynlerin güvenle tercih edebileceği, çocukların ise keyifle vakit geçireceği bir uygulamadır.
+
+Şimdi indir ve keşfet!
+
+----------------------------------------------------------------
+
+İLK SÜRÜM İÇİN GÜVENLİ CONFIG CHECKLIST
+
+PLAY STORE YAYIN ÖNCESİ CHECKLIST
+
+☑ Gizlilik politikası URL eklendi
+☑ Play Console > Data Safety: Veri toplanmıyor
+☑ Play Console > Ads: Evet (Families compliant)
+☑ Target Audience: 0–5, 6–8, 9–12 seçili
+☑ COPPA işaretli
+☑ Kişiselleştirilmiş reklam KAPALI
+☑ Analytics SDK YOK
+☑ Firebase Analytics YOK
+☑ Login / kayıt sistemi YOK
+☑ Konum izni YOK
+☑ Kamera / mikrofon izni YOK
+☑ Gereksiz permission YOK
+☑ Test cihazlarında reklamlar düzgün çalışıyor
+☑ Release build alındı (debug değil)
+
+----------------------------------------------------------------
+
+ÇOCUKLAR İÇİN REKLAM STRATEJİSİ (POLICY-SAFE)
+
+GÜVENLİ REKLAM STRATEJİSİ
+
+✔ Sadece AdMob
+✔ Banner + Interstitial
+✖ Rewarded video yok
+✖ Kişiselleştirilmiş reklam yok
+
+Reklam Gösterimi:
+- Uygulama açılışında ❌
+- Oyun sırasında ❌
+- Bölüm bitiminde ✅
+- Menü geçişlerinde ✅
+
+Frekans:
+- Interstitial: 3–5 dakikada 1
+- Banner: Alt sabit alan
+
+Hedefleme:
+- G-rated içerik
+- Çocuklara uygun reklamlar

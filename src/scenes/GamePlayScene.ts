@@ -220,33 +220,35 @@ export class GamePlayScene extends Scene {
      * Handles card click
      */
     private async onCardClick(card: Card): Promise<void> {
-        // Ignore if input is locked or card is not face down
-        if (this.isInputLocked || card.getState() !== CardState.FACE_DOWN || card.isCurrentlyFlipping()) {
+        // Ignore if input is locked, card is not face down, or we already have 2 cards flipped
+        if (
+            this.isInputLocked ||
+            card.getState() !== CardState.FACE_DOWN ||
+            card.isCurrentlyFlipping() ||
+            this.flippedCards.length >= 2
+        ) {
             return;
         }
+
+        // Add to tracking immediately to prevent race conditions during animation
+        this.flippedCards.push(card);
 
         // Flip the card
         this.feedbackService.triggerFeedback(FeedbackType.CARD_FLIP);
         await card.flipToFront();
 
         // Speak card name
-        this.isInputLocked = true;
-        await this.speakCardName(card.getImagePath());
-        this.isInputLocked = false;
-
-        this.flippedCards.push(card);
+        void this.speakCardName(card.getImagePath());
 
         // Check if we have two flipped cards
-        if (this.flippedCards.length === 2) {
+        // Identity check ensure checkMatch is only called by the second card's execution path
+        if (this.flippedCards.length === 2 && this.flippedCards[1] === card) {
             this.isInputLocked = true;
             await this.checkMatch();
             this.isInputLocked = false;
         }
     }
 
-    /**
-     * Speaks the name of the card
-     */
     /**
      * Speaks the name of the card
      */
@@ -309,10 +311,10 @@ export class GamePlayScene extends Scene {
             });
 
             // 3. Speak Name (Again, emphasizing the match)
-            await this.speakCardName(card1.getImagePath());
+            void this.speakCardName(card1.getImagePath());
 
-            // 4. Wait for speech/emphasis
-            // Removed explicit delay as we now await the speech
+            // 4. Wait for visual emphasis
+            await delay(1500);
 
             // 5. Scale Down / Hide Animation
             await new Promise<void>(resolve => {

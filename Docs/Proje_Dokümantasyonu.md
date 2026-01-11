@@ -592,12 +592,18 @@ graph TD
 **Card Click Handler:**
 ```typescript
 async onCardClick(card: Card): Promise<void> {
-  if (isInputLocked || card.state !== FACE_DOWN) return;
+  // Guard: Lock if input locked or 2 cards already flipped
+  if (isInputLocked || flippedCards.length >= 2 || card.state !== FACE_DOWN) return;
   
-  await card.flipToFront();
+  // IMMEDIATE tracking to prevent race conditions during 300ms flip animation
   flippedCards.push(card);
   
-  if (flippedCards.length === 2) {
+  await card.flipToFront();
+  
+  // TTS: Non-blocking reading
+  speakCardName(card.imagePath);
+
+  if (flippedCards.length === 2 && flippedCards[1] === card) {
     isInputLocked = true;
     await checkMatch();
     isInputLocked = false;
@@ -617,8 +623,14 @@ async checkMatch(): Promise<void> {
     card2.setMatched();
     matches++;
     
+    // Zoom & Speak (Non-blocking)
+    speakCardName(card1.imagePath);
+    await delay(1500);
+    
     if (matches === totalPairs) {
-      completeLevel();
+      await completeLevel();
+    } else if (matches % 3 === 0) {
+      await showAd(); // Ad every 3 matches
     }
   } else {
     // No match
@@ -685,8 +697,8 @@ async checkMatch(): Promise<void> {
 #### Sabitler
 ```typescript
 export const GAME_CONFIG = {
-  WIDTH: 1280,
-  HEIGHT: 720,
+  WIDTH: 720,
+  HEIGHT: 1280,
   BACKGROUND_COLOR: '#2C3E50',
 } as const;
 
@@ -1017,7 +1029,8 @@ Proje başarıyla tamamlandı ve temel oyun mekaniği çalışır durumda. Clean
 
 ### Başarılar
 ✅ **Varlık (Asset) Yönetimi**: Vite uyumlu `public` klasörü yapısı ile resimlerin yüklenememe sorunu kökten çözüldü.
-✅ **Reklam Modeli**: Oyunun altına (footer) standart banner reklam alanı ve oyun içi/seviye sonu geçiş reklamları (interstitial) entegre edildi.
+✅ **Reklam Modeli**: Oyunun altına (footer) standart banner reklam alanı ve oyun içi geçiş reklamları (interstitial) entegre edildi. Reklamlar her 3 başarılı eşleşmede bir ve seviye sonunda gösterilecek şekilde optimize edildi.
+✅ **Hücresel Veri Odaklı Tasarım**: Asset yönetimi ve sahneler arası veri aktarımı düşük gecikme için optimize edildi.
 ✅ **TypeScript & Lint**: Tüm kod tabanı strict TypeScript kurallarına göre temizlendi ve lint hataları giderildi.
 ✅ **SOLID & Temiz Kod**: Mimari, kolay genişletilebilir ve modüler hale getirildi.
 ✅ **Eğitici Oyun Modeli**: Ceza/Can sistemi kaldırılarak çocukların kesintisiz oynaması sağlandı. Reklam stratejisi (3 eşleşme ve seviye sonu) eğitici akışı bozmayacak şekilde güncellendi.
@@ -1026,6 +1039,7 @@ Proje başarıyla tamamlandı ve temel oyun mekaniği çalışır durumda. Clean
 ✅ **Mobil & Play Store Optimizasyonu**: `manifest.json` ve `sw.js` (Service Worker) ile PWA desteği eklendi.
 ✅ **APK Paketleme Altyapısı**: Capacitor enegrasyonu tamamlandı, Android projesi oluşturuldu ve [Android Studio Rehberi](file:///c:/Users/hiday/Desktop/çocuk oyun/Proje_Dosyaları/Docs/Android_Studio_Rehberi.md) hazırlandı.
 ✅ **Responsive Tasarım**: Safe Area (notch) desteği ve viewport optimizasyonları ile tüm mobil cihazlara uyumlu hale getirildi.
+✅ **Çoklu Tıklama Koruması**: Hızlı tıklama ile 2'den fazla kartın açılmasını engelleyen güvenlik kontrolü eklendi.
 
 ### Sonraki Adımlar
 1. **Asset Üretimi (Quota Reset Sonrası)**: Yeni eklenen 6 kategori için özgün görsel asset'lerin (167 saat sonra) üretilmesi.
@@ -1036,5 +1050,5 @@ Proje başarıyla tamamlandı ve temel oyun mekaniği çalışır durumda. Clean
 ---
 
 **Proje Durumu:** ✅ MVP Tamamlandı
-**Son Güncelleme:** 09 Ocak 2026
-**Versiyon:** 1.0.0
+**Son Güncelleme:** 11 Ocak 2026
+**Versiyon:** 1.0.2
