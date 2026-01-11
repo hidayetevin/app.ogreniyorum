@@ -32,8 +32,8 @@ export class LevelService implements ILevelService {
         }
 
         try {
-            // Load categories configuration
-            const categoriesResponse = await fetch('/config/categories.json');
+            // Load categories configuration with cache busting
+            const categoriesResponse = await fetch(`/config/categories.json?t=${Date.now()}`);
             const categoriesData = (await categoriesResponse.json()) as unknown;
 
             if (!Array.isArray(categoriesData)) {

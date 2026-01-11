@@ -157,6 +157,7 @@ export class GamePlayScene extends Scene {
         }
 
         const { rows, cols, pairCount, imagePaths } = this.currentLevel;
+        console.log(`[DEBUG] Creating Grid: ${rows} rows x ${cols} cols`);
 
         // Select random images for this level
         const selectedImages = imagePaths.slice(0, pairCount);

@@ -669,8 +669,8 @@ async checkMatch(): Promise<void> {
     {
       "id": "animals-2",
       "difficulty": "EASY",
-      "rows": 3,
-      "cols": 2,
+      "rows": 2,
+      "cols": 3,
       "pairCount": 3,
       "starThresholds": {
         "threeStars": 8,
@@ -681,8 +681,8 @@ async checkMatch(): Promise<void> {
     {
       "id": "animals-3",
       "difficulty": "MEDIUM",
-      "rows": 4,
-      "cols": 3,
+      "rows": 3,
+      "cols": 4,
       "pairCount": 6,
       "starThresholds": {
         "threeStars": 12,
