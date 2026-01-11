@@ -7,7 +7,7 @@ import { GamePlayScene } from './scenes/GamePlayScene';
 import { LevelCompleteScene } from './scenes/LevelCompleteScene';
 import { ParentPanelScene } from './scenes/ParentPanelScene';
 import { GAME_CONFIG } from '@constants/index';
-
+import { batteryOptimizer } from '@utils/BatteryOptimizer';
 /**
  * Main Phaser game configuration
  */
@@ -44,7 +44,12 @@ const config: Phaser.Types.Core.GameConfig = {
  * Initialize and start the game
  */
 function startGame(): void {
-    new Phaser.Game(config);
+    const game = new Phaser.Game(config);
+
+    // Initialize battery optimizer
+    batteryOptimizer.init(game);
+
+    console.log('[Game] Initialized with battery optimization');
 }
 
 // Start the game when DOM is ready

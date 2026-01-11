@@ -13,6 +13,7 @@ import { shuffle, createPairs } from '@utils/array';
 import { delay } from '@utils/async';
 import { CARD_NAMES } from '@constants/cardNames';
 import { AudioService } from '@core/AudioService';
+import { HapticFeedback } from '@utils/HapticFeedback';
 
 /**
  * GamePlayScene handles the main gameplay
@@ -288,7 +289,9 @@ export class GamePlayScene extends Scene {
 
         // Check if cards match
         if (card1.getPairId() === card2.getPairId()) {
-            // Match!
+            // Match! - Haptic feedback
+            HapticFeedback.success();
+
             this.feedbackService.triggerFeedback(FeedbackType.CORRECT_MATCH, card1.x, card1.y);
             this.feedbackService.triggerFeedback(FeedbackType.CORRECT_MATCH, card2.x, card2.y);
 
@@ -340,7 +343,9 @@ export class GamePlayScene extends Scene {
                 await this.showAd();
             }
         } else {
-            // No match
+            // No match - Haptic feedback
+            HapticFeedback.error();
+
             this.feedbackService.triggerFeedback(FeedbackType.WRONG_MATCH);
 
             card1.showWrongMatch();

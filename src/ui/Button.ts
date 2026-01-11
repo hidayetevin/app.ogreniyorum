@@ -1,6 +1,6 @@
 import { COLORS, ACCESSIBILITY, Z_INDEX, ANIMATION_DURATION } from '@constants/index';
 import { AudioService } from '@core/AudioService';
-
+import { HapticFeedback } from '@utils/HapticFeedback';
 /**
  * Button configuration interface
  */
@@ -126,6 +126,9 @@ export class Button extends Phaser.GameObjects.Container {
      */
     private onPressStart(): void {
         this.isPressed = true;
+
+        // Haptic feedback for mobile
+        HapticFeedback.light();
 
         this.scene.tweens.add({
             targets: this,
