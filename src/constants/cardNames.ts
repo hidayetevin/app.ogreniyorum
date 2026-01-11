@@ -6,6 +6,10 @@ export const CARD_NAMES: Record<string, string> = {
     'animals/4.png': 'card.animals.bird',
     'animals/5.png': 'card.animals.fish',
     'animals/6.png': 'card.animals.turtle',
+    'animals/7.png': 'card.animals.lion',
+    'animals/8.png': 'card.animals.elephant',
+    'animals/9.png': 'card.animals.monkey',
+    'animals/10.png': 'card.animals.giraffe',
 
     // Fruits
     'fruits/apple.png': 'card.fruits.apple',
@@ -32,6 +36,8 @@ export const CARD_NAMES: Record<string, string> = {
     'vehicles/bicycle.png': 'card.vehicles.bicycle',
     'vehicles/motorcycle.png': 'card.vehicles.motorcycle',
     'vehicles/helicopter.png': 'card.vehicles.helicopter',
+    'vehicles/truck.png': 'card.vehicles.truck',
+    'vehicles/ambulance.png': 'card.vehicles.ambulance',
 
     // Space
     'space/1.png': 'card.space.rocket',
@@ -40,11 +46,22 @@ export const CARD_NAMES: Record<string, string> = {
     'space/4.png': 'card.space.star',
     'space/5.png': 'card.space.ufo',
     'space/6.png': 'card.space.satellite',
+    'space/7.png': 'card.space.moon',
+    'space/8.png': 'card.space.sun',
+    'space/9.png': 'card.space.alien',
+    'space/10.png': 'card.space.telescope',
 
     // Sea
     'sea/1.png': 'card.sea.fish',
     'sea/2.png': 'card.sea.octopus',
     'sea/3.png': 'card.sea.crab',
+    'sea/4.png': 'card.sea.shark',
+    'sea/5.png': 'card.sea.whale',
+    'sea/6.png': 'card.sea.dolphin',
+    'sea/7.png': 'card.sea.seahorse',
+    'sea/8.png': 'card.sea.starfish',
+    'sea/9.png': 'card.sea.jellyfish',
+    'sea/10.png': 'card.sea.turtle',
 
     // Dinosaurs
     'dinosaurs/1.png': 'card.dinosaurs.trex',
@@ -53,17 +70,44 @@ export const CARD_NAMES: Record<string, string> = {
     'dinosaurs/4.png': 'card.dinosaurs.stegosaurus',
     'dinosaurs/5.png': 'card.dinosaurs.brachiosaurus',
     'dinosaurs/6.png': 'card.dinosaurs.velociraptor',
+    'dinosaurs/7.png': 'card.dinosaurs.spinosaurus',
+    'dinosaurs/8.png': 'card.dinosaurs.ankylosaurus',
+    'dinosaurs/9.png': 'card.dinosaurs.parasaurolophus',
+    'dinosaurs/10.png': 'card.dinosaurs.diplodocus',
 
     // Feelings
     'feelings/1.png': 'card.feelings.happy',
     'feelings/2.png': 'card.feelings.sad',
+    'feelings/3.png': 'card.feelings.angry',
+    'feelings/4.png': 'card.feelings.surprised',
+    'feelings/5.png': 'card.feelings.scared',
+    'feelings/6.png': 'card.feelings.bored',
+    'feelings/7.png': 'card.feelings.excited',
+    'feelings/8.png': 'card.feelings.sleepy',
+    'feelings/9.png': 'card.feelings.shy',
+    'feelings/10.png': 'card.feelings.confused',
 
     // Jobs
     'jobs/1.png': 'card.jobs.doctor',
     'jobs/2.png': 'card.jobs.police',
     'jobs/3.png': 'card.jobs.teacher',
+    'jobs/4.png': 'card.jobs.firefighter',
+    'jobs/5.png': 'card.jobs.engineer',
+    'jobs/6.png': 'card.jobs.chef',
+    'jobs/7.png': 'card.jobs.artist',
+    'jobs/8.png': 'card.jobs.farmer',
+    'jobs/9.png': 'card.jobs.dentist',
+    'jobs/10.png': 'card.jobs.pilot',
 
     // Shapes
     'shapes/1.png': 'card.shapes.circle',
     'shapes/2.png': 'card.shapes.square',
+    'shapes/3.png': 'card.shapes.triangle',
+    'shapes/4.png': 'card.shapes.star',
+    'shapes/5.png': 'card.shapes.heart',
+    'shapes/6.png': 'card.shapes.diamond',
+    'shapes/7.png': 'card.shapes.rectangle',
+    'shapes/8.png': 'card.shapes.oval',
+    'shapes/9.png': 'card.shapes.hexagon',
+    'shapes/10.png': 'card.shapes.pentagon',
 };

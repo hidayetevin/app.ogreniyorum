@@ -65,7 +65,11 @@
                     "/assets/images/animals/3.png",
                     "/assets/images/animals/4.png",
                     "/assets/images/animals/5.png",
-                    "/assets/images/animals/6.png"
+                    "/assets/images/animals/6.png",
+                    "/assets/images/animals/7.png",
+                    "/assets/images/animals/8.png",
+                    "/assets/images/animals/9.png",
+                    "/assets/images/animals/10.png"
                 ]
             }
         ]
@@ -121,7 +125,11 @@
                     "/assets/images/fruits/pear.png",
                     "/assets/images/fruits/pineapple.png",
                     "/assets/images/fruits/cherry.png",
-                    "/assets/images/fruits/kiwi.png"
+                    "/assets/images/fruits/kiwi.png",
+                    "/assets/images/fruits/mango.png",
+                    "/assets/images/fruits/peach.png",
+                    "/assets/images/fruits/plum.png",
+                    "/assets/images/fruits/melon.png"
                 ]
             }
         ]
@@ -176,7 +184,9 @@
                     "/assets/images/vehicles/boat.png",
                     "/assets/images/vehicles/bicycle.png",
                     "/assets/images/vehicles/motorcycle.png",
-                    "/assets/images/vehicles/helicopter.png"
+                    "/assets/images/vehicles/helicopter.png",
+                    "/assets/images/vehicles/truck.png",
+                    "/assets/images/vehicles/ambulance.png"
                 ]
             }
         ]
@@ -228,7 +238,11 @@
                     "/assets/images/space/3.png",
                     "/assets/images/space/4.png",
                     "/assets/images/space/5.png",
-                    "/assets/images/space/6.png"
+                    "/assets/images/space/6.png",
+                    "/assets/images/space/7.png",
+                    "/assets/images/space/8.png",
+                    "/assets/images/space/9.png",
+                    "/assets/images/space/10.png"
                 ]
             }
         ]
@@ -259,7 +273,14 @@
                 "imagePaths": [
                     "/assets/images/sea/1.png",
                     "/assets/images/sea/2.png",
-                    "/assets/images/sea/3.png"
+                    "/assets/images/sea/3.png",
+                    "/assets/images/sea/4.png",
+                    "/assets/images/sea/5.png",
+                    "/assets/images/sea/6.png",
+                    "/assets/images/sea/7.png",
+                    "/assets/images/sea/8.png",
+                    "/assets/images/sea/9.png",
+                    "/assets/images/sea/10.png"
                 ]
             }
         ]
@@ -293,7 +314,11 @@
                     "/assets/images/dinosaurs/3.png",
                     "/assets/images/dinosaurs/4.png",
                     "/assets/images/dinosaurs/5.png",
-                    "/assets/images/dinosaurs/6.png"
+                    "/assets/images/dinosaurs/6.png",
+                    "/assets/images/dinosaurs/7.png",
+                    "/assets/images/dinosaurs/8.png",
+                    "/assets/images/dinosaurs/9.png",
+                    "/assets/images/dinosaurs/10.png"
                 ]
             }
         ]
@@ -323,7 +348,15 @@
                 },
                 "imagePaths": [
                     "/assets/images/feelings/1.png",
-                    "/assets/images/feelings/2.png"
+                    "/assets/images/feelings/2.png",
+                    "/assets/images/feelings/3.png",
+                    "/assets/images/feelings/4.png",
+                    "/assets/images/feelings/5.png",
+                    "/assets/images/feelings/6.png",
+                    "/assets/images/feelings/7.png",
+                    "/assets/images/feelings/8.png",
+                    "/assets/images/feelings/9.png",
+                    "/assets/images/feelings/10.png"
                 ]
             }
         ]
@@ -354,7 +387,14 @@
                 "imagePaths": [
                     "/assets/images/jobs/1.png",
                     "/assets/images/jobs/2.png",
-                    "/assets/images/jobs/3.png"
+                    "/assets/images/jobs/3.png",
+                    "/assets/images/jobs/4.png",
+                    "/assets/images/jobs/5.png",
+                    "/assets/images/jobs/6.png",
+                    "/assets/images/jobs/7.png",
+                    "/assets/images/jobs/8.png",
+                    "/assets/images/jobs/9.png",
+                    "/assets/images/jobs/10.png"
                 ]
             }
         ]
@@ -384,7 +424,15 @@
                 },
                 "imagePaths": [
                     "/assets/images/shapes/1.png",
-                    "/assets/images/shapes/2.png"
+                    "/assets/images/shapes/2.png",
+                    "/assets/images/shapes/3.png",
+                    "/assets/images/shapes/4.png",
+                    "/assets/images/shapes/5.png",
+                    "/assets/images/shapes/6.png",
+                    "/assets/images/shapes/7.png",
+                    "/assets/images/shapes/8.png",
+                    "/assets/images/shapes/9.png",
+                    "/assets/images/shapes/10.png"
                 ]
             }
         ]
