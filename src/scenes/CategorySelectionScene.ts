@@ -44,6 +44,7 @@ export class CategorySelectionScene extends Scene {
     public create(): void {
         // Reset loading state when scene starts
         this.isLoading = false;
+        console.log('[CategorySelection] Scene created, isLoading reset to:', this.isLoading);
 
         const width = GAME_CONFIG.WIDTH;
         const height = GAME_CONFIG.HEIGHT;
@@ -250,10 +251,19 @@ export class CategorySelectionScene extends Scene {
             });
 
             bg.on('pointerup', (pointer: Phaser.Input.Pointer) => {
+                console.log('[CategorySelection] Pointerup - isLoading:', this.isLoading, 'category:', category.id);
+
+                // Prevent selection if already loading
+                if (this.isLoading) {
+                    console.log('[CategorySelection] BLOCKED - Already loading');
+                    return;
+                }
+
                 const dist = Phaser.Math.Distance.Between(pressX, pressY, pointer.x, pointer.y);
 
                 // Trigger only if not dragging and movement is small
                 if (!this.isDragging && dist < 15) {
+                    console.log('[CategorySelection] Click valid, starting selection animation');
                     this.tweens.add({
                         targets: card,
                         scale: 0.95,
@@ -292,25 +302,28 @@ export class CategorySelectionScene extends Scene {
      * Selects a category and shows its levels
      */
     private async selectCategory(category: ICategory): Promise<void> {
+        console.log('[CategorySelection] selectCategory called for:', category.id, 'isLoading:', this.isLoading);
+
         // Prevent multiple clicks
         if (this.isLoading) {
+            console.log('[CategorySelection] selectCategory BLOCKED - Already loading');
             return;
         }
+
         this.isLoading = true;
+        console.log('[CategorySelection] isLoading set to TRUE');
 
         const name = this.localizationService.translate(category.nameKey);
         const lang = this.localizationService.getCurrentLanguage();
         void this.audioService.speak(name, lang === 'tr' ? 'tr-TR' : 'en-US');
 
-        // Show loading overlay
-        if (this.loadingOverlay === null) {
-            this.loadingOverlay = new LoadingOverlay(this);
-        }
+        // Always create fresh loading overlay for this scene
+        this.loadingOverlay = new LoadingOverlay(this);
         this.loadingOverlay.show();
 
         try {
             // Load category assets
-            console.log(`[CategorySelection] Loading assets for ${category.id}`);
+            console.log('[CategorySelection] Loading assets for', category.id);
 
             // Simulate progress updates
             this.loadingOverlay.updateProgress(0.3);
