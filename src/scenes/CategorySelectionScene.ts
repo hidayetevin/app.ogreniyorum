@@ -42,6 +42,9 @@ export class CategorySelectionScene extends Scene {
      * Creates the category selection UI
      */
     public create(): void {
+        // Reset loading state when scene starts
+        this.isLoading = false;
+
         const width = GAME_CONFIG.WIDTH;
         const height = GAME_CONFIG.HEIGHT;
         const headerHeight = 120;
