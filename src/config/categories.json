@@ -32,8 +32,8 @@
                 "categoryId": "animals",
                 "levelNumber": 2,
                 "difficulty": "EASY",
-                "rows": 2,
-                "cols": 3,
+                "rows": 3,
+                "cols": 2,
                 "pairCount": 3,
                 "starThresholds": {
                     "threeStars": 8,
@@ -51,8 +51,8 @@
                 "categoryId": "animals",
                 "levelNumber": 3,
                 "difficulty": "MEDIUM",
-                "rows": 3,
-                "cols": 4,
+                "rows": 4,
+                "cols": 3,
                 "pairCount": 6,
                 "starThresholds": {
                     "threeStars": 12,
@@ -108,7 +108,7 @@
                 "levelNumber": 2,
                 "difficulty": "MEDIUM",
                 "rows": 3,
-                "cols": 4,
+                "cols": 2,
                 "pairCount": 6,
                 "starThresholds": {
                     "threeStars": 12,
@@ -149,8 +149,8 @@
                 "categoryId": "vehicles",
                 "levelNumber": 1,
                 "difficulty": "EASY",
-                "rows": 2,
-                "cols": 3,
+                "rows": 3,
+                "cols": 2,
                 "pairCount": 3,
                 "starThresholds": {
                     "threeStars": 8,
@@ -169,7 +169,7 @@
                 "levelNumber": 2,
                 "difficulty": "HARD",
                 "rows": 4,
-                "cols": 4,
+                "cols": 3,
                 "pairCount": 8,
                 "starThresholds": {
                     "threeStars": 16,
@@ -206,7 +206,7 @@
                 "categoryId": "space",
                 "levelNumber": 1,
                 "difficulty": "EASY",
-                "rows": 2,
+                "rows": 3,
                 "cols": 2,
                 "pairCount": 2,
                 "starThresholds": {
@@ -224,8 +224,8 @@
                 "categoryId": "space",
                 "levelNumber": 2,
                 "difficulty": "MEDIUM",
-                "rows": 3,
-                "cols": 4,
+                "rows": 4,
+                "cols": 3,
                 "pairCount": 6,
                 "starThresholds": {
                     "threeStars": 12,
@@ -262,8 +262,8 @@
                 "categoryId": "sea",
                 "levelNumber": 1,
                 "difficulty": "EASY",
-                "rows": 2,
-                "cols": 3,
+                "rows": 3,
+                "cols": 2,
                 "pairCount": 3,
                 "starThresholds": {
                     "threeStars": 8,
@@ -300,8 +300,8 @@
                 "categoryId": "dinosaurs",
                 "levelNumber": 1,
                 "difficulty": "MEDIUM",
-                "rows": 3,
-                "cols": 4,
+                "rows": 4,
+                "cols": 3,
                 "pairCount": 6,
                 "starThresholds": {
                     "threeStars": 12,
@@ -376,8 +376,8 @@
                 "categoryId": "jobs",
                 "levelNumber": 1,
                 "difficulty": "EASY",
-                "rows": 2,
-                "cols": 3,
+                "rows": 3,
+                "cols": 2,
                 "pairCount": 3,
                 "starThresholds": {
                     "threeStars": 8,
