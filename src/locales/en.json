@@ -38,8 +38,6 @@
     "level.failed": "Try Again",
     "level.pause": "Pause",
     "level.resume": "Resume",
-    "level.lives": "Lives",
-    "level.outOfLives": "Out of Lives!",
     "ad.watchToContinue": "Watch and Continue",
     "ad.watching": "Watching Ad...",
     "stats.moves": "{count} Moves",

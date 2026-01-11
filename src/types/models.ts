@@ -138,7 +138,7 @@ export interface IGameSession {
     moves: number;
     matches: number;
     totalPairs: number;
-    lives: number;
+
     elapsedTime: number; // in seconds
 }
 

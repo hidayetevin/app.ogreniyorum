@@ -6,7 +6,6 @@ export const GAME_CONFIG = {
     HEIGHT: 1280,
     BACKGROUND_COLOR: '#2C3E50',
     PARENT: 'game-container',
-    INITIAL_LIVES: 3,
 } as const;
 
 /**

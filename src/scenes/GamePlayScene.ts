@@ -63,7 +63,7 @@ export class GamePlayScene extends Scene {
             moves: 0,
             matches: 0,
             totalPairs: level.pairCount,
-            lives: GAME_CONFIG.INITIAL_LIVES,
+
             elapsedTime: 0,
         };
 
@@ -143,30 +143,10 @@ export class GamePlayScene extends Scene {
         // Store reference for updates
         this.data.set('movesText', movesText);
 
-        // Lives counter (Hearts)
-        this.createLivesUI();
+        this.data.set('movesText', movesText);
     }
 
-    /**
-     * Creates the lives UI (hearts)
-     */
-    private createLivesUI(): void {
-        const startX = GAME_CONFIG.WIDTH - 200;
-        const startY = 100;
-        const spacing = 40;
 
-        const hearts: Phaser.GameObjects.Text[] = [];
-
-        for (let i = 0; i < GAME_CONFIG.INITIAL_LIVES; i++) {
-            const heart = this.add.text(startX + i * spacing, startY, '❤️', {
-                fontSize: '32px',
-            });
-            heart.setOrigin(0.5);
-            hearts.push(heart);
-        }
-
-        this.data.set('hearts', hearts);
-    }
 
     /**
      * Creates the card grid
@@ -250,7 +230,9 @@ export class GamePlayScene extends Scene {
         await card.flipToFront();
 
         // Speak card name
-        this.speakCardName(card.getImagePath());
+        this.isInputLocked = true;
+        await this.speakCardName(card.getImagePath());
+        this.isInputLocked = false;
 
         this.flippedCards.push(card);
 
@@ -265,7 +247,10 @@ export class GamePlayScene extends Scene {
     /**
      * Speaks the name of the card
      */
-    private speakCardName(imagePath: string): void {
+    /**
+     * Speaks the name of the card
+     */
+    private async speakCardName(imagePath: string): Promise<void> {
         // Remove /assets/images/ prefix to get the key used in CARD_NAMES
         const cleanPath = imagePath.replace('/assets/images/', '');
         const key = CARD_NAMES[cleanPath];
@@ -275,7 +260,7 @@ export class GamePlayScene extends Scene {
             const currentLang = this.localizationService.getCurrentLanguage();
             // Convert 'tr' to 'tr-TR', 'en' to 'en-US' for Speech API
             const locale = currentLang === 'tr' ? 'tr-TR' : 'en-US';
-            void this.audioService.speak(name, locale);
+            await this.audioService.speak(name, locale);
         }
     }
 
@@ -296,7 +281,7 @@ export class GamePlayScene extends Scene {
         // Increment moves
         this.gameSession.moves++;
         this.updateMovesDisplay();
-        this.updateLivesDisplay();
+
 
         // Check if cards match
         if (card1.getPairId() === card2.getPairId()) {
@@ -324,10 +309,10 @@ export class GamePlayScene extends Scene {
             });
 
             // 3. Speak Name (Again, emphasizing the match)
-            this.speakCardName(card1.getImagePath());
+            await this.speakCardName(card1.getImagePath());
 
             // 4. Wait for speech/emphasis
-            await delay(1500);
+            // Removed explicit delay as we now await the speech
 
             // 5. Scale Down / Hide Animation
             await new Promise<void>(resolve => {
@@ -346,7 +331,10 @@ export class GamePlayScene extends Scene {
             // Check if level is complete
             if (this.gameSession.matches === this.gameSession.totalPairs) {
                 await delay(TIMING.LEVEL_COMPLETE_DELAY);
-                this.completeLevel();
+                await this.completeLevel();
+            } else if (this.gameSession.matches > 0 && this.gameSession.matches % 3 === 0) {
+                // Show ad every 3 matches
+                await this.showAd();
             }
         } else {
             // No match
@@ -359,15 +347,6 @@ export class GamePlayScene extends Scene {
             await delay(TIMING.WRONG_MATCH_DELAY);
 
             await Promise.all([card1.flipToBack(), card2.flipToBack()]);
-
-            // Deduct life
-            this.gameSession.lives--;
-            this.updateLivesDisplay();
-
-            // Check if game over
-            if (this.gameSession.lives <= 0) {
-                this.showOutOfLivesPopup();
-            }
         }
 
         // Clear flipped cards
@@ -387,113 +366,59 @@ export class GamePlayScene extends Scene {
         }
     }
 
-    /**
-     * Updates the lives display
-     */
-    private updateLivesDisplay(): void {
-        const hearts = this.data.get('hearts') as Phaser.GameObjects.Text[] | undefined;
-        if (hearts !== undefined && this.gameSession !== null) {
-            hearts.forEach((heart, index) => {
-                if (index < this.gameSession!.lives) {
-                    heart.setText('❤️');
-                    heart.setAlpha(1);
-                } else {
-                    heart.setText('🖤');
-                    heart.setAlpha(0.5);
-                }
-            });
-        }
-    }
+
 
     /**
-     * Shows out of lives popup
+     * Shows an interstitial ad
      */
-    private showOutOfLivesPopup(): void {
+    private async showAd(): Promise<void> {
         this.isInputLocked = true;
 
-        // Overlay background
+        // Show loading or overlay if needed
         const overlay = this.add.rectangle(
             GAME_CONFIG.WIDTH / 2,
             GAME_CONFIG.HEIGHT / 2,
             GAME_CONFIG.WIDTH,
             GAME_CONFIG.HEIGHT,
             0x000000,
-            0.8
+            0.7
         );
-        overlay.setDepth(100);
+        overlay.setDepth(200);
 
-        // Container
-        const container = this.add.container(GAME_CONFIG.WIDTH / 2, GAME_CONFIG.HEIGHT / 2);
-        container.setDepth(101);
+        const loadingText = this.add.text(
+            GAME_CONFIG.WIDTH / 2,
+            GAME_CONFIG.HEIGHT / 2,
+            'Reklam Yükleniyor...',
+            {
+                fontSize: '32px',
+                color: '#ffffff'
+            }
+        );
+        loadingText.setOrigin(0.5);
+        loadingText.setDepth(201);
 
-        // Background
-        const bg = this.add.rectangle(0, 0, 500, 300, 0xffffff);
-        bg.setStrokeStyle(4, parseInt(COLORS.PRIMARY.replace('#', ''), 16));
-        container.add(bg);
+        try {
+            // Show interstitial ad
+            // Note: In a real implementation this would wait for the ad to close
+            // AdService's showInterstitialAd should ideally return a Promise that resolves when closed
+            await this.adService.showInterstitialAd();
 
-        // Text
-        const text = this.add.text(0, -80, this.localizationService.translate('level.outOfLives'), {
-            fontSize: '40px',
-            color: '#000000',
-            fontStyle: 'bold',
-        });
-        text.setOrigin(0.5);
-        container.add(text);
+            // Artificial delay if ad service is instant/mock
+            await delay(1000);
 
-        // Ad Button
-        const adButton = new Button(this, {
-            x: 0,
-            y: 20,
-            width: 300,
-            height: 60,
-            text: this.localizationService.translate('ad.watchToContinue'),
-            backgroundColor: COLORS.SUCCESS,
-            fontSize: 24,
-            onClick: async () => {
-                adButton.setEnabled(false);
-                text.setText(this.localizationService.translate('ad.watching'));
-
-                // Use AdService to show rewarded ad (AdMob ready)
-                const success = await this.adService.showRewardedAd();
-
-                if (success && this.gameSession) {
-                    this.gameSession.lives = GAME_CONFIG.INITIAL_LIVES;
-                    this.updateLivesDisplay();
-
-                    // Cleanup relative objects
-                    overlay.destroy();
-                    container.destroy();
-                    this.isInputLocked = false;
-                } else {
-                    // Ad failed or closed
-                    text.setText(this.localizationService.translate('ad.failed'));
-                    adButton.setEnabled(true);
-                    adButton.setText(this.localizationService.translate('ad.retry'));
-                }
-            },
-        });
-        container.add(adButton);
-
-        // Back to menu button
-        const backButton = new Button(this, {
-            x: 0,
-            y: 100,
-            width: 300,
-            height: 60,
-            text: this.localizationService.translate('menu.mainMenu'),
-            backgroundColor: COLORS.ACCENT,
-            fontSize: 24,
-            onClick: () => {
-                this.exitToMenu();
-            },
-        });
-        container.add(backButton);
+        } catch (error) {
+            console.error('Ad failed to show:', error);
+        } finally {
+            overlay.destroy();
+            loadingText.destroy();
+            this.isInputLocked = false;
+        }
     }
 
     /**
      * Completes the level
      */
-    private completeLevel(): void {
+    private async completeLevel(): Promise<void> {
         if (this.currentLevel === null || this.gameSession === null) {
             return;
         }
@@ -510,6 +435,9 @@ export class GamePlayScene extends Scene {
             moves: this.gameSession.moves,
             stars,
         });
+
+        // Show Ad before completing level
+        await this.showAd();
 
         // Transition to completion scene
         this.scene.start(SCENE_KEYS.LEVEL_COMPLETE, {

@@ -653,6 +653,30 @@ async checkMatch(): Promise<void> {
         "twoStars": 8,
         "oneStar": 12
       }
+    },
+    {
+      "id": "animals-2",
+      "difficulty": "EASY",
+      "rows": 3,
+      "cols": 2,
+      "pairCount": 3,
+      "starThresholds": {
+        "threeStars": 8,
+        "twoStars": 12,
+        "oneStar": 16
+      }
+    },
+    {
+      "id": "animals-3",
+      "difficulty": "MEDIUM",
+      "rows": 4,
+      "cols": 3,
+      "pairCount": 6,
+      "starThresholds": {
+        "threeStars": 12,
+        "twoStars": 18,
+        "oneStar": 24
+      }
     }
   ]
 }
@@ -993,10 +1017,10 @@ Proje başarıyla tamamlandı ve temel oyun mekaniği çalışır durumda. Clean
 
 ### Başarılar
 ✅ **Varlık (Asset) Yönetimi**: Vite uyumlu `public` klasörü yapısı ile resimlerin yüklenememe sorunu kökten çözüldü.
-✅ **Reklam Modeli**: Oyunun altına (footer) standart banner reklam alanı başarıyla entegre edildi.
+✅ **Reklam Modeli**: Oyunun altına (footer) standart banner reklam alanı ve oyun içi/seviye sonu geçiş reklamları (interstitial) entegre edildi.
 ✅ **TypeScript & Lint**: Tüm kod tabanı strict TypeScript kurallarına göre temizlendi ve lint hataları giderildi.
 ✅ **SOLID & Temiz Kod**: Mimari, kolay genişletilebilir ve modüler hale getirildi.
-✅ **Can Hakkı & Video Reklam Sistemi**: Oyuna yanlış hamleler için can sınırı ve canlar bittiğinde ödüllü video reklam (simüle) izleyerek devam etme özelliği eklendi.
+✅ **Eğitici Oyun Modeli**: Ceza/Can sistemi kaldırılarak çocukların kesintisiz oynaması sağlandı. Reklam stratejisi (3 eşleşme ve seviye sonu) eğitici akışı bozmayacak şekilde güncellendi.
 ✅ **9 Toplam Kategori**: Uzay, Deniz, Dinozorlar, Duygular, Meslekler ve Şekiller dahil 6 yeni kategori eklenerek içerik çeşitliliği artırıldı.
 ✅ **Gelişmiş Seviye Sistemi**: Her kategori için farklı zorluk seviyeleri ve yıldız gereksinimleri tanımlandı.
 ✅ **Mobil & Play Store Optimizasyonu**: `manifest.json` ve `sw.js` (Service Worker) ile PWA desteği eklendi.

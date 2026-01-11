@@ -80,4 +80,19 @@ export class AdService {
             }, 2000);
         });
     }
+
+    /**
+     * Shows an interstitial ad
+     */
+    public async showInterstitialAd(): Promise<void> {
+        console.log('AdService: Showing Interstitial Ad...');
+        this.analyticsService.trackEvent(AnalyticsEventType.AD_SHOW, { type: AdType.INTERSTITIAL });
+
+        // Simulate ad
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve();
+            }, 1000);
+        });
+    }
 }
