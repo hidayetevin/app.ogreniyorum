@@ -27,6 +27,7 @@ export class CategorySelectionScene extends Scene {
     private maxScroll: number = 0;
     private startPointerY: number = 0;
     private loadingOverlay: LoadingOverlay | null = null;
+    private isLoading: boolean = false;
 
     constructor() {
         super({ key: SCENE_KEYS.CATEGORY_SELECTION });
@@ -288,6 +289,12 @@ export class CategorySelectionScene extends Scene {
      * Selects a category and shows its levels
      */
     private async selectCategory(category: ICategory): Promise<void> {
+        // Prevent multiple clicks
+        if (this.isLoading) {
+            return;
+        }
+        this.isLoading = true;
+
         const name = this.localizationService.translate(category.nameKey);
         const lang = this.localizationService.getCurrentLanguage();
         void this.audioService.speak(name, lang === 'tr' ? 'tr-TR' : 'en-US');
@@ -324,6 +331,7 @@ export class CategorySelectionScene extends Scene {
         } catch (error) {
             console.error('[CategorySelection] Failed to load assets:', error);
             this.loadingOverlay.hide();
+            this.isLoading = false; // Reset to allow retry
             // Could show error message to user here
         }
     }

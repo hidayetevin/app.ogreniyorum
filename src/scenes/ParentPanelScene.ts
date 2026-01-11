@@ -56,7 +56,7 @@ export class ParentPanelScene extends Scene {
         });
 
         // Statistics panel
-        this.createStatsPanel(centerX, centerY - 100, {
+        this.createStatsPanel(centerX, centerY - 200, {
             totalStars: progress.totalStars,
             maxStars: totalPossibleStars,
             levelsCompleted: progress.levelsCompleted,
@@ -69,8 +69,8 @@ export class ParentPanelScene extends Scene {
             totalAchievements: this.achievementService.getAllAchievements().length,
         });
 
-        // Category performance
-        this.createCategoryPerformance(centerX, centerY + 100, categories, progress);
+        // Category performance (moved down)
+        this.createCategoryPerformance(centerX, centerY + 150, categories, progress);
 
         // Reset button
         new Button(this, {

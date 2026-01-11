@@ -45,10 +45,10 @@ export class MainMenuScene extends Scene {
         // Title
         const title = this.add.text(
             centerX,
-            centerY - 200,
+            centerY - 300,
             this.localizationService.translate('app.title'),
             {
-                fontSize: '64px',
+                fontSize: '54px',
                 color: COLORS.TEXT_LIGHT,
                 fontFamily: 'Arial, sans-serif',
                 fontStyle: 'bold',

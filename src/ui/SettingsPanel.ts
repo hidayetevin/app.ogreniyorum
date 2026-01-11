@@ -3,18 +3,15 @@ import { Button } from './Button';
 import { AudioService } from '@core/AudioService';
 import { LocalizationService } from '@core/LocalizationService';
 import { StorageService } from '@core/StorageService';
-import { ThemeService } from '@core/ThemeService';
 import { Language } from '../types/models';
 
 export class SettingsPanel extends Phaser.GameObjects.Container {
     private audioService: AudioService;
     private localizationService: LocalizationService;
     private storageService: StorageService;
-    private themeService: ThemeService;
 
     private musicButton!: Button;
     private soundButton!: Button;
-    private themeButton!: Button;
 
     constructor(scene: Phaser.Scene) {
         super(scene, 0, 0);
@@ -22,7 +19,6 @@ export class SettingsPanel extends Phaser.GameObjects.Container {
         this.audioService = AudioService.getInstance();
         this.localizationService = LocalizationService.getInstance();
         this.storageService = StorageService.getInstance();
-        this.themeService = ThemeService.getInstance();
 
         this.setDepth(Z_INDEX.OVERLAY);
         this.setVisible(false);
@@ -86,19 +82,7 @@ export class SettingsPanel extends Phaser.GameObjects.Container {
         });
         this.add(this.soundButton);
 
-        // 6. Theme Toggle
-        this.themeButton = new Button(this.scene, {
-            x: panelX,
-            y: panelY + 80,
-            width: 300,
-            height: 70,
-            text: this.getThemeText(),
-            backgroundColor: COLORS.PRIMARY,
-            onClick: () => this.toggleTheme()
-        });
-        this.add(this.themeButton);
-
-        // 7. Close Button
+        // Close Button
         const closeButton = new Button(this.scene, {
             x: panelX,
             y: panelY + 220,
@@ -153,13 +137,6 @@ export class SettingsPanel extends Phaser.GameObjects.Container {
         this.refreshState();
     }
 
-    private toggleTheme(): void {
-        this.themeService.toggleTheme();
-        this.refreshState();
-        // Notify user to restart scene for full theme application
-        // (In a real app, you'd update all colors dynamically)
-    }
-
     private getMusicText(): string {
         const status = this.audioService.isMusicEnabled() ? 'AÇIK' : 'KAPALI';
         return `Müzik: ${status}`;
@@ -170,21 +147,12 @@ export class SettingsPanel extends Phaser.GameObjects.Container {
         return `Ses Efektleri: ${status}`;
     }
 
-    private getThemeText(): string {
-        const isDark = this.themeService.isDark();
-        const icon = isDark ? '🌙' : '🌞';
-        const text = isDark ? 'Karanlık' : 'Aydınlık';
-        return `${icon} Tema: ${text}`;
-    }
-
     private refreshState(): void {
         this.musicButton.setText(this.getMusicText());
         this.musicButton.setBackgroundColor(this.audioService.isMusicEnabled() ? COLORS.SUCCESS : COLORS.DISABLED);
 
         this.soundButton.setText(this.getSoundText());
         this.soundButton.setBackgroundColor(this.audioService.isSoundEnabled() ? COLORS.SUCCESS : COLORS.DISABLED);
-
-        this.themeButton.setText(this.getThemeText());
     }
 
     private saveSettings(): void {
