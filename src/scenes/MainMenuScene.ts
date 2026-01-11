@@ -6,6 +6,7 @@ import { AudioService } from '@core/AudioService';
 import { SettingsPanel } from '@ui/SettingsPanel';
 import { ProgressBar } from '@ui/ProgressBar';
 import { StatsPanel } from '@ui/StatsPanel';
+import { ParentGate } from '@ui/ParentGate';
 import { StorageService } from '@core/StorageService';
 import { LevelService } from '@core/LevelService';
 import { Language } from '../types/models';
@@ -21,6 +22,7 @@ export class MainMenuScene extends Scene {
     private settingsPanel!: SettingsPanel;
     private progressBar!: ProgressBar;
     private statsPanel!: StatsPanel;
+    private parentGate!: ParentGate;
 
     constructor() {
         super({ key: SCENE_KEYS.MAIN_MENU });
@@ -128,6 +130,19 @@ export class MainMenuScene extends Scene {
         // Initialize Settings Panel
         this.settingsPanel = new SettingsPanel(this);
 
+        // Initialize Parent Gate
+        this.parentGate = new ParentGate(
+            this,
+            () => {
+                // Success - open parent panel
+                this.scene.start(SCENE_KEYS.PARENT_PANEL);
+            },
+            () => {
+                // Fail - do nothing
+                console.log('Parent gate failed');
+            }
+        );
+
         // Language Button (Top Right)
         const currentLang = this.localizationService.getCurrentLanguage();
         new Button(this, {
@@ -172,8 +187,7 @@ export class MainMenuScene extends Scene {
      * Opens parent panel
      */
     private openParentPanel(): void {
-        // TODO: Implement parent panel
-        console.warn('Parent panel not yet implemented');
+        this.parentGate.show();
     }
 
     /**

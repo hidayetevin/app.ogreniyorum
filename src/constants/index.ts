@@ -92,6 +92,7 @@ export const SCENE_KEYS = {
     CATEGORY_SELECTION: 'CategorySelectionScene',
     GAME_PLAY: 'GamePlayScene',
     LEVEL_COMPLETE: 'LevelCompleteScene',
+    PARENT_PANEL: 'ParentPanelScene',
 } as const;
 
 /**
@@ -102,6 +103,7 @@ export const STORAGE_KEYS = {
     PROGRESS: 'game-progress',
     ANALYTICS: 'game-analytics',
     ACHIEVEMENTS: 'game-achievements',
+    THEME: 'game-theme',
 } as const;
 
 import { Language } from '../types/models';
