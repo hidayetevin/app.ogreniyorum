@@ -4,6 +4,10 @@ import { Button } from '@ui/Button';
 import { LocalizationService } from '@core/LocalizationService';
 import { AudioService } from '@core/AudioService';
 import { SettingsPanel } from '@ui/SettingsPanel';
+import { ProgressBar } from '@ui/ProgressBar';
+import { StatsPanel } from '@ui/StatsPanel';
+import { StorageService } from '@core/StorageService';
+import { LevelService } from '@core/LevelService';
 import { Language } from '../types/models';
 
 /**
@@ -12,12 +16,18 @@ import { Language } from '../types/models';
 export class MainMenuScene extends Scene {
     private localizationService: LocalizationService;
     private audioService: AudioService;
+    private storageService: StorageService;
+    private levelService: LevelService;
     private settingsPanel!: SettingsPanel;
+    private progressBar!: ProgressBar;
+    private statsPanel!: StatsPanel;
 
     constructor() {
         super({ key: SCENE_KEYS.MAIN_MENU });
         this.localizationService = LocalizationService.getInstance();
         this.audioService = AudioService.getInstance();
+        this.storageService = StorageService.getInstance();
+        this.levelService = LevelService.getInstance();
     }
 
     /**
@@ -57,10 +67,13 @@ export class MainMenuScene extends Scene {
         );
         subtitle.setOrigin(0.5);
 
-        // Play button
+        // Progress tracking UI (moved above buttons)
+        this.createProgressUI(centerX, centerY - 280);
+
+        // Play button (moved down)
         new Button(this, {
             x: centerX,
-            y: centerY,
+            y: centerY + 80,
             width: 300,
             height: 80,
             text: this.localizationService.translate('menu.play'),
@@ -71,10 +84,10 @@ export class MainMenuScene extends Scene {
             },
         });
 
-        // Settings button
+        // Settings button (moved down)
         new Button(this, {
             x: centerX,
-            y: centerY + 100,
+            y: centerY + 180,
             width: 300,
             height: 80,
             text: this.localizationService.translate('menu.settings'),
@@ -85,10 +98,10 @@ export class MainMenuScene extends Scene {
             },
         });
 
-        // Parent panel button
+        // Parent panel button (moved down)
         new Button(this, {
             x: centerX,
-            y: centerY + 200,
+            y: centerY + 280,
             width: 300,
             height: 80,
             text: this.localizationService.translate('menu.parent'),
@@ -161,5 +174,35 @@ export class MainMenuScene extends Scene {
     private openParentPanel(): void {
         // TODO: Implement parent panel
         console.warn('Parent panel not yet implemented');
+    }
+
+    /**
+     * Creates progress tracking UI
+     */
+    private createProgressUI(centerX: number, centerY: number): void {
+        const progress = this.storageService.loadProgress();
+        const categories = this.levelService.getCategories();
+
+        // Calculate total possible stars
+        let totalPossibleStars = 0;
+        categories.forEach(category => {
+            totalPossibleStars += category.levels.length * 3; // 3 stars per level
+        });
+
+        // Create progress bar
+        this.progressBar = new ProgressBar(this, centerX - 200, centerY + 80, 400, 30);
+        this.progressBar.updateProgress(progress.totalStars, totalPossibleStars, false);
+
+        // Create stats panel
+        this.statsPanel = new StatsPanel(this, centerX - 200, centerY + 130, 400);
+        this.statsPanel.updateStats({
+            totalStars: progress.totalStars,
+            maxStars: totalPossibleStars,
+            levelsCompleted: progress.levelsCompleted,
+            totalLevels: categories.reduce((sum, cat) => sum + cat.levels.length, 0),
+            categoriesUnlocked: progress.unlockedCategories.length,
+            totalCategories: categories.length,
+            currentStreak: progress.currentStreak,
+        });
     }
 }

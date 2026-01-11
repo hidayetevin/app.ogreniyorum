@@ -126,6 +126,9 @@ export class StorageService implements IStorageService {
         progress.levelsCompleted = completedLevels.length;
         progress.totalStars = completedLevels.reduce((sum, lp) => sum + lp.stars, 0);
 
+        // Update streak
+        this.updateStreak(progress);
+
         this.saveProgress(progress);
     }
 
@@ -166,5 +169,66 @@ export class StorageService implements IStorageService {
         }
 
         return false;
+    }
+
+    /**
+     * Updates the current streak based on last played date
+     */
+    private updateStreak(progress: IProgress): void {
+        const today = new Date().toISOString().split('T')[0] as string; // YYYY-MM-DD
+        const lastPlayed = progress.lastPlayedDate;
+
+        if (!lastPlayed || lastPlayed === '') {
+            // First time playing
+            progress.currentStreak = 1;
+            progress.lastPlayedDate = today;
+            return;
+        }
+
+        if (lastPlayed === today) {
+            // Already played today, no change
+            return;
+        }
+
+        // Calculate days difference
+        const lastDate = new Date(lastPlayed);
+        const todayDate = new Date(today);
+        const diffTime = todayDate.getTime() - lastDate.getTime();
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 1) {
+            // Consecutive day
+            progress.currentStreak++;
+        } else if (diffDays > 1) {
+            // Streak broken
+            progress.currentStreak = 1;
+        }
+
+        progress.lastPlayedDate = today;
+    }
+
+    /**
+     * Adds play time to total
+     */
+    public addPlayTime(milliseconds: number): void {
+        const progress = this.loadProgress();
+        progress.totalPlayTime += milliseconds;
+        this.saveProgress(progress);
+    }
+
+    /**
+     * Gets formatted play time
+     */
+    public getFormattedPlayTime(): string {
+        const progress = this.loadProgress();
+        const totalMs = progress.totalPlayTime;
+
+        const hours = Math.floor(totalMs / (1000 * 60 * 60));
+        const minutes = Math.floor((totalMs % (1000 * 60 * 60)) / (1000 * 60));
+
+        if (hours > 0) {
+            return `${hours}s ${minutes}d`;
+        }
+        return `${minutes}d`;
     }
 }

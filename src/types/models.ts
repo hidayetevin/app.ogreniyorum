@@ -126,6 +126,9 @@ export interface IProgress {
     levelsCompleted: number;
     levelProgress: Record<string, ILevelProgress>; // levelId -> progress
     unlockedCategories: string[]; // category IDs
+    currentStreak: number; // Consecutive days played
+    lastPlayedDate: string; // ISO date string (YYYY-MM-DD)
+    totalPlayTime: number; // Total play time in milliseconds
 }
 
 /**
@@ -173,4 +176,47 @@ export enum FeedbackType {
     CARD_FLIP = 'CARD_FLIP',
     LEVEL_COMPLETE = 'LEVEL_COMPLETE',
     BUTTON_CLICK = 'BUTTON_CLICK',
+}
+
+/**
+ * Achievement condition types
+ */
+export enum AchievementConditionType {
+    COMPLETE_LEVEL = 'COMPLETE_LEVEL',
+    EARN_THREE_STARS = 'EARN_THREE_STARS',
+    COLLECT_STARS = 'COLLECT_STARS',
+    COMPLETE_CATEGORY = 'COMPLETE_CATEGORY',
+    FAST_MATCH = 'FAST_MATCH',
+    STREAK_DAYS = 'STREAK_DAYS',
+    COMPLETE_LEVELS = 'COMPLETE_LEVELS',
+    COMPLETE_ALL_CATEGORIES = 'COMPLETE_ALL_CATEGORIES',
+}
+
+/**
+ * Achievement condition
+ */
+export interface IAchievementCondition {
+    type: AchievementConditionType;
+    value: number;
+}
+
+/**
+ * Achievement definition
+ */
+export interface IAchievement {
+    id: string;
+    nameKey: string;
+    descriptionKey: string;
+    iconEmoji: string;
+    condition: IAchievementCondition;
+    reward: number; // Bonus stars
+}
+
+/**
+ * Achievement progress tracking
+ */
+export interface IAchievementProgress {
+    unlockedAchievements: string[]; // Achievement IDs
+    totalBonusStars: number;
+    lastUnlockedAt?: number; // Timestamp
 }

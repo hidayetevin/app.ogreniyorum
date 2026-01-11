@@ -101,6 +101,7 @@ export const STORAGE_KEYS = {
     SETTINGS: 'game-settings',
     PROGRESS: 'game-progress',
     ANALYTICS: 'game-analytics',
+    ACHIEVEMENTS: 'game-achievements',
 } as const;
 
 import { Language } from '../types/models';
@@ -124,6 +125,9 @@ export const DEFAULT_PROGRESS = {
     levelsCompleted: 0,
     levelProgress: {},
     unlockedCategories: [] as string[],
+    currentStreak: 0,
+    lastPlayedDate: '',
+    totalPlayTime: 0,
 };
 
 /**

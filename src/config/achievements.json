@@ -1,0 +1,112 @@
+[
+    {
+        "id": "first_step",
+        "nameKey": "achievement.first_step.name",
+        "descriptionKey": "achievement.first_step.description",
+        "iconEmoji": "🎯",
+        "condition": {
+            "type": "COMPLETE_LEVEL",
+            "value": 1
+        },
+        "reward": 5
+    },
+    {
+        "id": "perfect_memory",
+        "nameKey": "achievement.perfect_memory.name",
+        "descriptionKey": "achievement.perfect_memory.description",
+        "iconEmoji": "⭐",
+        "condition": {
+            "type": "EARN_THREE_STARS",
+            "value": 1
+        },
+        "reward": 10
+    },
+    {
+        "id": "star_collector_10",
+        "nameKey": "achievement.star_collector_10.name",
+        "descriptionKey": "achievement.star_collector_10.description",
+        "iconEmoji": "🌟",
+        "condition": {
+            "type": "COLLECT_STARS",
+            "value": 10
+        },
+        "reward": 10
+    },
+    {
+        "id": "star_collector_50",
+        "nameKey": "achievement.star_collector_50.name",
+        "descriptionKey": "achievement.star_collector_50.description",
+        "iconEmoji": "💫",
+        "condition": {
+            "type": "COLLECT_STARS",
+            "value": 50
+        },
+        "reward": 25
+    },
+    {
+        "id": "category_master",
+        "nameKey": "achievement.category_master.name",
+        "descriptionKey": "achievement.category_master.description",
+        "iconEmoji": "🏆",
+        "condition": {
+            "type": "COMPLETE_CATEGORY",
+            "value": 1
+        },
+        "reward": 50
+    },
+    {
+        "id": "speed_demon",
+        "nameKey": "achievement.speed_demon.name",
+        "descriptionKey": "achievement.speed_demon.description",
+        "iconEmoji": "⚡",
+        "condition": {
+            "type": "FAST_MATCH",
+            "value": 5
+        },
+        "reward": 15
+    },
+    {
+        "id": "dedicated_player",
+        "nameKey": "achievement.dedicated_player.name",
+        "descriptionKey": "achievement.dedicated_player.description",
+        "iconEmoji": "🔥",
+        "condition": {
+            "type": "STREAK_DAYS",
+            "value": 3
+        },
+        "reward": 20
+    },
+    {
+        "id": "week_warrior",
+        "nameKey": "achievement.week_warrior.name",
+        "descriptionKey": "achievement.week_warrior.description",
+        "iconEmoji": "💪",
+        "condition": {
+            "type": "STREAK_DAYS",
+            "value": 7
+        },
+        "reward": 50
+    },
+    {
+        "id": "level_master",
+        "nameKey": "achievement.level_master.name",
+        "descriptionKey": "achievement.level_master.description",
+        "iconEmoji": "🎓",
+        "condition": {
+            "type": "COMPLETE_LEVELS",
+            "value": 10
+        },
+        "reward": 30
+    },
+    {
+        "id": "completionist",
+        "nameKey": "achievement.completionist.name",
+        "descriptionKey": "achievement.completionist.description",
+        "iconEmoji": "👑",
+        "condition": {
+            "type": "COMPLETE_ALL_CATEGORIES",
+            "value": 1
+        },
+        "reward": 100
+    }
+]
