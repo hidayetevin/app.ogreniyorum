@@ -1756,6 +1756,61 @@ Proje başarıyla tamamlandı ve temel oyun mekaniği çalışır durumda. Clean
 ✅ **AdMob Entegrasyonu** (11 Ocak 2026): Gerçek AdMob SDK entegrasyonu tamamlandı. Tüm sahnelerde banner reklamlar aktif edildi, oyun sonlarında tam ekran reklamlar gösteriliyor. Layout kayma sorunları CSS padding ile giderildi.
 ✅ **Hücresel Veri Odaklı Tasarım**: Asset yönetimi ve sahneler arası veri aktarımı düşük gecikme için optimize edildi.
 
+### Kritik Bug Düzeltmeleri (13 Ocak 2026)
+
+#### 1. Kart Eşleştirme Algoritması Hatası
+**Sorun:** Oyunda bazı kartların eşi olmadığı tespit edildi. Kullanıcılar eşleşmeyen tekil kartlarla karşılaşıyordu.
+
+**Kök Neden:** `GamePlayScene.ts` içinde kart seçim mantığında hata vardı:
+```typescript
+// HATALI KOD (satır 167)
+const selectedImages = imagePaths.slice(0, pairCount);
+// Bu sadece ilk pairCount kadar resmi alıyordu, rastgele seçim yapmıyordu
+```
+
+**Çözüm:** Kart seçim algoritması yeniden yazıldı:
+```typescript
+// DÜZELTİLMİŞ KOD
+const shuffledPaths = shuffle([...imagePaths]);  // Önce karıştır
+const selectedImages = shuffledPaths.slice(0, pairCount);  // Sonra seç
+const cardData = createPairs(selectedImages);  // Her resim tam 2 kez
+const shuffledData = shuffle(cardData);  // Pozisyonları karıştır
+```
+
+**Garanti:** Artık her resmin **tam olarak 1 eşi** var. Örnek:
+- 3 pair gerekiyorsa → 3 farklı resim seçilir → 6 kart oluşturulur (her resim 2 kez)
+- Eşsiz kart kalmaz
+
+**Etkilenen Dosyalar:**
+- `src/scenes/GamePlayScene.ts` (satır 163-184)
+
+#### 2. Card.ts Tween Crash Hatası
+**Sorun:** Kart animasyonları sırasında `Cannot read properties of undefined (reading 'tweens')` hatası alınıyordu.
+
+**Kök Neden:** Kart destroy edildikten veya scene hazır olmadan önce `this.scene.tweens` çağrılıyordu.
+
+**Çözüm:** Tüm tween kullanımlarına null-safety kontrolleri eklendi:
+```typescript
+// playFlipAnimation içinde
+if (!this.scene || !this.scene.tweens) {
+    console.warn('Card: Scene or tweens not available');
+    resolve();
+    return;
+}
+```
+
+**Etkilenen Metodlar:**
+- `playFlipAnimation()` - İki aşamalı kontrol
+- `onHover()` - Early return
+- `onHoverEnd()` - Early return  
+- `setMatched()` - Conditional execution
+- `destroy()` - Safe cleanup
+
+**Etkilenen Dosyalar:**
+- `src/ui/Card.ts` (satır 84, 96, 152, 165, 190, 243)
+
+**Test Sonucu:** Artık oyun akışı kesintisiz çalışıyor, kart animasyonları stabil.
+
 ### Sonraki Adımlar
 1. **Asset Üretimi (Quota Reset Sonrası)**: Yeni eklenen 6 kategori için özgün görsel asset'lerin üretilmesi.
 2. **Gerçek Reklam SDK Entegrasyonu**: AdMob veya benzeri bir SDK'nın AdService üzerinden canlıya alınması.
@@ -1765,6 +1820,6 @@ Proje başarıyla tamamlandı ve temel oyun mekaniği çalışır durumda. Clean
 
 ---
 
-**Proje Durumu:** ✅ MVP + Performans + UX + Mobil + AdMob Tamamlandı
-**Son Güncelleme:** 11 Ocak 2026
-**Versiyon:** 1.4.0
+**Proje Durumu:** ✅ MVP + Performans + UX + Mobil + AdMob + Bug Fixes Tamamlandı
+**Son Güncelleme:** 13 Ocak 2026
+**Versiyon:** 1.4.1

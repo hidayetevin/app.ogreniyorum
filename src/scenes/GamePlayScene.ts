@@ -163,12 +163,25 @@ export class GamePlayScene extends Scene {
         const { rows, cols, pairCount, imagePaths } = this.currentLevel;
         console.log(`[DEBUG] Creating Grid: ${rows} rows x ${cols} cols`);
 
-        // Select random images for this level
-        const selectedImages = imagePaths.slice(0, pairCount);
+        const totalCards = rows * cols;
 
-        // Create pairs and shuffle
+        // Ensure we have enough images for the number of cards needed
+        // Each pair needs 1 image, so we need pairCount images
+        if (pairCount > imagePaths.length) {
+            console.error(`Not enough images! Need ${pairCount} images but only have ${imagePaths.length}`);
+        }
+
+        // Select exactly pairCount images randomly from available images
+        const shuffledPaths = shuffle([...imagePaths]);
+        const selectedImages = shuffledPaths.slice(0, pairCount);
+
+        // Create pairs (each image appears exactly twice)
         const cardData = createPairs(selectedImages);
+
+        // Shuffle the pairs for random positioning
         const shuffledData = shuffle(cardData);
+
+        console.log(`[DEBUG] Total cards needed: ${totalCards}, Pairs: ${pairCount}, Generated cards: ${shuffledData.length}`);
 
         // --- Dynamic Scaling for Portrait ---
         // Available space
