@@ -81,6 +81,8 @@ export class Card extends Phaser.GameObjects.Container {
      * Hover effect
      */
     private onHover(): void {
+        if (!this.scene || !this.scene.tweens) return;
+
         this.scene.tweens.add({
             targets: this,
             scale: 1.05,
@@ -93,6 +95,8 @@ export class Card extends Phaser.GameObjects.Container {
      * Hover end effect
      */
     private onHoverEnd(): void {
+        if (!this.scene || !this.scene.tweens) return;
+
         this.scene.tweens.add({
             targets: this,
             scale: 1,
@@ -148,6 +152,13 @@ export class Card extends Phaser.GameObjects.Container {
      */
     private playFlipAnimation(showFront: boolean): Promise<void> {
         return new Promise((resolve) => {
+            // Check if scene and tweens are available
+            if (!this.scene || !this.scene.tweens) {
+                console.warn('Card: Scene or tweens not available for flip animation');
+                resolve();
+                return;
+            }
+
             // First half: scale down
             this.scene.tweens.add({
                 targets: this,
@@ -159,6 +170,12 @@ export class Card extends Phaser.GameObjects.Container {
                     this.backRect.setVisible(!showFront);
                     if (this.frontImage !== null) {
                         this.frontImage.setVisible(showFront);
+                    }
+
+                    // Check again before second half
+                    if (!this.scene || !this.scene.tweens) {
+                        resolve();
+                        return;
                     }
 
                     // Second half: scale up
@@ -187,12 +204,14 @@ export class Card extends Phaser.GameObjects.Container {
         this.feedbackService.showGlow(this as unknown as Phaser.GameObjects.GameObject);
 
         // Fade out slightly
-        this.scene.tweens.add({
-            targets: this,
-            alpha: 0.7,
-            duration: ANIMATION_DURATION.CARD_MATCH,
-            ease: 'Power2',
-        });
+        if (this.scene && this.scene.tweens) {
+            this.scene.tweens.add({
+                targets: this,
+                alpha: 0.7,
+                duration: ANIMATION_DURATION.CARD_MATCH,
+                ease: 'Power2',
+            });
+        }
     }
 
     /**
@@ -240,7 +259,9 @@ export class Card extends Phaser.GameObjects.Container {
         this.backRect.off('pointerdown');
 
         // Kill any tweens targeting this card
-        this.scene.tweens.killTweensOf(this);
+        if (this.scene && this.scene.tweens) {
+            this.scene.tweens.killTweensOf(this);
+        }
 
         // Destroy front image if it exists
         if (this.frontImage !== null) {
