@@ -12,6 +12,8 @@ export class Card extends Phaser.GameObjects.Container {
     private frontImage: Phaser.GameObjects.Image | null = null;
     private backRect: Phaser.GameObjects.Rectangle;
     private feedbackService: FeedbackService;
+    private label: string;
+    private textObj: Phaser.GameObjects.Text | null = null;
     private isFlipping: boolean = false;
 
     constructor(
@@ -20,12 +22,14 @@ export class Card extends Phaser.GameObjects.Container {
         y: number,
         pairId: string,
         imagePath: string,
+        label: string,
         size: number = GRID_CONFIG.CARD_WIDTH
     ) {
         super(scene, x, y);
 
         this.pairId = pairId;
         this.imagePath = imagePath;
+        this.label = label;
         this.cardState = CardState.FACE_DOWN;
         this.feedbackService = FeedbackService.getInstance();
 
@@ -55,9 +59,6 @@ export class Card extends Phaser.GameObjects.Container {
      */
     private setupInteractivity(): void {
         this.backRect.setInteractive({ useHandCursor: true });
-
-        // Hit area for the entire card container should match the rect
-        // No need to manually define since we use backRect.setInteractive
 
         this.backRect.on('pointerover', () => {
             if (this.cardState === CardState.FACE_DOWN && !this.isFlipping) {
@@ -105,6 +106,8 @@ export class Card extends Phaser.GameObjects.Container {
         });
     }
 
+    // ... (interactivity methods remain same)
+
     /**
      * Flips the card to show front
      */
@@ -118,11 +121,37 @@ export class Card extends Phaser.GameObjects.Container {
 
         // Load image if not already loaded
         if (this.frontImage === null) {
+            // Add image
             this.frontImage = this.scene.add.image(0, 0, this.imagePath);
             const size = this.backRect.width;
-            this.frontImage.setDisplaySize(size - (size * 0.1), size - (size * 0.1));
+
+            // Limit image size
+            this.frontImage.setDisplaySize(size - 20, size - 20);
             this.frontImage.setVisible(false);
             this.add(this.frontImage);
+
+            // Add text (label) at the bottom or center
+            // Use a semi-transparent background for readability
+            const textBg = this.scene.add.rectangle(0, size / 2 - 20, size - 10, 30, 0xffffff, 0.8);
+            textBg.setOrigin(0.5);
+
+            this.textObj = this.scene.add.text(0, size / 2 - 20, this.label, {
+                fontSize: '16px',
+                color: '#000000',
+                fontFamily: 'Arial',
+                fontStyle: 'bold',
+                align: 'center',
+                wordWrap: { width: size - 20 }
+            });
+            this.textObj.setOrigin(0.5);
+
+            this.textObj.setVisible(false);
+            textBg.setVisible(false);
+
+            // Store reference to background to toggle visibility
+            this.textObj.setData('bg', textBg);
+            this.add(textBg);
+            this.add(this.textObj);
         }
 
         // Flip animation
@@ -170,6 +199,11 @@ export class Card extends Phaser.GameObjects.Container {
                     this.backRect.setVisible(!showFront);
                     if (this.frontImage !== null) {
                         this.frontImage.setVisible(showFront);
+                    }
+                    if (this.textObj !== null) {
+                        this.textObj.setVisible(showFront);
+                        const bg = this.textObj.getData('bg');
+                        if (bg) bg.setVisible(showFront);
                     }
 
                     // Check again before second half
@@ -267,6 +301,14 @@ export class Card extends Phaser.GameObjects.Container {
         if (this.frontImage !== null) {
             this.frontImage.destroy();
             this.frontImage = null;
+        }
+
+        // Destroy text object if it exists
+        if (this.textObj !== null) {
+            const bg = this.textObj.getData('bg');
+            if (bg) bg.destroy();
+            this.textObj.destroy();
+            this.textObj = null;
         }
 
         // Destroy back rectangle

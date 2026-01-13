@@ -31,7 +31,7 @@
                 "id": "animals-2",
                 "categoryId": "animals",
                 "levelNumber": 2,
-                "difficulty": "EASY",
+                "difficulty": "MEDIUM",
                 "rows": 3,
                 "cols": 2,
                 "pairCount": 3,
@@ -50,14 +50,14 @@
                 "id": "animals-3",
                 "categoryId": "animals",
                 "levelNumber": 3,
-                "difficulty": "MEDIUM",
+                "difficulty": "HARD",
                 "rows": 4,
                 "cols": 3,
                 "pairCount": 6,
                 "starThresholds": {
-                    "threeStars": 12,
-                    "twoStars": 18,
-                    "oneStar": 24
+                    "threeStars": 14,
+                    "twoStars": 20,
+                    "oneStar": 28
                 },
                 "imagePaths": [
                     "/assets/images/animals/1.png",
@@ -107,13 +107,32 @@
                 "categoryId": "fruits",
                 "levelNumber": 2,
                 "difficulty": "MEDIUM",
+                "rows": 3,
+                "cols": 2,
+                "pairCount": 3,
+                "starThresholds": {
+                    "threeStars": 8,
+                    "twoStars": 12,
+                    "oneStar": 16
+                },
+                "imagePaths": [
+                    "/assets/images/fruits/apple.png",
+                    "/assets/images/fruits/banana.png",
+                    "/assets/images/fruits/orange.png"
+                ]
+            },
+            {
+                "id": "fruits-3",
+                "categoryId": "fruits",
+                "levelNumber": 3,
+                "difficulty": "HARD",
                 "rows": 4,
                 "cols": 3,
                 "pairCount": 6,
                 "starThresholds": {
-                    "threeStars": 12,
-                    "twoStars": 18,
-                    "oneStar": 24
+                    "threeStars": 14,
+                    "twoStars": 20,
+                    "oneStar": 28
                 },
                 "imagePaths": [
                     "/assets/images/fruits/apple.png",
@@ -125,11 +144,7 @@
                     "/assets/images/fruits/pear.png",
                     "/assets/images/fruits/pineapple.png",
                     "/assets/images/fruits/cherry.png",
-                    "/assets/images/fruits/kiwi.png",
-                    "/assets/images/fruits/mango.png",
-                    "/assets/images/fruits/peach.png",
-                    "/assets/images/fruits/plum.png",
-                    "/assets/images/fruits/melon.png"
+                    "/assets/images/fruits/kiwi.png"
                 ]
             }
         ]
@@ -149,6 +164,24 @@
                 "categoryId": "vehicles",
                 "levelNumber": 1,
                 "difficulty": "EASY",
+                "rows": 2,
+                "cols": 2,
+                "pairCount": 2,
+                "starThresholds": {
+                    "threeStars": 6,
+                    "twoStars": 8,
+                    "oneStar": 12
+                },
+                "imagePaths": [
+                    "/assets/images/vehicles/car.png",
+                    "/assets/images/vehicles/bus.png"
+                ]
+            },
+            {
+                "id": "vehicles-2",
+                "categoryId": "vehicles",
+                "levelNumber": 2,
+                "difficulty": "MEDIUM",
                 "rows": 3,
                 "cols": 2,
                 "pairCount": 3,
@@ -164,17 +197,17 @@
                 ]
             },
             {
-                "id": "vehicles-2",
+                "id": "vehicles-3",
                 "categoryId": "vehicles",
-                "levelNumber": 2,
+                "levelNumber": 3,
                 "difficulty": "HARD",
                 "rows": 4,
                 "cols": 3,
-                "pairCount": 8,
+                "pairCount": 6,
                 "starThresholds": {
-                    "threeStars": 16,
-                    "twoStars": 24,
-                    "oneStar": 32
+                    "threeStars": 14,
+                    "twoStars": 20,
+                    "oneStar": 28
                 },
                 "imagePaths": [
                     "/assets/images/vehicles/car.png",
@@ -226,11 +259,30 @@
                 "difficulty": "MEDIUM",
                 "rows": 3,
                 "cols": 2,
+                "pairCount": 3,
+                "starThresholds": {
+                    "threeStars": 8,
+                    "twoStars": 12,
+                    "oneStar": 16
+                },
+                "imagePaths": [
+                    "/assets/images/space/1.png",
+                    "/assets/images/space/2.png",
+                    "/assets/images/space/3.png"
+                ]
+            },
+            {
+                "id": "space-3",
+                "categoryId": "space",
+                "levelNumber": 3,
+                "difficulty": "HARD",
+                "rows": 4,
+                "cols": 3,
                 "pairCount": 6,
                 "starThresholds": {
-                    "threeStars": 12,
-                    "twoStars": 18,
-                    "oneStar": 24
+                    "threeStars": 14,
+                    "twoStars": 20,
+                    "oneStar": 28
                 },
                 "imagePaths": [
                     "/assets/images/space/1.png",
@@ -262,6 +314,24 @@
                 "categoryId": "sea",
                 "levelNumber": 1,
                 "difficulty": "EASY",
+                "rows": 2,
+                "cols": 2,
+                "pairCount": 2,
+                "starThresholds": {
+                    "threeStars": 6,
+                    "twoStars": 8,
+                    "oneStar": 12
+                },
+                "imagePaths": [
+                    "/assets/images/sea/1.png",
+                    "/assets/images/sea/2.png"
+                ]
+            },
+            {
+                "id": "sea-2",
+                "categoryId": "sea",
+                "levelNumber": 2,
+                "difficulty": "MEDIUM",
                 "rows": 3,
                 "cols": 2,
                 "pairCount": 3,
@@ -269,6 +339,25 @@
                     "threeStars": 8,
                     "twoStars": 12,
                     "oneStar": 16
+                },
+                "imagePaths": [
+                    "/assets/images/sea/1.png",
+                    "/assets/images/sea/2.png",
+                    "/assets/images/sea/3.png"
+                ]
+            },
+            {
+                "id": "sea-3",
+                "categoryId": "sea",
+                "levelNumber": 3,
+                "difficulty": "HARD",
+                "rows": 4,
+                "cols": 3,
+                "pairCount": 6,
+                "starThresholds": {
+                    "threeStars": 14,
+                    "twoStars": 20,
+                    "oneStar": 28
                 },
                 "imagePaths": [
                     "/assets/images/sea/1.png",
@@ -299,14 +388,51 @@
                 "id": "dinosaurs-1",
                 "categoryId": "dinosaurs",
                 "levelNumber": 1,
+                "difficulty": "EASY",
+                "rows": 2,
+                "cols": 2,
+                "pairCount": 2,
+                "starThresholds": {
+                    "threeStars": 6,
+                    "twoStars": 8,
+                    "oneStar": 12
+                },
+                "imagePaths": [
+                    "/assets/images/dinosaurs/1.png",
+                    "/assets/images/dinosaurs/2.png"
+                ]
+            },
+            {
+                "id": "dinosaurs-2",
+                "categoryId": "dinosaurs",
+                "levelNumber": 2,
                 "difficulty": "MEDIUM",
+                "rows": 3,
+                "cols": 2,
+                "pairCount": 3,
+                "starThresholds": {
+                    "threeStars": 8,
+                    "twoStars": 12,
+                    "oneStar": 16
+                },
+                "imagePaths": [
+                    "/assets/images/dinosaurs/1.png",
+                    "/assets/images/dinosaurs/2.png",
+                    "/assets/images/dinosaurs/3.png"
+                ]
+            },
+            {
+                "id": "dinosaurs-3",
+                "categoryId": "dinosaurs",
+                "levelNumber": 3,
+                "difficulty": "HARD",
                 "rows": 4,
                 "cols": 3,
                 "pairCount": 6,
                 "starThresholds": {
-                    "threeStars": 12,
-                    "twoStars": 18,
-                    "oneStar": 24
+                    "threeStars": 14,
+                    "twoStars": 20,
+                    "oneStar": 28
                 },
                 "imagePaths": [
                     "/assets/images/dinosaurs/1.png",
@@ -317,8 +443,7 @@
                     "/assets/images/dinosaurs/6.png",
                     "/assets/images/dinosaurs/7.png",
                     "/assets/images/dinosaurs/8.png",
-                    "/assets/images/dinosaurs/9.png",
-                    "/assets/images/dinosaurs/10.png"
+                    "/assets/images/dinosaurs/9.png"
                 ]
             }
         ]
@@ -348,15 +473,7 @@
                 },
                 "imagePaths": [
                     "/assets/images/feelings/1.png",
-                    "/assets/images/feelings/2.png",
-                    "/assets/images/feelings/3.png",
-                    "/assets/images/feelings/4.png",
-                    "/assets/images/feelings/5.png",
-                    "/assets/images/feelings/6.png",
-                    "/assets/images/feelings/7.png",
-                    "/assets/images/feelings/8.png",
-                    "/assets/images/feelings/9.png",
-                    "/assets/images/feelings/10.png"
+                    "/assets/images/feelings/2.png"
                 ]
             }
         ]
@@ -376,6 +493,24 @@
                 "categoryId": "jobs",
                 "levelNumber": 1,
                 "difficulty": "EASY",
+                "rows": 2,
+                "cols": 2,
+                "pairCount": 2,
+                "starThresholds": {
+                    "threeStars": 6,
+                    "twoStars": 8,
+                    "oneStar": 12
+                },
+                "imagePaths": [
+                    "/assets/images/jobs/1.png",
+                    "/assets/images/jobs/2.png"
+                ]
+            },
+            {
+                "id": "jobs-2",
+                "categoryId": "jobs",
+                "levelNumber": 2,
+                "difficulty": "MEDIUM",
                 "rows": 3,
                 "cols": 2,
                 "pairCount": 3,
@@ -387,14 +522,7 @@
                 "imagePaths": [
                     "/assets/images/jobs/1.png",
                     "/assets/images/jobs/2.png",
-                    "/assets/images/jobs/3.png",
-                    "/assets/images/jobs/4.png",
-                    "/assets/images/jobs/5.png",
-                    "/assets/images/jobs/6.png",
-                    "/assets/images/jobs/7.png",
-                    "/assets/images/jobs/8.png",
-                    "/assets/images/jobs/9.png",
-                    "/assets/images/jobs/10.png"
+                    "/assets/images/jobs/3.png"
                 ]
             }
         ]
@@ -421,6 +549,43 @@
                     "threeStars": 6,
                     "twoStars": 8,
                     "oneStar": 12
+                },
+                "imagePaths": [
+                    "/assets/images/shapes/1.png",
+                    "/assets/images/shapes/2.png"
+                ]
+            },
+            {
+                "id": "shapes-2",
+                "categoryId": "shapes",
+                "levelNumber": 2,
+                "difficulty": "MEDIUM",
+                "rows": 3,
+                "cols": 2,
+                "pairCount": 3,
+                "starThresholds": {
+                    "threeStars": 8,
+                    "twoStars": 12,
+                    "oneStar": 16
+                },
+                "imagePaths": [
+                    "/assets/images/shapes/1.png",
+                    "/assets/images/shapes/2.png",
+                    "/assets/images/shapes/3.png"
+                ]
+            },
+            {
+                "id": "shapes-3",
+                "categoryId": "shapes",
+                "levelNumber": 3,
+                "difficulty": "HARD",
+                "rows": 4,
+                "cols": 3,
+                "pairCount": 6,
+                "starThresholds": {
+                    "threeStars": 14,
+                    "twoStars": 20,
+                    "oneStar": 28
                 },
                 "imagePaths": [
                     "/assets/images/shapes/1.png",

@@ -217,11 +217,18 @@ export class GamePlayScene extends Scene {
                     continue;
                 }
 
+                // Resolve label for the card
+                const cleanPath = imagePath.replace('/assets/images/', '');
+                const key = CARD_NAMES[cleanPath];
+                const label = key ? this.localizationService.translate(key) : '';
+
+                console.log(`[GamePlay] Creating card: Path=${imagePath}, Key=${key}, Label=${label}`);
+
                 const x = startX + col * (cardSize + spacing);
                 const y = startY + row * (cardSize + spacing);
 
-                // Create card with dynamic size
-                const card = new Card(this, x, y, imagePath, imagePath, cardSize);
+                // Create card with dynamic size and label
+                const card = new Card(this, x, y, imagePath, imagePath, label, cardSize);
 
                 // Add click handler
                 card.on('pointerdown', () => {

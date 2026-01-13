@@ -76,21 +76,37 @@ export class AssetLoaderService {
                 return;
             }
 
-            // Setup load complete callback
-            const onLoadComplete = (): void => {
-                scene.load.off('complete', onLoadComplete);
-                resolve();
-            };
-
-            scene.load.once('complete', onLoadComplete);
+            let assetsToLoad = 0;
 
             // Queue assets for loading
             paths.forEach((path) => {
                 // Only load if not already in cache
                 if (!scene.textures.exists(path)) {
                     scene.load.image(path, path);
+                    assetsToLoad++;
                 }
             });
+
+            // If all assets are already cached, resolve immediately
+            if (assetsToLoad === 0) {
+                console.log('[AssetLoader] All assets already cached');
+                resolve();
+                return;
+            }
+
+            // Setup load complete callback
+            const onLoadComplete = (): void => {
+                scene.load.off('complete', onLoadComplete);
+                scene.load.off('loaderror', onLoadError);
+                resolve();
+            };
+
+            const onLoadError = (file: { key: string }): void => {
+                console.error(`[AssetLoader] Error loading asset: ${file.key}`);
+            };
+
+            scene.load.once('complete', onLoadComplete);
+            scene.load.on('loaderror', onLoadError);
 
             // Start loading
             scene.load.start();

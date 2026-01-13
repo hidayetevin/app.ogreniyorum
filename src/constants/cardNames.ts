@@ -43,25 +43,25 @@ export const CARD_NAMES: Record<string, string> = {
     'space/1.png': 'card.space.rocket',
     'space/2.png': 'card.space.astronaut',
     'space/3.png': 'card.space.planet',
-    'space/4.png': 'card.space.star',
+    'space/4.png': 'card.space.alien',
     'space/5.png': 'card.space.ufo',
-    'space/6.png': 'card.space.satellite',
-    'space/7.png': 'card.space.moon',
-    'space/8.png': 'card.space.sun',
-    'space/9.png': 'card.space.alien',
-    'space/10.png': 'card.space.telescope',
+    'space/6.png': 'card.space.moon',
+    'space/7.png': 'card.space.sun',
+    'space/8.png': 'card.space.star',
+    'space/9.png': 'card.space.comet',
+    'space/10.png': 'card.space.spacestation',
 
     // Sea
     'sea/1.png': 'card.sea.fish',
     'sea/2.png': 'card.sea.octopus',
-    'sea/3.png': 'card.sea.crab',
-    'sea/4.png': 'card.sea.shark',
-    'sea/5.png': 'card.sea.whale',
-    'sea/6.png': 'card.sea.dolphin',
-    'sea/7.png': 'card.sea.seahorse',
-    'sea/8.png': 'card.sea.starfish',
-    'sea/9.png': 'card.sea.jellyfish',
-    'sea/10.png': 'card.sea.turtle',
+    'sea/3.png': 'card.sea.crab', // Existing generic
+    'sea/4.png': 'card.sea.clownfish', // New generated
+    'sea/5.png': 'card.sea.dolphin', // New generated
+    'sea/6.png': 'card.sea.seahorse', // New generated
+    'sea/7.png': 'card.sea.crab', // New generated match
+    'sea/8.png': 'card.sea.jellyfish', // New generated
+    'sea/9.png': 'card.sea.starfish', // New generated
+    'sea/10.png': 'card.sea.octopus', // New generated match
 
     // Dinosaurs
     'dinosaurs/1.png': 'card.dinosaurs.trex',
