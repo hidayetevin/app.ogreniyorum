@@ -323,8 +323,8 @@
                     "oneStar": 12
                 },
                 "imagePaths": [
-                    "/assets/images/sea/1.png",
-                    "/assets/images/sea/2.png"
+                    "/assets/images/sea/4.png",
+                    "/assets/images/sea/5.png"
                 ]
             },
             {
@@ -341,9 +341,9 @@
                     "oneStar": 16
                 },
                 "imagePaths": [
-                    "/assets/images/sea/1.png",
-                    "/assets/images/sea/2.png",
-                    "/assets/images/sea/3.png"
+                    "/assets/images/sea/6.png",
+                    "/assets/images/sea/7.png",
+                    "/assets/images/sea/8.png"
                 ]
             },
             {
@@ -360,9 +360,6 @@
                     "oneStar": 28
                 },
                 "imagePaths": [
-                    "/assets/images/sea/1.png",
-                    "/assets/images/sea/2.png",
-                    "/assets/images/sea/3.png",
                     "/assets/images/sea/4.png",
                     "/assets/images/sea/5.png",
                     "/assets/images/sea/6.png",
