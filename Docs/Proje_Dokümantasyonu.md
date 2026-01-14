@@ -589,8 +589,9 @@ graph TD
 
 **Initialization:**
 1. Level data yükleme
-2. Game session oluşturma
-3. Analytics event
+2. State reset (cards, flippedCards)
+3. Game session oluşturma
+4. Analytics event
 
 **Grid Creation:**
 1. Pair count'a göre image seçimi
@@ -632,8 +633,8 @@ async checkMatch(): Promise<void> {
     card2.setMatched();
     matches++;
     
-    // Zoom & Speak (Non-blocking)
-    speakCardName(card1.imagePath);
+    // Zoom (Non-blocking)
+    // Note: TTS on match removed per user request
     await delay(1500);
     
     if (matches === totalPairs) {
@@ -652,6 +653,7 @@ async checkMatch(): Promise<void> {
   
   flippedCards = [];
 }
+
 ```
 
 ### 6. Konfigürasyon Sistemi

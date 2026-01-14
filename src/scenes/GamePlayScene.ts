@@ -46,6 +46,11 @@ export class GamePlayScene extends Scene {
      * Initializes the scene with level data
      */
     public init(data: { levelId: string; categoryId: string }): void {
+        // Ensure clean state
+        this.cards = [];
+        this.flippedCards = [];
+        this.isInputLocked = false;
+
         const level = this.levelService.getLevelById(data.levelId);
 
         if (level === null) {
@@ -337,8 +342,8 @@ export class GamePlayScene extends Scene {
                 });
             });
 
-            // 3. Speak Name (Again, emphasizing the match)
-            void this.speakCardName(card1.getImagePath());
+            // 3. Speak Name (Again, emphasizing the match) - REMOVED per user request
+            // void this.speakCardName(card1.getImagePath());
 
             // 4. Wait for visual emphasis
             await delay(1500);
@@ -452,6 +457,8 @@ export class GamePlayScene extends Scene {
      * Exits to main menu
      */
     private exitToMenu(): void {
+        this.cards = [];
+        this.flippedCards = [];
         this.scene.start(SCENE_KEYS.CATEGORY_SELECTION);
     }
 
