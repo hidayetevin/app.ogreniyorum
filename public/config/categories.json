@@ -472,6 +472,51 @@
                     "/assets/images/feelings/1.png",
                     "/assets/images/feelings/2.png"
                 ]
+            },
+            {
+                "id": "feelings-2",
+                "categoryId": "feelings",
+                "levelNumber": 2,
+                "difficulty": "EASY",
+                "rows": 3,
+                "cols": 2,
+                "pairCount": 3,
+                "starThresholds": {
+                    "threeStars": 8,
+                    "twoStars": 12,
+                    "oneStar": 16
+                },
+                "imagePaths": [
+                    "/assets/images/feelings/1.png",
+                    "/assets/images/feelings/2.png",
+                    "/assets/images/feelings/3.png"
+                ]
+            },
+            {
+                "id": "feelings-3",
+                "categoryId": "feelings",
+                "levelNumber": 3,
+                "difficulty": "MEDIUM",
+                "rows": 4,
+                "cols": 3,
+                "pairCount": 6,
+                "starThresholds": {
+                    "threeStars": 12,
+                    "twoStars": 18,
+                    "oneStar": 24
+                },
+                "imagePaths": [
+                    "/assets/images/feelings/1.png",
+                    "/assets/images/feelings/2.png",
+                    "/assets/images/feelings/3.png",
+                    "/assets/images/feelings/4.png",
+                    "/assets/images/feelings/5.png",
+                    "/assets/images/feelings/6.png",
+                    "/assets/images/feelings/7.png",
+                    "/assets/images/feelings/8.png",
+                    "/assets/images/feelings/9.png",
+                    "/assets/images/feelings/10.png"
+                ]
             }
         ]
     },
@@ -507,7 +552,7 @@
                 "id": "jobs-2",
                 "categoryId": "jobs",
                 "levelNumber": 2,
-                "difficulty": "MEDIUM",
+                "difficulty": "EASY",
                 "rows": 3,
                 "cols": 2,
                 "pairCount": 3,
@@ -521,17 +566,118 @@
                     "/assets/images/jobs/2.png",
                     "/assets/images/jobs/3.png"
                 ]
+            },
+            {
+                "id": "jobs-3",
+                "categoryId": "jobs",
+                "levelNumber": 3,
+                "difficulty": "MEDIUM",
+                "rows": 4,
+                "cols": 3,
+                "pairCount": 6,
+                "starThresholds": {
+                    "threeStars": 12,
+                    "twoStars": 18,
+                    "oneStar": 24
+                },
+                "imagePaths": [
+                    "/assets/images/jobs/1.png",
+                    "/assets/images/jobs/2.png",
+                    "/assets/images/jobs/3.png",
+                    "/assets/images/jobs/4.png",
+                    "/assets/images/jobs/5.png",
+                    "/assets/images/jobs/6.png",
+                    "/assets/images/jobs/7.png",
+                    "/assets/images/jobs/8.png",
+                    "/assets/images/jobs/9.png",
+                    "/assets/images/jobs/10.png"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "numbers",
+        "name": "Sayılar",
+        "nameKey": "category.numbers.name",
+        "description": "Sayıları öğren ve eşleştir",
+        "descriptionKey": "category.numbers.description",
+        "iconPath": "/assets/images/categories/numbers-icon.png",
+        "unlockRequirement": 35,
+        "isLocked": true,
+        "levels": [
+            {
+                "id": "numbers-1",
+                "categoryId": "numbers",
+                "levelNumber": 1,
+                "difficulty": "EASY",
+                "rows": 2,
+                "cols": 2,
+                "pairCount": 2,
+                "starThresholds": {
+                    "threeStars": 6,
+                    "twoStars": 8,
+                    "oneStar": 12
+                },
+                "imagePaths": [
+                    "/assets/images/numbers/1.png",
+                    "/assets/images/numbers/2.png"
+                ]
+            },
+            {
+                "id": "numbers-2",
+                "categoryId": "numbers",
+                "levelNumber": 2,
+                "difficulty": "EASY",
+                "rows": 3,
+                "cols": 2,
+                "pairCount": 3,
+                "starThresholds": {
+                    "threeStars": 8,
+                    "twoStars": 12,
+                    "oneStar": 16
+                },
+                "imagePaths": [
+                    "/assets/images/numbers/1.png",
+                    "/assets/images/numbers/2.png",
+                    "/assets/images/numbers/3.png"
+                ]
+            },
+            {
+                "id": "numbers-3",
+                "categoryId": "numbers",
+                "levelNumber": 3,
+                "difficulty": "MEDIUM",
+                "rows": 4,
+                "cols": 3,
+                "pairCount": 6,
+                "starThresholds": {
+                    "threeStars": 12,
+                    "twoStars": 18,
+                    "oneStar": 24
+                },
+                "imagePaths": [
+                    "/assets/images/numbers/1.png",
+                    "/assets/images/numbers/2.png",
+                    "/assets/images/numbers/3.png",
+                    "/assets/images/numbers/4.png",
+                    "/assets/images/numbers/5.png",
+                    "/assets/images/numbers/6.png",
+                    "/assets/images/numbers/7.png",
+                    "/assets/images/numbers/8.png",
+                    "/assets/images/numbers/9.png",
+                    "/assets/images/numbers/10.png"
+                ]
             }
         ]
     },
     {
         "id": "shapes",
-        "name": "Sayılar ve Şekiller",
+        "name": "Şekiller",
         "nameKey": "category.shapes.name",
-        "description": "Rakamları ve şekilleri eşleştir",
+        "description": "Geometrik şekilleri eşleştir",
         "descriptionKey": "category.shapes.description",
         "iconPath": "/assets/images/categories/shapes-icon.png",
-        "unlockRequirement": 35,
+        "unlockRequirement": 40,
         "isLocked": true,
         "levels": [
             {
@@ -556,7 +702,7 @@
                 "id": "shapes-2",
                 "categoryId": "shapes",
                 "levelNumber": 2,
-                "difficulty": "MEDIUM",
+                "difficulty": "EASY",
                 "rows": 3,
                 "cols": 2,
                 "pairCount": 3,
@@ -575,14 +721,14 @@
                 "id": "shapes-3",
                 "categoryId": "shapes",
                 "levelNumber": 3,
-                "difficulty": "HARD",
+                "difficulty": "MEDIUM",
                 "rows": 4,
                 "cols": 3,
                 "pairCount": 6,
                 "starThresholds": {
-                    "threeStars": 14,
-                    "twoStars": 20,
-                    "oneStar": 28
+                    "threeStars": 12,
+                    "twoStars": 18,
+                    "oneStar": 24
                 },
                 "imagePaths": [
                     "/assets/images/shapes/1.png",

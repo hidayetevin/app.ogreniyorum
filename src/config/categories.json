@@ -472,13 +472,88 @@
         ]
     },
     {
+        "id": "numbers",
+        "name": "Sayılar",
+        "nameKey": "category.numbers.name",
+        "description": "Sayıları öğren ve eşleştir",
+        "descriptionKey": "category.numbers.description",
+        "iconPath": "/assets/images/categories/numbers-icon.png",
+        "unlockRequirement": 35,
+        "isLocked": true,
+        "levels": [
+            {
+                "id": "numbers-1",
+                "categoryId": "numbers",
+                "levelNumber": 1,
+                "difficulty": "EASY",
+                "rows": 2,
+                "cols": 2,
+                "pairCount": 2,
+                "starThresholds": {
+                    "threeStars": 6,
+                    "twoStars": 8,
+                    "oneStar": 12
+                },
+                "imagePaths": [
+                    "/assets/images/numbers/1.png",
+                    "/assets/images/numbers/2.png"
+                ]
+            },
+            {
+                "id": "numbers-2",
+                "categoryId": "numbers",
+                "levelNumber": 2,
+                "difficulty": "EASY",
+                "rows": 3,
+                "cols": 2,
+                "pairCount": 3,
+                "starThresholds": {
+                    "threeStars": 8,
+                    "twoStars": 12,
+                    "oneStar": 16
+                },
+                "imagePaths": [
+                    "/assets/images/numbers/1.png",
+                    "/assets/images/numbers/2.png",
+                    "/assets/images/numbers/3.png"
+                ]
+            },
+            {
+                "id": "numbers-3",
+                "categoryId": "numbers",
+                "levelNumber": 3,
+                "difficulty": "MEDIUM",
+                "rows": 4,
+                "cols": 3,
+                "pairCount": 6,
+                "starThresholds": {
+                    "threeStars": 12,
+                    "twoStars": 18,
+                    "oneStar": 24
+                },
+                "imagePaths": [
+                    "/assets/images/numbers/1.png",
+                    "/assets/images/numbers/2.png",
+                    "/assets/images/numbers/3.png",
+                    "/assets/images/numbers/4.png",
+                    "/assets/images/numbers/5.png",
+                    "/assets/images/numbers/6.png",
+                    "/assets/images/numbers/7.png",
+                    "/assets/images/numbers/8.png",
+                    "/assets/images/numbers/9.png",
+                    "/assets/images/numbers/10.png"
+                ]
+            }
+        ]
+    },
+    {
         "id": "shapes",
-        "name": "Sayılar ve Şekiller",
+        "name": "Şekiller",
         "nameKey": "category.shapes.name",
-        "description": "Rakamları ve şekilleri eşleştir",
+        "description": "Geometrik şekilleri eşleştir",
         "descriptionKey": "category.shapes.description",
         "iconPath": "/assets/images/categories/shapes-icon.png",
-        "unlockRequirement": 35,
+        "unlockRequirement": 40,
         "isLocked": true,
         "levels": [
             {

@@ -99,6 +99,18 @@ export const CARD_NAMES: Record<string, string> = {
     'jobs/9.png': 'card.jobs.dentist',
     'jobs/10.png': 'card.jobs.pilot',
 
+    // Numbers
+    'numbers/1.png': 'card.numbers.one',
+    'numbers/2.png': 'card.numbers.two',
+    'numbers/3.png': 'card.numbers.three',
+    'numbers/4.png': 'card.numbers.four',
+    'numbers/5.png': 'card.numbers.five',
+    'numbers/6.png': 'card.numbers.six',
+    'numbers/7.png': 'card.numbers.seven',
+    'numbers/8.png': 'card.numbers.eight',
+    'numbers/9.png': 'card.numbers.nine',
+    'numbers/10.png': 'card.numbers.ten',
+
     // Shapes
     'shapes/1.png': 'card.shapes.circle',
     'shapes/2.png': 'card.shapes.square',
