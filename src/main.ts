@@ -6,6 +6,7 @@ import { CategorySelectionScene } from './scenes/CategorySelectionScene';
 import { GamePlayScene } from './scenes/GamePlayScene';
 import { LevelCompleteScene } from './scenes/LevelCompleteScene';
 import { ParentPanelScene } from './scenes/ParentPanelScene';
+import { CardBackSelectionScene } from './scenes/CardBackSelectionScene';
 import { GAME_CONFIG } from '@constants/index';
 import { batteryOptimizer } from '@utils/BatteryOptimizer';
 /**
@@ -17,7 +18,7 @@ const config: Phaser.Types.Core.GameConfig = {
     height: GAME_CONFIG.HEIGHT,
     parent: 'game-container',
     backgroundColor: GAME_CONFIG.BACKGROUND_COLOR,
-    scene: [BootScene, MainMenuScene, CategorySelectionScene, GamePlayScene, LevelCompleteScene, ParentPanelScene],
+    scene: [BootScene, MainMenuScene, CategorySelectionScene, GamePlayScene, LevelCompleteScene, ParentPanelScene, CardBackSelectionScene],
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,

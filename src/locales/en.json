@@ -179,5 +179,17 @@
     "card.shapes.rectangle": "Rectangle",
     "card.shapes.oval": "Oval",
     "card.shapes.hexagon": "Hexagon",
-    "card.shapes.pentagon": "Pentagon"
+    "card.shapes.pentagon": "Pentagon",
+    "cardBack.title": "Card Patterns",
+    "cardBack.unlock": "Unlock ({stars} ⭐)",
+    "cardBack.select": "Select",
+    "cardBack.selected": "Selected",
+    "cardBack.locked": "Locked",
+    "cardBack.notEnoughStars": "Not enough stars!",
+    "cardBack.default.name": "Default",
+    "cardBack.stars.name": "Stars",
+    "cardBack.rainbow.name": "Rainbow",
+    "cardBack.animals.name": "Animals",
+    "cardBack.space.name": "Space",
+    "cardBack.hearts.name": "Hearts"
 }

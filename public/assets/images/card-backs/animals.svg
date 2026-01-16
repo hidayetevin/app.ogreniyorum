@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400">
+  <defs>
+    <linearGradient id="animalsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#56ab2f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#a8e063;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="300" height="400" fill="url(#animalsGrad)" rx="20"/>
+  <!-- Cute paw prints -->
+  <g opacity="0.7">
+    <ellipse cx="80" cy="100" rx="12" ry="16" fill="#fff"/>
+    <circle cx="70" cy="85" r="7" fill="#fff"/>
+    <circle cx="90" cy="85" r="7" fill="#fff"/>
+    <circle cx="65" cy="95" r="5" fill="#fff"/>
+    <circle cx="95" cy="95" r="5" fill="#fff"/>
+  </g>
+  <g opacity="0.7">
+    <ellipse cx="220" cy="200" rx="12" ry="16" fill="#fff"/>
+    <circle cx="210" cy="185" r="7" fill="#fff"/>
+    <circle cx="230" cy="185" r="7" fill="#fff"/>
+    <circle cx="205" cy="195" r="5" fill="#fff"/>
+    <circle cx="235" cy="195" r="5" fill="#fff"/>
+  </g>
+  <g opacity="0.7">
+    <ellipse cx="120" cy="300" rx="12" ry="16" fill="#fff"/>
+    <circle cx="110" cy="285" r="7" fill="#fff"/>
+    <circle cx="130" cy="285" r="7" fill="#fff"/>
+    <circle cx="105" cy="295" r="5" fill="#fff"/>
+    <circle cx="135" cy="295" r="5" fill="#fff"/>
+  </g>
+</svg>

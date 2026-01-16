@@ -117,6 +117,20 @@ export class MainMenuScene extends Scene {
             },
         });
 
+        // Card backs button
+        new Button(this, {
+            x: centerX,
+            y: centerY + 380,
+            width: 300,
+            height: 80,
+            text: this.localizationService.translate('cardBack.title'),
+            backgroundColor: COLORS.PRIMARY,
+            fontSize: 32,
+            onClick: () => {
+                this.scene.start(SCENE_KEYS.CARD_BACK_SELECTION);
+            },
+        });
+
         // Add pulsing animation to title
         this.tweens.add({
             targets: title,

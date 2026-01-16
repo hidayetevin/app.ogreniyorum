@@ -145,6 +145,20 @@ export class BootScene extends Scene {
             this.load.image(iconPath, iconPath);
         });
 
+        // Load card back images
+        const cardBacks = [
+            { key: 'card-back-default', path: '/assets/images/card-backs/default.svg' },
+            { key: 'card-back-stars', path: '/assets/images/card-backs/stars.svg' },
+            { key: 'card-back-rainbow', path: '/assets/images/card-backs/rainbow.svg' },
+            { key: 'card-back-animals', path: '/assets/images/card-backs/animals.svg' },
+            { key: 'card-back-space', path: '/assets/images/card-backs/space.svg' },
+            { key: 'card-back-hearts', path: '/assets/images/card-backs/hearts.svg' },
+        ];
+
+        cardBacks.forEach(cb => {
+            this.load.svg(cb.key, cb.path);
+        });
+
         // NOTE: Card images are now loaded lazily per category via AssetLoaderService
         // This reduces initial load time from ~5s to ~1.5s (70% improvement)
         console.log('[BootScene] Loading only essential assets (category icons + UI)');

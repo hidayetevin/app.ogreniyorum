@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400">
+  <defs>
+    <linearGradient id="spaceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#000033;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#000066;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="300" height="400" fill="url(#spaceGrad)" rx="20"/>
+  <!-- Stars -->
+  <circle cx="50" cy="80" r="2" fill="#fff"/>
+  <circle cx="120" cy="60" r="1.5" fill="#fff"/>
+  <circle cx="200" cy="90" r="2.5" fill="#fff"/>
+  <circle cx= "250" cy="70" r="1" fill="#fff"/>
+  <circle cx="80" cy="150" r="2" fill="#fff"/>
+  <circle cx="220" cy="180" r="1.5" fill="#fff"/>
+  <circle cx="150" cy="240" r="2.5" fill="#fff"/>
+  <circle cx="60" cy="300" r="1.5" fill="#fff"/>
+  <circle cx="260" cy="320" r="2" fill="#fff"/>
+  <!-- Planet -->
+  <circle cx="220" cy="280" r="40" fill="#ff6347" opacity="0.8"/>
+  <ellipse cx="220" cy="280" rx="55" ry="10" fill="none" stroke="#ffa500" stroke-width="3" opacity="0.6"/>
+  <!-- Rocket -->
+  <path d="M100 320 L100 340 L110 350 L120 340 L120 320 L110 300 Z" fill="#e0e0e0"/>
+  <circle cx="110" cy="325" r="5" fill="#4169e1"/>
+</svg>

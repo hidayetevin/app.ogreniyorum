@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400">
+  <defs>
+    <linearGradient id="starsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F99B6D;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E94F57;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="300" height="400" fill="url(#starsGrad)" rx="20"/>
+  <!-- Stars pattern -->
+  <path d="M60 80 L70 100 L92 102 L73 118 L78 140 L60 128 L42 140 L47 118 L28 102 L50 100 Z" fill="#FFD700" opacity="0.9"/>
+  <path d="M240 80 L250 100 L272 102 L253 118 L258 140 L240 128 L222 140 L227 118 L208 102 L230 100 Z" fill="#FFD700" opacity="0.9"/>
+  <path d="M150 150 L160 170 L182 172 L163 188 L168 210 L150 198 L132 210 L137 188 L118 172 L140 170 Z" fill="#FFF" opacity="0.95"/>
+  <path d="M60 260 L70 280 L92 282 L73 298 L78 320 L60 308 L42 320 L47 298 L28 282 L50 280 Z" fill="#FFD700" opacity="0.9"/>
+  <path d="M240 260 L250 280 L272 282 L253 298 L258 320 L240 308 L222 320 L227 298 L208 282 L230 280 Z" fill="#FFD700" opacity="0.9"/>
+</svg>

@@ -199,5 +199,17 @@
     "achievement.level_master.name": "Seviye Ustası",
     "achievement.level_master.description": "10 seviye tamamladın!",
     "achievement.completionist.name": "Tamamlayıcı",
-    "achievement.completionist.description": "Tüm kategorileri tamamladın!"
+    "achievement.completionist.description": "Tüm kategorileri tamamladın!",
+    "cardBack.title": "Kart Desenleri",
+    "cardBack.unlock": "Aç ({stars} ⭐)",
+    "cardBack.select": "Seç",
+    "cardBack.selected": "Seçili",
+    "cardBack.locked": "Kilitli",
+    "cardBack.notEnoughStars": "Yeterli yıldızın yok!",
+    "cardBack.default.name": "Varsayılan",
+    "cardBack.stars.name": "Yıldızlar",
+    "cardBack.rainbow.name": "Gökkuşağı",
+    "cardBack.animals.name": "Hayvanlar",
+    "cardBack.space.name": "Uzay",
+    "cardBack.hearts.name": "Kalpler"
 }

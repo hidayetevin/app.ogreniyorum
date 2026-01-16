@@ -10,7 +10,8 @@ export class Card extends Phaser.GameObjects.Container {
     private imagePath: string;
     private cardState: CardState;
     private frontImage: Phaser.GameObjects.Image | null = null;
-    private backRect: Phaser.GameObjects.Rectangle;
+    private backBg: Phaser.GameObjects.Rectangle;
+    private backImage: Phaser.GameObjects.Image | null = null;
     private feedbackService: FeedbackService;
     private label: string;
     private textObj: Phaser.GameObjects.Text | null = null;
@@ -23,7 +24,8 @@ export class Card extends Phaser.GameObjects.Container {
         pairId: string,
         imagePath: string,
         label: string,
-        size: number = GRID_CONFIG.CARD_WIDTH
+        size: number = GRID_CONFIG.CARD_WIDTH,
+        cardBackKey: string = 'card-back-default'
     ) {
         super(scene, x, y);
 
@@ -33,18 +35,25 @@ export class Card extends Phaser.GameObjects.Container {
         this.cardState = CardState.FACE_DOWN;
         this.feedbackService = FeedbackService.getInstance();
 
-        // Create card back (visible initially)
-        this.backRect = scene.add.rectangle(
+        // Create card back background (fallback/border)
+        this.backBg = scene.add.rectangle(
             0,
             0,
             size,
             size,
             parseInt(COLORS.CARD_BACK.replace('#', ''), 16)
         );
+        this.backBg.setStrokeStyle(Math.max(2, size / 30), parseInt(COLORS.PRIMARY.replace('#', ''), 16));
+        this.add(this.backBg);
 
-        this.backRect.setStrokeStyle(Math.max(2, size / 30), parseInt(COLORS.PRIMARY.replace('#', ''), 16));
-
-        this.add(this.backRect);
+        // Create card back image
+        try {
+            this.backImage = scene.add.image(0, 0, cardBackKey);
+            this.backImage.setDisplaySize(size, size);
+            this.add(this.backImage);
+        } catch (e) {
+            console.error(`Error loading card back image: ${cardBackKey}`, e);
+        }
 
         // Setup interactivity
         this.setupInteractivity();
@@ -58,22 +67,22 @@ export class Card extends Phaser.GameObjects.Container {
      * Sets up interactive behavior
      */
     private setupInteractivity(): void {
-        this.backRect.setInteractive({ useHandCursor: true });
+        this.backBg.setInteractive({ useHandCursor: true });
 
-        this.backRect.on('pointerover', () => {
+        this.backBg.on('pointerover', () => {
             if (this.cardState === CardState.FACE_DOWN && !this.isFlipping) {
                 this.onHover();
             }
         });
 
-        this.backRect.on('pointerout', () => {
+        this.backBg.on('pointerout', () => {
             if (this.cardState === CardState.FACE_DOWN && !this.isFlipping) {
                 this.onHoverEnd();
             }
         });
 
         // Add click handler
-        this.backRect.on('pointerdown', () => {
+        this.backBg.on('pointerdown', () => {
             this.emit('pointerdown');
         });
     }
@@ -123,7 +132,7 @@ export class Card extends Phaser.GameObjects.Container {
         if (this.frontImage === null) {
             // Add image
             this.frontImage = this.scene.add.image(0, 0, this.imagePath);
-            const size = this.backRect.width;
+            const size = this.backBg.width;
 
             // Limit image size
             this.frontImage.setDisplaySize(size - 20, size - 20);
@@ -196,7 +205,10 @@ export class Card extends Phaser.GameObjects.Container {
                 ease: 'Power2',
                 onComplete: () => {
                     // Switch visibility
-                    this.backRect.setVisible(!showFront);
+                    this.backBg.setVisible(!showFront);
+                    if (this.backImage) {
+                        this.backImage.setVisible(!showFront);
+                    }
                     if (this.frontImage !== null) {
                         this.frontImage.setVisible(showFront);
                     }
@@ -232,7 +244,7 @@ export class Card extends Phaser.GameObjects.Container {
      */
     public setMatched(): void {
         this.cardState = CardState.MATCHED;
-        this.backRect.disableInteractive();
+        this.backBg.disableInteractive();
 
         // Glow effect
         this.feedbackService.showGlow(this as unknown as Phaser.GameObjects.GameObject);
@@ -288,9 +300,9 @@ export class Card extends Phaser.GameObjects.Container {
      */
     public override destroy(fromScene?: boolean): void {
         // Remove event listeners
-        this.backRect.off('pointerover');
-        this.backRect.off('pointerout');
-        this.backRect.off('pointerdown');
+        this.backBg.off('pointerover');
+        this.backBg.off('pointerout');
+        this.backBg.off('pointerdown');
 
         // Kill any tweens targeting this card
         if (this.scene && this.scene.tweens) {
@@ -311,8 +323,14 @@ export class Card extends Phaser.GameObjects.Container {
             this.textObj = null;
         }
 
-        // Destroy back rectangle
-        this.backRect.destroy();
+        // Destroy back background
+        this.backBg.destroy();
+
+        // Destroy back image
+        if (this.backImage) {
+            this.backImage.destroy();
+            this.backImage = null;
+        }
 
         // Call parent destroy
         super.destroy(fromScene);

@@ -129,6 +129,8 @@ export interface IProgress {
     currentStreak: number; // Consecutive days played
     lastPlayedDate: string; // ISO date string (YYYY-MM-DD)
     totalPlayTime: number; // Total play time in milliseconds
+    unlockedCardBacks: string[]; // IDs of unlocked card backs
+    selectedCardBack: string; // ID of the currently selected card back
 }
 
 /**
@@ -219,4 +221,16 @@ export interface IAchievementProgress {
     unlockedAchievements: string[]; // Achievement IDs
     totalBonusStars: number;
     lastUnlockedAt?: number; // Timestamp
+}
+
+/**
+ * Card back customization
+ */
+export interface ICardBack {
+    id: string;
+    name: string;
+    nameKey: string; // Localization key
+    imagePath: string;
+    unlockCost: number; // Stars required to unlock
+    isDefault?: boolean; // Whether this is the default card back
 }

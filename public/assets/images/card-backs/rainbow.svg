@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400">
+  <defs>
+    <linearGradient id="rainbowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff0000;stop-opacity:1" />
+      <stop offset="16.66%" style="stop-color:#ff9900;stop-opacity:1" />
+      <stop offset="33.33%" style="stop-color:#ffff00;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#00ff00;stop-opacity:1" />
+      <stop offset="66.66%" style="stop-color:#0099ff;stop-opacity:1" />
+      <stop offset="83.33%" style="stop-color:#6633ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff00ff;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="300" height="400" fill="url(#rainbowGrad)" rx="20"/>
+  <circle cx="150" cy="200" r="100" fill="#fff" opacity="0.15"/>
+  <path d="M150 140 Q100 190, 150 240 Q200 190, 150 140" fill="#fff" opacity="0.2"/>
+</svg>

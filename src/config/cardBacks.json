@@ -1,0 +1,47 @@
+{
+    "cardBacks": [
+        {
+            "id": "default",
+            "name": "Varsayılan",
+            "nameKey": "cardBack.default.name",
+            "imagePath": "/assets/images/card-backs/default.svg",
+            "unlockCost": 0,
+            "isDefault": true
+        },
+        {
+            "id": "stars",
+            "name": "Yıldızlar",
+            "nameKey": "cardBack.stars.name",
+            "imagePath": "/assets/images/card-backs/stars.svg",
+            "unlockCost": 10
+        },
+        {
+            "id": "rainbow",
+            "name": "Gökkuşağı",
+            "nameKey": "cardBack.rainbow.name",
+            "imagePath": "/assets/images/card-backs/rainbow.svg",
+            "unlockCost": 25
+        },
+        {
+            "id": "animals",
+            "name": "Hayvanlar",
+            "nameKey": "cardBack.animals.name",
+            "imagePath": "/assets/images/card-backs/animals.svg",
+            "unlockCost": 50
+        },
+        {
+            "id": "space",
+            "name": "Uzay",
+            "nameKey": "cardBack.space.name",
+            "imagePath": "/assets/images/card-backs/space.svg",
+            "unlockCost": 75
+        },
+        {
+            "id": "hearts",
+            "name": "Kalpler",
+            "nameKey": "cardBack.hearts.name",
+            "imagePath": "/assets/images/card-backs/hearts.svg",
+            "unlockCost": 100
+        }
+    ]
+}

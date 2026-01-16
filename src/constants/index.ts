@@ -93,6 +93,7 @@ export const SCENE_KEYS = {
     GAME_PLAY: 'GamePlayScene',
     LEVEL_COMPLETE: 'LevelCompleteScene',
     PARENT_PANEL: 'ParentPanelScene',
+    CARD_BACK_SELECTION: 'CardBackSelectionScene',
 } as const;
 
 /**
@@ -130,6 +131,8 @@ export const DEFAULT_PROGRESS = {
     currentStreak: 0,
     lastPlayedDate: '',
     totalPlayTime: 0,
+    unlockedCardBacks: ['default'],
+    selectedCardBack: 'default',
 };
 
 /**

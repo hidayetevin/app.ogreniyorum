@@ -3,6 +3,7 @@ import { SCENE_KEYS, GAME_CONFIG, COLORS, TIMING, GRID_CONFIG } from '@constants
 import { Card } from '@ui/Card';
 import { Button } from '@ui/Button';
 import { LevelService } from '@core/LevelService';
+import { StorageService } from '@core/StorageService';
 import { FeedbackService } from '@core/FeedbackService';
 import { AnalyticsService } from '@core/AnalyticsService';
 import { LocalizationService } from '@core/LocalizationService';
@@ -25,6 +26,7 @@ export class GamePlayScene extends Scene {
     private localizationService: LocalizationService;
     private adService: AdService;
     private audioService: AudioService;
+    private storageService: StorageService;
 
     private currentLevel: ILevel | null = null;
     private cards: Card[] = [];
@@ -40,6 +42,7 @@ export class GamePlayScene extends Scene {
         this.localizationService = LocalizationService.getInstance();
         this.adService = AdService.getInstance();
         this.audioService = AudioService.getInstance();
+        this.storageService = StorageService.getInstance();
     }
 
     /**
@@ -232,8 +235,12 @@ export class GamePlayScene extends Scene {
                 const x = startX + col * (cardSize + spacing);
                 const y = startY + row * (cardSize + spacing);
 
+                // Get selected card back
+                const selectedCardBackId = this.storageService.getSelectedCardBackId();
+                const cardBackKey = `card-back-${selectedCardBackId}`;
+
                 // Create card with dynamic size and label
-                const card = new Card(this, x, y, imagePath, imagePath, label, cardSize);
+                const card = new Card(this, x, y, imagePath, imagePath, label, cardSize, cardBackKey);
 
                 // Add click handler
                 card.on('pointerdown', () => {
