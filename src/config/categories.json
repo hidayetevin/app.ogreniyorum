@@ -346,6 +346,43 @@
                 },
                 "imagePaths": [
                     "/assets/images/feelings/1.png",
+                    "/assets/images/feelings/2.png"
+                ]
+            },
+            {
+                "id": "feelings-2",
+                "categoryId": "feelings",
+                "levelNumber": 2,
+                "difficulty": "EASY",
+                "rows": 3,
+                "cols": 2,
+                "pairCount": 3,
+                "starThresholds": {
+                    "threeStars": 8,
+                    "twoStars": 12,
+                    "oneStar": 16
+                },
+                "imagePaths": [
+                    "/assets/images/feelings/1.png",
+                    "/assets/images/feelings/2.png",
+                    "/assets/images/feelings/3.png"
+                ]
+            },
+            {
+                "id": "feelings-3",
+                "categoryId": "feelings",
+                "levelNumber": 3,
+                "difficulty": "MEDIUM",
+                "rows": 4,
+                "cols": 3,
+                "pairCount": 6,
+                "starThresholds": {
+                    "threeStars": 12,
+                    "twoStars": 18,
+                    "oneStar": 24
+                },
+                "imagePaths": [
+                    "/assets/images/feelings/1.png",
                     "/assets/images/feelings/2.png",
                     "/assets/images/feelings/3.png",
                     "/assets/images/feelings/4.png",
@@ -374,6 +411,24 @@
                 "categoryId": "jobs",
                 "levelNumber": 1,
                 "difficulty": "EASY",
+                "rows": 2,
+                "cols": 2,
+                "pairCount": 2,
+                "starThresholds": {
+                    "threeStars": 6,
+                    "twoStars": 8,
+                    "oneStar": 12
+                },
+                "imagePaths": [
+                    "/assets/images/jobs/1.png",
+                    "/assets/images/jobs/2.png"
+                ]
+            },
+            {
+                "id": "jobs-2",
+                "categoryId": "jobs",
+                "levelNumber": 2,
+                "difficulty": "EASY",
                 "rows": 3,
                 "cols": 2,
                 "pairCount": 3,
@@ -381,6 +436,25 @@
                     "threeStars": 8,
                     "twoStars": 12,
                     "oneStar": 16
+                },
+                "imagePaths": [
+                    "/assets/images/jobs/1.png",
+                    "/assets/images/jobs/2.png",
+                    "/assets/images/jobs/3.png"
+                ]
+            },
+            {
+                "id": "jobs-3",
+                "categoryId": "jobs",
+                "levelNumber": 3,
+                "difficulty": "MEDIUM",
+                "rows": 4,
+                "cols": 3,
+                "pairCount": 6,
+                "starThresholds": {
+                    "threeStars": 12,
+                    "twoStars": 18,
+                    "oneStar": 24
                 },
                 "imagePaths": [
                     "/assets/images/jobs/1.png",
@@ -419,6 +493,43 @@
                     "threeStars": 6,
                     "twoStars": 8,
                     "oneStar": 12
+                },
+                "imagePaths": [
+                    "/assets/images/shapes/1.png",
+                    "/assets/images/shapes/2.png"
+                ]
+            },
+            {
+                "id": "shapes-2",
+                "categoryId": "shapes",
+                "levelNumber": 2,
+                "difficulty": "EASY",
+                "rows": 3,
+                "cols": 2,
+                "pairCount": 3,
+                "starThresholds": {
+                    "threeStars": 8,
+                    "twoStars": 12,
+                    "oneStar": 16
+                },
+                "imagePaths": [
+                    "/assets/images/shapes/1.png",
+                    "/assets/images/shapes/2.png",
+                    "/assets/images/shapes/3.png"
+                ]
+            },
+            {
+                "id": "shapes-3",
+                "categoryId": "shapes",
+                "levelNumber": 3,
+                "difficulty": "MEDIUM",
+                "rows": 4,
+                "cols": 3,
+                "pairCount": 6,
+                "starThresholds": {
+                    "threeStars": 12,
+                    "twoStars": 18,
+                    "oneStar": 24
                 },
                 "imagePaths": [
                     "/assets/images/shapes/1.png",
