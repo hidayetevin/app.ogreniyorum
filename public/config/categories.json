@@ -694,8 +694,8 @@
                     "oneStar": 12
                 },
                 "imagePaths": [
-                    "/assets/images/shapes/1.png",
-                    "/assets/images/shapes/2.png"
+                    "/assets/images/shapes/1.svg",
+                    "/assets/images/shapes/2.svg"
                 ]
             },
             {
@@ -712,9 +712,9 @@
                     "oneStar": 16
                 },
                 "imagePaths": [
-                    "/assets/images/shapes/1.png",
-                    "/assets/images/shapes/2.png",
-                    "/assets/images/shapes/3.png"
+                    "/assets/images/shapes/1.svg",
+                    "/assets/images/shapes/2.svg",
+                    "/assets/images/shapes/3.svg"
                 ]
             },
             {
@@ -731,16 +731,16 @@
                     "oneStar": 24
                 },
                 "imagePaths": [
-                    "/assets/images/shapes/1.png",
-                    "/assets/images/shapes/2.png",
-                    "/assets/images/shapes/3.png",
-                    "/assets/images/shapes/4.png",
-                    "/assets/images/shapes/5.png",
-                    "/assets/images/shapes/6.png",
-                    "/assets/images/shapes/7.png",
-                    "/assets/images/shapes/8.png",
-                    "/assets/images/shapes/9.png",
-                    "/assets/images/shapes/10.png"
+                    "/assets/images/shapes/1.svg",
+                    "/assets/images/shapes/2.svg",
+                    "/assets/images/shapes/3.svg",
+                    "/assets/images/shapes/4.svg",
+                    "/assets/images/shapes/5.svg",
+                    "/assets/images/shapes/6.svg",
+                    "/assets/images/shapes/7.svg",
+                    "/assets/images/shapes/8.svg",
+                    "/assets/images/shapes/9.svg",
+                    "/assets/images/shapes/10.svg"
                 ]
             }
         ]
