@@ -111,6 +111,21 @@ export class StorageService implements IStorageService {
             return { ...DEFAULT_PROGRESS };
         }
 
+        // Backward compatibility: Add missing fields from new features
+        let needsSave = false;
+        if (!progress.unlockedCardBacks || !Array.isArray(progress.unlockedCardBacks)) {
+            progress.unlockedCardBacks = ['default'];
+            needsSave = true;
+        }
+        if (!progress.selectedCardBack) {
+            progress.selectedCardBack = 'default';
+            needsSave = true;
+        }
+
+        if (needsSave) {
+            this.saveProgress(progress);
+        }
+
         return progress;
     }
 
@@ -254,7 +269,12 @@ export class StorageService implements IStorageService {
      */
     public getUnlockedCardBacks(): string[] {
         const progress = this.loadProgress();
-        return progress.unlockedCardBacks || ['default'];
+        // Ensure array exists for backward compatibility
+        if (!progress.unlockedCardBacks || !Array.isArray(progress.unlockedCardBacks)) {
+            progress.unlockedCardBacks = ['default'];
+            this.saveProgress(progress);
+        }
+        return progress.unlockedCardBacks;
     }
 
     /**
@@ -262,6 +282,11 @@ export class StorageService implements IStorageService {
      */
     public unlockCardBack(id: string, cost: number): boolean {
         const progress = this.loadProgress();
+
+        // Ensure array exists for backward compatibility
+        if (!progress.unlockedCardBacks || !Array.isArray(progress.unlockedCardBacks)) {
+            progress.unlockedCardBacks = ['default'];
+        }
 
         // Check if already unlocked
         if (progress.unlockedCardBacks.includes(id)) {
