@@ -112,7 +112,7 @@ export class LevelCompleteScene extends Scene {
                 backgroundColor: COLORS.PRIMARY,
                 fontSize: 28,
                 onClick: () => {
-                    this.playNextLevel();
+                    void this.handleActionWithAd(() => this.playNextLevel());
                 },
             });
         }
@@ -127,7 +127,7 @@ export class LevelCompleteScene extends Scene {
             backgroundColor: COLORS.SECONDARY,
             fontSize: 28,
             onClick: () => {
-                this.retryLevel();
+                void this.handleActionWithAd(() => this.retryLevel());
             },
         });
 
@@ -141,7 +141,7 @@ export class LevelCompleteScene extends Scene {
             backgroundColor: COLORS.ACCENT,
             fontSize: 28,
             onClick: () => {
-                this.goToMainMenu();
+                void this.handleActionWithAd(() => this.goToMainMenu());
             },
         });
 
@@ -239,5 +239,23 @@ export class LevelCompleteScene extends Scene {
      */
     private goToMainMenu(): void {
         this.scene.start(SCENE_KEYS.MAIN_MENU);
+    }
+
+    /**
+     * Handles an action with a rewarded ad wrapper
+     * Attempts to show an ad, then executes the action regardless of ad outcome
+     */
+    private async handleActionWithAd(action: () => void): Promise<void> {
+        try {
+            // Attempt to show rewarded ad
+            // logic: Users "pay" with their time watching an ad to proceed/retry
+            await this.adService.showRewardedAd();
+        } catch (error) {
+            console.error('Error showing rewarded ad:', error);
+            // If ad fails, we still want the user to proceed
+        } finally {
+            // Execute the intended action (navigation)
+            action();
+        }
     }
 }
