@@ -30,8 +30,8 @@ export interface IAudioService {
  */
 export interface IFeedbackService {
     initialize(scene: Phaser.Scene): void;
-    triggerFeedback(type: FeedbackType, x?: number, y?: number): void;
-    showConfetti(x: number, y: number): void;
+    triggerFeedback(type: FeedbackType): void;
+    // showConfetti removed - feature removed per user request
     showShake(target: Phaser.GameObjects.GameObject): void;
     cleanup(): void;
 }

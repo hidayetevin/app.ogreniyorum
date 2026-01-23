@@ -10,7 +10,7 @@ export class AchievementNotification extends Phaser.GameObjects.Container {
     private titleText: Phaser.GameObjects.Text;
     private descriptionText: Phaser.GameObjects.Text;
     private rewardText: Phaser.GameObjects.Text;
-    private confettiParticles: Phaser.GameObjects.Particles.ParticleEmitter | null = null;
+    // confettiParticles removed - feature removed per user request
 
     constructor(scene: Phaser.Scene) {
         super(scene, GAME_CONFIG.WIDTH / 2, -200); // Start off-screen
@@ -94,8 +94,7 @@ export class AchievementNotification extends Phaser.GameObjects.Container {
         // Make visible
         this.setVisible(true);
 
-        // Create confetti effect
-        this.createConfetti();
+        // Confetti removed - user doesn't like the visual effect
 
         // Slide in animation
         this.scene.tweens.add({
@@ -133,56 +132,19 @@ export class AchievementNotification extends Phaser.GameObjects.Container {
             ease: 'Back.in',
             onComplete: () => {
                 this.setVisible(false);
-                if (this.confettiParticles) {
-                    this.confettiParticles.stop();
-                }
+                // confettiParticles cleanup removed - feature removed
             },
         });
     }
 
-    /**
-     * Creates confetti particle effect
-     */
-    private createConfetti(): void {
-        // Simple confetti using graphics
-        const colors = [0xffd700, 0xff6b6b, 0x4ecdc4, 0x45b7d1, 0xf7b731];
-
-        // Create multiple confetti pieces
-        for (let i = 0; i < 20; i++) {
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            const confetti = this.scene.add.rectangle(
-                this.x + (Math.random() - 0.5) * 300,
-                this.y,
-                8,
-                8,
-                color
-            );
-            confetti.setDepth(Z_INDEX.PARTICLES);
-
-            // Animate falling
-            this.scene.tweens.add({
-                targets: confetti,
-                y: confetti.y + 200 + Math.random() * 100,
-                x: confetti.x + (Math.random() - 0.5) * 200,
-                rotation: Math.random() * Math.PI * 4,
-                alpha: 0,
-                duration: 1500 + Math.random() * 500,
-                ease: 'Cubic.out',
-                onComplete: () => {
-                    confetti.destroy();
-                },
-            });
-        }
-    }
+    // createConfetti method removed - feature removed per user request
 
     /**
      * Cleanup
      */
     public override destroy(fromScene?: boolean): void {
         this.background.destroy();
-        if (this.confettiParticles) {
-            this.confettiParticles.stop();
-        }
+        // confettiParticles cleanup removed - feature removed
         super.destroy(fromScene);
     }
 }

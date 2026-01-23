@@ -64,7 +64,6 @@ export class LevelCompleteScene extends Scene {
 
         // Celebration effect
         this.feedbackService.triggerFeedback(FeedbackType.LEVEL_COMPLETE);
-        this.feedbackService.showConfetti(centerX, centerY - 100);
 
         // Title
         const title = this.add.text(

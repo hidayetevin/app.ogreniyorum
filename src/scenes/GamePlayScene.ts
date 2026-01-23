@@ -327,8 +327,8 @@ export class GamePlayScene extends Scene {
             // Match! - Haptic feedback
             HapticFeedback.success();
 
-            this.feedbackService.triggerFeedback(FeedbackType.CORRECT_MATCH, card1.x, card1.y);
-            this.feedbackService.triggerFeedback(FeedbackType.CORRECT_MATCH, card2.x, card2.y);
+            this.feedbackService.triggerFeedback(FeedbackType.CORRECT_MATCH);
+            this.feedbackService.triggerFeedback(FeedbackType.CORRECT_MATCH);
 
             card1.setMatched();
             card2.setMatched();

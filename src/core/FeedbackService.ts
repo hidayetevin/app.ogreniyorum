@@ -1,6 +1,6 @@
 import type { IFeedbackService } from '../types/services';
 import { FeedbackType } from '../types/models';
-import { ANIMATION_DURATION, COLORS, Z_INDEX } from '@constants/index';
+import { ANIMATION_DURATION, COLORS } from '@constants/index';
 import { AudioService } from './AudioService';
 
 /**
@@ -35,13 +35,11 @@ export class FeedbackService implements IFeedbackService {
     /**
      * Triggers appropriate feedback based on type
      */
-    public triggerFeedback(type: FeedbackType, x?: number, y?: number): void {
+    public triggerFeedback(type: FeedbackType): void {
         switch (type) {
             case FeedbackType.CORRECT_MATCH:
                 this.audioService.playSound('correct-match');
-                if (x !== undefined && y !== undefined) {
-                    this.showConfetti(x, y);
-                }
+                // Confetti removed - user doesn't like the visual effect
                 break;
 
             case FeedbackType.WRONG_MATCH:
@@ -62,37 +60,7 @@ export class FeedbackService implements IFeedbackService {
         }
     }
 
-    /**
-     * Shows confetti particle effect
-     */
-    public showConfetti(x: number, y: number): void {
-        if (this.scene === null) {
-            return;
-        }
-
-        const colors = [COLORS.PRIMARY, COLORS.SECONDARY, COLORS.ACCENT, COLORS.WARNING];
-
-        // Create particle emitter
-        const texture = this.scene.textures.exists('star') ? 'star' : 'confetti';
-
-        const particles = this.scene.add.particles(x, y, texture, {
-            speed: { min: 150, max: 350 },
-            angle: { min: 0, max: 360 },
-            scale: { start: 0.8, end: 0 },
-            lifespan: ANIMATION_DURATION.CONFETTI,
-            quantity: 30,
-            tint: colors.map((c) => parseInt(c.replace('#', ''), 16)),
-            gravityY: 350,
-            rotate: { start: 0, end: 360 }
-        });
-
-        particles.setDepth(Z_INDEX.PARTICLES);
-
-        // Auto-destroy after animation
-        this.scene.time.delayedCall(ANIMATION_DURATION.CONFETTI, () => {
-            particles.destroy();
-        });
-    }
+    // showConfetti method removed - confetti effect was removed per user request
 
     /**
      * Shows shake effect on a game object
