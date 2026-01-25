@@ -39,144 +39,171 @@ export class MainMenuScene extends Scene {
      * Creates the main menu UI
      */
     public create(): void {
-        const centerX = GAME_CONFIG.WIDTH / 2;
-        const centerY = GAME_CONFIG.HEIGHT / 2;
+        try {
+            const centerX = GAME_CONFIG.WIDTH / 2;
+            const centerY = GAME_CONFIG.HEIGHT / 2;
 
-        // Background
-        this.cameras.main.setBackgroundColor(GAME_CONFIG.BACKGROUND_COLOR);
+            // Background
+            this.cameras.main.setBackgroundColor(GAME_CONFIG.BACKGROUND_COLOR);
 
-        // Title
-        const title = this.add.text(
-            centerX,
-            centerY - 300,
-            this.localizationService.translate('app.title'),
-            {
-                fontSize: '54px',
-                color: COLORS.TEXT_LIGHT,
-                fontFamily: 'Arial, sans-serif',
-                fontStyle: 'bold',
-            }
-        );
-        title.setOrigin(0.5);
+            // Title
+            const title = this.add.text(
+                centerX,
+                centerY - 300,
+                this.localizationService.translate('app.title'),
+                {
+                    fontSize: '54px',
+                    color: COLORS.TEXT_LIGHT,
+                    fontFamily: 'Arial, sans-serif',
+                    fontStyle: 'bold',
+                }
+            );
+            title.setOrigin(0.5);
 
-        // Subtitle
-        const subtitle = this.add.text(
-            centerX,
-            centerY - 230,
-            this.localizationService.translate('app.subtitle'),
-            {
-                fontSize: '24px',
-                color: COLORS.TEXT_LIGHT,
-                fontFamily: 'Arial, sans-serif',
-            }
-        );
-        subtitle.setOrigin(0.5);
+            // Subtitle
+            const subtitle = this.add.text(
+                centerX,
+                centerY - 230,
+                this.localizationService.translate('app.subtitle'),
+                {
+                    fontSize: '24px',
+                    color: COLORS.TEXT_LIGHT,
+                    fontFamily: 'Arial, sans-serif',
+                }
+            );
+            subtitle.setOrigin(0.5);
 
-        // Progress tracking UI (moved above buttons)
-        this.createProgressUI(centerX, centerY - 280);
+            // Progress tracking UI (moved above buttons)
+            this.createProgressUI(centerX, centerY - 280);
 
-        // Play button (moved down)
-        new Button(this, {
-            x: centerX,
-            y: centerY + 80,
-            width: 300,
-            height: 80,
-            text: this.localizationService.translate('menu.play'),
-            backgroundColor: COLORS.PRIMARY,
-            fontSize: 32,
-            onClick: () => {
-                this.startGame();
-            },
-        });
+            // Play button (moved down)
+            new Button(this, {
+                x: centerX,
+                y: centerY + 80,
+                width: 300,
+                height: 80,
+                text: this.localizationService.translate('menu.play'),
+                backgroundColor: COLORS.PRIMARY,
+                fontSize: 32,
+                onClick: () => {
+                    this.startGame();
+                },
+            });
 
-        // Settings button (moved down)
-        new Button(this, {
-            x: centerX,
-            y: centerY + 180,
-            width: 300,
-            height: 80,
-            text: this.localizationService.translate('menu.settings'),
-            backgroundColor: COLORS.SECONDARY,
-            fontSize: 32,
-            onClick: () => {
-                this.openSettings();
-            },
-        });
+            // Settings button (moved down)
+            new Button(this, {
+                x: centerX,
+                y: centerY + 180,
+                width: 300,
+                height: 80,
+                text: this.localizationService.translate('menu.settings'),
+                backgroundColor: COLORS.SECONDARY,
+                fontSize: 32,
+                onClick: () => {
+                    this.openSettings();
+                },
+            });
 
-        // Parent panel button (moved down)
-        new Button(this, {
-            x: centerX,
-            y: centerY + 280,
-            width: 300,
-            height: 80,
-            text: this.localizationService.translate('menu.parent'),
-            backgroundColor: COLORS.WARNING,
-            fontSize: 32,
-            onClick: () => {
-                this.openParentPanel();
-            },
-        });
+            // Parent panel button (moved down)
+            new Button(this, {
+                x: centerX,
+                y: centerY + 280,
+                width: 300,
+                height: 80,
+                text: this.localizationService.translate('menu.parent'),
+                backgroundColor: COLORS.WARNING,
+                fontSize: 32,
+                onClick: () => {
+                    this.openParentPanel();
+                },
+            });
 
-        // Card backs button
-        new Button(this, {
-            x: centerX,
-            y: centerY + 380,
-            width: 300,
-            height: 80,
-            text: this.localizationService.translate('cardBack.title'),
-            backgroundColor: COLORS.PRIMARY,
-            fontSize: 32,
-            onClick: () => {
-                this.scene.start(SCENE_KEYS.CARD_BACK_SELECTION);
-            },
-        });
+            // Card backs button
+            new Button(this, {
+                x: centerX,
+                y: centerY + 380,
+                width: 300,
+                height: 80,
+                text: this.localizationService.translate('cardBack.title'),
+                backgroundColor: COLORS.PRIMARY,
+                fontSize: 32,
+                onClick: () => {
+                    this.scene.start(SCENE_KEYS.CARD_BACK_SELECTION);
+                },
+            });
 
-        // Add pulsing animation to title
-        this.tweens.add({
-            targets: title,
-            scale: 1.05,
-            duration: 1000,
-            yoyo: true,
-            repeat: -1,
-            ease: 'Sine.easeInOut',
-        });
+            // Add pulsing animation to title
+            this.tweens.add({
+                targets: title,
+                scale: 1.05,
+                duration: 1000,
+                yoyo: true,
+                repeat: -1,
+                ease: 'Sine.easeInOut',
+            });
 
-        // Play background music
-        this.audioService.playMusic('background-music', true);
+            // Play background music
+            this.audioService.playMusic('background-music', true);
 
-        // Initialize Settings Panel
-        this.settingsPanel = new SettingsPanel(this);
+            // Initialize Settings Panel
+            this.settingsPanel = new SettingsPanel(this);
 
-        // Initialize Parent Gate
-        this.parentGate = new ParentGate(
-            this,
-            () => {
-                // Success - open parent panel
-                this.scene.start(SCENE_KEYS.PARENT_PANEL);
-            },
-            () => {
-                // Fail - do nothing
-                console.log('Parent gate failed');
-            }
-        );
+            // Initialize Parent Gate
+            this.parentGate = new ParentGate(
+                this,
+                () => {
+                    // Success - open parent panel
+                    this.scene.start(SCENE_KEYS.PARENT_PANEL);
+                },
+                () => {
+                    // Fail - do nothing
+                    console.log('Parent gate failed');
+                }
+            );
 
-        // Language Button (Top Right)
-        const currentLang = this.localizationService.getCurrentLanguage();
-        new Button(this, {
-            x: GAME_CONFIG.WIDTH - 80,
-            y: 50,
-            width: 100,
-            height: 60,
-            text: currentLang.toUpperCase(),
-            backgroundColor: COLORS.ACCENT,
-            fontSize: 24,
-            onClick: () => {
-                this.toggleLanguage();
-            },
-        });
+            // Language Button (Top Right)
+            const currentLang = this.localizationService.getCurrentLanguage();
+            new Button(this, {
+                x: GAME_CONFIG.WIDTH - 80,
+                y: 50,
+                width: 100,
+                height: 60,
+                text: currentLang.toUpperCase(),
+                backgroundColor: COLORS.ACCENT,
+                fontSize: 24,
+                onClick: () => {
+                    this.toggleLanguage();
+                },
+            });
 
-        // Show banner ad via AdMob
-        void this.adService.showBanner();
+            // Show banner ad via AdMob
+            void this.adService.showBanner();
+        } catch (error) {
+            console.error('[MainMenuScene] Scene Create Error:', error);
+
+            // Show explicit error (Critical scene)
+            const centerX = GAME_CONFIG.WIDTH / 2;
+            const centerY = GAME_CONFIG.HEIGHT / 2;
+
+            this.add.text(centerX, centerY, 'Bir hata oluştu.', {
+                fontSize: '32px',
+                color: '#ff0000',
+                backgroundColor: '#000000'
+            }).setOrigin(0.5);
+
+            new Button(this, {
+                x: centerX,
+                y: centerY + 100,
+                width: 200,
+                height: 60,
+                text: 'Tekrar Dene',
+                backgroundColor: COLORS.ACCENT,
+                fontSize: 24,
+                onClick: () => {
+                    this.scene.restart();
+                }
+            });
+        }
     }
 
     private async toggleLanguage(): Promise<void> {

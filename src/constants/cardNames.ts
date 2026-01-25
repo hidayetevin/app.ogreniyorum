@@ -90,13 +90,13 @@ export const CARD_NAMES: Record<string, string> = {
     // Jobs
     'jobs/1.png': 'card.jobs.doctor',
     'jobs/2.png': 'card.jobs.police',
-    'jobs/3.png': 'card.jobs.teacher',
-    'jobs/4.png': 'card.jobs.firefighter',
-    'jobs/5.png': 'card.jobs.engineer',
-    'jobs/6.png': 'card.jobs.chef',
-    'jobs/7.png': 'card.jobs.artist',
-    'jobs/8.png': 'card.jobs.farmer',
-    'jobs/9.png': 'card.jobs.dentist',
+    'jobs/3.png': 'card.jobs.engineer',
+    'jobs/4.png': 'card.jobs.dentist',
+    'jobs/5.png': 'card.jobs.firefighter',
+    'jobs/6.png': 'card.jobs.artist',
+    'jobs/7.png': 'card.jobs.chef',
+    'jobs/8.png': 'card.jobs.teacher',
+    'jobs/9.png': 'card.jobs.farmer',
     'jobs/10.png': 'card.jobs.pilot',
 
     // Numbers

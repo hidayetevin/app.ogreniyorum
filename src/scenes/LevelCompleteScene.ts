@@ -50,110 +50,137 @@ export class LevelCompleteScene extends Scene {
      * Creates the completion UI
      */
     public create(): void {
-        const centerX = GAME_CONFIG.WIDTH / 2;
-        const centerY = GAME_CONFIG.HEIGHT / 2;
+        try {
+            const centerX = GAME_CONFIG.WIDTH / 2;
+            const centerY = GAME_CONFIG.HEIGHT / 2;
 
-        // Background
-        this.cameras.main.setBackgroundColor(GAME_CONFIG.BACKGROUND_COLOR);
+            // Background
+            this.cameras.main.setBackgroundColor(GAME_CONFIG.BACKGROUND_COLOR);
 
-        // Show banner ad via AdMob
-        void this.adService.showBanner();
+            // Show banner ad via AdMob
+            void this.adService.showBanner();
 
-        // Initialize feedback service
-        this.feedbackService.initialize(this);
+            // Initialize feedback service
+            this.feedbackService.initialize(this);
 
-        // Celebration effect
-        this.feedbackService.triggerFeedback(FeedbackType.LEVEL_COMPLETE);
+            // Celebration effect
+            this.feedbackService.triggerFeedback(FeedbackType.LEVEL_COMPLETE);
 
-        // Title
-        const title = this.add.text(
-            centerX,
-            centerY - 200,
-            this.localizationService.translate('level.complete'),
-            {
-                fontSize: '64px',
-                color: COLORS.SUCCESS,
-                fontFamily: 'Arial, sans-serif',
-                fontStyle: 'bold',
+            // Title
+            const title = this.add.text(
+                centerX,
+                centerY - 200,
+                this.localizationService.translate('level.complete'),
+                {
+                    fontSize: '64px',
+                    color: COLORS.SUCCESS,
+                    fontFamily: 'Arial, sans-serif',
+                    fontStyle: 'bold',
+                }
+            );
+            title.setOrigin(0.5);
+
+            // Stars display
+            this.displayStars(centerX, centerY - 100);
+
+            // Stats
+            const statsY = centerY + 20;
+            const movesText = this.add.text(
+                centerX,
+                statsY,
+                this.localizationService.translate('stats.moves', { count: this.moves.toString() }),
+                {
+                    fontSize: '28px',
+                    color: COLORS.TEXT_LIGHT,
+                    fontFamily: 'Arial, sans-serif',
+                }
+            );
+            movesText.setOrigin(0.5);
+
+            // Buttons
+            const buttonY = centerY + 150;
+
+            // Next level button
+            const nextLevel = this.levelService.getNextLevel(this.levelId);
+
+            if (nextLevel !== null) {
+                new Button(this, {
+                    x: centerX - 160,
+                    y: buttonY,
+                    width: 250,
+                    height: 70,
+                    text: this.localizationService.translate('menu.next'),
+                    backgroundColor: COLORS.PRIMARY,
+                    fontSize: 28,
+                    onClick: () => {
+                        void this.handleActionWithAd(() => this.playNextLevel());
+                    },
+                });
             }
-        );
-        title.setOrigin(0.5);
 
-        // Stars display
-        this.displayStars(centerX, centerY - 100);
-
-        // Stats
-        const statsY = centerY + 20;
-        const movesText = this.add.text(
-            centerX,
-            statsY,
-            this.localizationService.translate('stats.moves', { count: this.moves.toString() }),
-            {
-                fontSize: '28px',
-                color: COLORS.TEXT_LIGHT,
-                fontFamily: 'Arial, sans-serif',
-            }
-        );
-        movesText.setOrigin(0.5);
-
-        // Buttons
-        const buttonY = centerY + 150;
-
-        // Next level button
-        const nextLevel = this.levelService.getNextLevel(this.levelId);
-
-        if (nextLevel !== null) {
+            // Retry button
             new Button(this, {
-                x: centerX - 160,
+                x: centerX + (nextLevel !== null ? 160 : 0),
                 y: buttonY,
                 width: 250,
                 height: 70,
-                text: this.localizationService.translate('menu.next'),
-                backgroundColor: COLORS.PRIMARY,
+                text: this.localizationService.translate('menu.retry'),
+                backgroundColor: COLORS.SECONDARY,
                 fontSize: 28,
                 onClick: () => {
-                    void this.handleActionWithAd(() => this.playNextLevel());
+                    void this.handleActionWithAd(() => this.retryLevel());
                 },
             });
+
+            // Main menu button
+            new Button(this, {
+                x: centerX,
+                y: buttonY + 90,
+                width: 250,
+                height: 70,
+                text: this.localizationService.translate('menu.mainMenu'),
+                backgroundColor: COLORS.ACCENT,
+                fontSize: 28,
+                onClick: () => {
+                    void this.handleActionWithAd(() => this.goToMainMenu());
+                },
+            });
+
+            // Animate title
+            this.tweens.add({
+                targets: title,
+                scale: 1.1,
+                duration: 500,
+                yoyo: true,
+                repeat: -1,
+                ease: 'Sine.easeInOut',
+            });
+        } catch (error) {
+            console.error('[LevelCompleteScene] Scene Create Error:', error);
+
+            // Show explicit error
+            const centerX = GAME_CONFIG.WIDTH / 2;
+            const centerY = GAME_CONFIG.HEIGHT / 2;
+
+            this.add.text(centerX, centerY, 'Bir hata oluştu.', {
+                fontSize: '32px',
+                color: '#ff0000',
+                backgroundColor: '#000000'
+            }).setOrigin(0.5);
+
+            new Button(this, {
+                x: centerX,
+                y: centerY + 100,
+                width: 200,
+                height: 60,
+                text: 'Ana Menü',
+                backgroundColor: COLORS.ACCENT,
+                fontSize: 24,
+                onClick: () => {
+                    this.scene.start(SCENE_KEYS.MAIN_MENU);
+                }
+            });
         }
-
-        // Retry button
-        new Button(this, {
-            x: centerX + (nextLevel !== null ? 160 : 0),
-            y: buttonY,
-            width: 250,
-            height: 70,
-            text: this.localizationService.translate('menu.retry'),
-            backgroundColor: COLORS.SECONDARY,
-            fontSize: 28,
-            onClick: () => {
-                void this.handleActionWithAd(() => this.retryLevel());
-            },
-        });
-
-        // Main menu button
-        new Button(this, {
-            x: centerX,
-            y: buttonY + 90,
-            width: 250,
-            height: 70,
-            text: this.localizationService.translate('menu.mainMenu'),
-            backgroundColor: COLORS.ACCENT,
-            fontSize: 28,
-            onClick: () => {
-                void this.handleActionWithAd(() => this.goToMainMenu());
-            },
-        });
-
-        // Animate title
-        this.tweens.add({
-            targets: title,
-            scale: 1.1,
-            duration: 500,
-            yoyo: true,
-            repeat: -1,
-            ease: 'Sine.easeInOut',
-        });
     }
 
     /**

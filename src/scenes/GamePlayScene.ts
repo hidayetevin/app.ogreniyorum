@@ -87,24 +87,51 @@ export class GamePlayScene extends Scene {
      * Creates the gameplay UI
      */
     public create(): void {
-        if (this.currentLevel === null || this.gameSession === null) {
-            return;
+        try {
+            if (this.currentLevel === null || this.gameSession === null) {
+                return;
+            }
+
+            // Background
+            this.cameras.main.setBackgroundColor(GAME_CONFIG.BACKGROUND_COLOR);
+
+            // Show banner ad via AdMob
+            void this.adService.showBanner();
+
+            // Initialize feedback service
+            this.feedbackService.initialize(this);
+
+            // Create UI
+            this.createUI();
+
+            // Create card grid
+            this.createCardGrid();
+        } catch (error) {
+            console.error('[GamePlayScene] Scene Create Error:', error);
+
+            // Show explicit error
+            const centerX = GAME_CONFIG.WIDTH / 2;
+            const centerY = GAME_CONFIG.HEIGHT / 2;
+
+            this.add.text(centerX, centerY, 'Oyun oluşturulurken hata oluştu.', {
+                fontSize: '32px',
+                color: '#ff0000',
+                backgroundColor: '#000000'
+            }).setOrigin(0.5);
+
+            new Button(this, {
+                x: centerX,
+                y: centerY + 100,
+                width: 250,
+                height: 60,
+                text: 'Kategori Seç',
+                backgroundColor: COLORS.ACCENT,
+                fontSize: 24,
+                onClick: () => {
+                    this.scene.start(SCENE_KEYS.CATEGORY_SELECTION);
+                }
+            });
         }
-
-        // Background
-        this.cameras.main.setBackgroundColor(GAME_CONFIG.BACKGROUND_COLOR);
-
-        // Show banner ad via AdMob
-        void this.adService.showBanner();
-
-        // Initialize feedback service
-        this.feedbackService.initialize(this);
-
-        // Create UI
-        this.createUI();
-
-        // Create card grid
-        this.createCardGrid();
     }
 
     /**

@@ -27,84 +27,111 @@ export class ParentPanelScene extends Scene {
      * Creates the parent panel UI
      */
     public create(): void {
-        const centerX = GAME_CONFIG.WIDTH / 2;
-        const centerY = GAME_CONFIG.HEIGHT / 2;
+        try {
+            const centerX = GAME_CONFIG.WIDTH / 2;
+            const centerY = GAME_CONFIG.HEIGHT / 2;
 
-        // Background
-        this.cameras.main.setBackgroundColor(GAME_CONFIG.BACKGROUND_COLOR);
+            // Background
+            this.cameras.main.setBackgroundColor(GAME_CONFIG.BACKGROUND_COLOR);
 
-        // Show banner ad via AdMob
-        void this.adService.showBanner();
+            // Show banner ad via AdMob
+            void this.adService.showBanner();
 
-        // Title
-        const title = this.add.text(
-            centerX,
-            100,
-            '📊 EBEVEYİN PANELİ',
-            {
-                fontSize: '48px',
-                color: COLORS.WARNING,
-                fontFamily: 'Arial, sans-serif',
-                fontStyle: 'bold',
-            }
-        );
-        title.setOrigin(0.5);
+            // Title
+            const title = this.add.text(
+                centerX,
+                100,
+                '📊 EBEVEYİN PANELİ',
+                {
+                    fontSize: '48px',
+                    color: COLORS.WARNING,
+                    fontFamily: 'Arial, sans-serif',
+                    fontStyle: 'bold',
+                }
+            );
+            title.setOrigin(0.5);
 
-        // Get statistics
-        const progress = this.storageService.loadProgress();
-        const categories = this.levelService.getCategories();
-        const achievementProgress = this.achievementService.getProgress();
+            // Get statistics
+            const progress = this.storageService.loadProgress();
+            const categories = this.levelService.getCategories();
+            const achievementProgress = this.achievementService.getProgress();
 
-        // Calculate total possible stars
-        let totalPossibleStars = 0;
-        categories.forEach(category => {
-            totalPossibleStars += category.levels.length * 3;
-        });
+            // Calculate total possible stars
+            let totalPossibleStars = 0;
+            categories.forEach(category => {
+                totalPossibleStars += category.levels.length * 3;
+            });
 
-        // Statistics panel
-        this.createStatsPanel(centerX, centerY - 200, {
-            totalStars: progress.totalStars,
-            maxStars: totalPossibleStars,
-            levelsCompleted: progress.levelsCompleted,
-            totalLevels: categories.reduce((sum, cat) => sum + cat.levels.length, 0),
-            categoriesUnlocked: progress.unlockedCategories.length,
-            totalCategories: categories.length,
-            currentStreak: progress.currentStreak,
-            playTime: this.storageService.getFormattedPlayTime(),
-            achievementsUnlocked: achievementProgress.unlockedAchievements.length,
-            totalAchievements: this.achievementService.getAllAchievements().length,
-        });
+            // Statistics panel
+            this.createStatsPanel(centerX, centerY - 200, {
+                totalStars: progress.totalStars,
+                maxStars: totalPossibleStars,
+                levelsCompleted: progress.levelsCompleted,
+                totalLevels: categories.reduce((sum, cat) => sum + cat.levels.length, 0),
+                categoriesUnlocked: progress.unlockedCategories.length,
+                totalCategories: categories.length,
+                currentStreak: progress.currentStreak,
+                playTime: this.storageService.getFormattedPlayTime(),
+                achievementsUnlocked: achievementProgress.unlockedAchievements.length,
+                totalAchievements: this.achievementService.getAllAchievements().length,
+            });
 
-        // Category performance (moved down)
-        this.createCategoryPerformance(centerX, centerY + 150, categories, progress);
+            // Category performance (moved down)
+            this.createCategoryPerformance(centerX, centerY + 150, categories, progress);
 
-        // Reset button
-        new Button(this, {
-            x: centerX,
-            y: GAME_CONFIG.HEIGHT - 200,
-            width: 350,
-            height: 70,
-            text: '🗑️ İlerlemeyi Sıfırla',
-            backgroundColor: COLORS.ACCENT,
-            fontSize: 24,
-            onClick: () => {
-                this.confirmReset();
-            },
-        });
+            // Reset button
+            new Button(this, {
+                x: centerX,
+                y: GAME_CONFIG.HEIGHT - 200,
+                width: 350,
+                height: 70,
+                text: '🗑️ İlerlemeyi Sıfırla',
+                backgroundColor: COLORS.ACCENT,
+                fontSize: 24,
+                onClick: () => {
+                    this.confirmReset();
+                },
+            });
 
-        // Back button
-        new Button(this, {
-            x: centerX,
-            y: GAME_CONFIG.HEIGHT - 110,
-            width: 350,
-            height: 70,
-            text: '← Ana Menü',
-            backgroundColor: COLORS.SECONDARY,
-            fontSize: 24,
-            onClick: () => {
-                this.scene.start(SCENE_KEYS.MAIN_MENU);
-            },
-        });
+            // Back button
+            new Button(this, {
+                x: centerX,
+                y: GAME_CONFIG.HEIGHT - 110,
+                width: 350,
+                height: 70,
+                text: '← Ana Menü',
+                backgroundColor: COLORS.SECONDARY,
+                fontSize: 24,
+                onClick: () => {
+                    this.scene.start(SCENE_KEYS.MAIN_MENU);
+                },
+            });
+        } catch (error) {
+            console.error('[ParentPanelScene] Scene Create Error:', error);
+
+            // Show explicit error
+            const centerX = GAME_CONFIG.WIDTH / 2;
+            const centerY = GAME_CONFIG.HEIGHT / 2;
+
+            this.add.text(centerX, centerY, 'Bir hata oluştu.', {
+                fontSize: '32px',
+                color: '#ff0000',
+                backgroundColor: '#000000'
+            }).setOrigin(0.5);
+
+            new Button(this, {
+                x: centerX,
+                y: centerY + 100,
+                width: 200,
+                height: 60,
+                text: 'Ana Menü',
+                backgroundColor: COLORS.ACCENT,
+                fontSize: 24,
+                onClick: () => {
+                    this.scene.start(SCENE_KEYS.MAIN_MENU);
+                }
+            });
+        }
     }
 
     /**

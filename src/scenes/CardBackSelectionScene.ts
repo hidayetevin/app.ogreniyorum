@@ -33,98 +33,124 @@ export class CardBackSelectionScene extends Scene {
     }
 
     public create(): void {
-        const width = GAME_CONFIG.WIDTH;
-        const height = GAME_CONFIG.HEIGHT;
-        const headerHeight = 120;
-        const footerHeight = 100;
-        const bodyHeight = height - headerHeight - footerHeight;
+        try {
+            const width = GAME_CONFIG.WIDTH;
+            const height = GAME_CONFIG.HEIGHT;
+            const headerHeight = 120;
+            const footerHeight = 100;
+            const bodyHeight = height - headerHeight - footerHeight;
 
-        // Background
-        this.cameras.main.setBackgroundColor(GAME_CONFIG.BACKGROUND_COLOR);
+            // Background
+            this.cameras.main.setBackgroundColor(GAME_CONFIG.BACKGROUND_COLOR);
 
-        // --- HEADER ---
-        const headerBg = this.add.rectangle(0, 0, width, headerHeight, 0x2c3e50);
-        headerBg.setOrigin(0, 0);
-        headerBg.setDepth(Z_INDEX.UI + 10);
+            // --- HEADER ---
+            const headerBg = this.add.rectangle(0, 0, width, headerHeight, 0x2c3e50);
+            headerBg.setOrigin(0, 0);
+            headerBg.setDepth(Z_INDEX.UI + 10);
 
-        const title = this.add.text(width / 2, headerHeight / 2, this.localizationService.translate('cardBack.title'), {
-            fontSize: '42px',
-            color: COLORS.TEXT_LIGHT,
-            fontFamily: 'Arial, sans-serif',
-            fontStyle: 'bold',
-        });
-        title.setOrigin(0.5);
-        title.setDepth(Z_INDEX.UI + 11);
+            const title = this.add.text(width / 2, headerHeight / 2, this.localizationService.translate('cardBack.title'), {
+                fontSize: '42px',
+                color: COLORS.TEXT_LIGHT,
+                fontFamily: 'Arial, sans-serif',
+                fontStyle: 'bold',
+            });
+            title.setOrigin(0.5);
+            title.setDepth(Z_INDEX.UI + 11);
 
-        // --- BODY (Scrollable) ---
-        this.scrollContainer = this.add.container(0, headerHeight);
+            // --- BODY (Scrollable) ---
+            this.scrollContainer = this.add.container(0, headerHeight);
 
-        // Define mask
-        const maskShape = this.make.graphics({});
-        maskShape.fillStyle(0xffffff);
-        maskShape.fillRect(0, headerHeight, width, bodyHeight);
-        this.scrollMask = maskShape.createGeometryMask();
-        this.scrollContainer.setMask(this.scrollMask);
+            // Define mask
+            const maskShape = this.make.graphics({});
+            maskShape.fillStyle(0xffffff);
+            maskShape.fillRect(0, headerHeight, width, bodyHeight);
+            this.scrollMask = maskShape.createGeometryMask();
+            this.scrollContainer.setMask(this.scrollMask);
 
-        // Create scrollable content
-        this.createScrollableContent();
+            // Create scrollable content
+            this.createScrollableContent();
 
-        // --- SCROLL LOGIC ---
-        this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-            if (pointer.y > headerHeight && pointer.y < height - footerHeight) {
-                this.startY = pointer.y;
-                this.startPointerY = pointer.y;
-                this.lastY = this.scrollContainer!.y;
-                this.isDragging = false;
-            }
-        });
+            // --- SCROLL LOGIC ---
+            this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+                if (pointer.y > headerHeight && pointer.y < height - footerHeight) {
+                    this.startY = pointer.y;
+                    this.startPointerY = pointer.y;
+                    this.lastY = this.scrollContainer!.y;
+                    this.isDragging = false;
+                }
+            });
 
-        this.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
-            if (!pointer.isDown || !this.scrollContainer) return;
-            if (this.startPointerY === 0) return;
+            this.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
+                if (!pointer.isDown || !this.scrollContainer) return;
+                if (this.startPointerY === 0) return;
 
-            const totalDelta = Math.abs(pointer.y - this.startPointerY);
+                const totalDelta = Math.abs(pointer.y - this.startPointerY);
 
-            if (totalDelta > 15) {
-                this.isDragging = true;
-                let newY = this.lastY + (pointer.y - this.startY);
+                if (totalDelta > 15) {
+                    this.isDragging = true;
+                    let newY = this.lastY + (pointer.y - this.startY);
 
-                // Constrain scrolling
-                if (newY > headerHeight) newY = headerHeight;
-                if (newY < headerHeight - this.maxScroll) newY = headerHeight - this.maxScroll;
+                    // Constrain scrolling
+                    if (newY > headerHeight) newY = headerHeight;
+                    if (newY < headerHeight - this.maxScroll) newY = headerHeight - this.maxScroll;
 
-                this.scrollContainer.y = newY;
-            }
-        });
+                    this.scrollContainer.y = newY;
+                }
+            });
 
-        this.input.on('pointerup', () => {
-            this.startPointerY = 0;
-            setTimeout(() => {
-                this.isDragging = false;
-            }, 50);
-        });
+            this.input.on('pointerup', () => {
+                this.startPointerY = 0;
+                setTimeout(() => {
+                    this.isDragging = false;
+                }, 50);
+            });
 
-        // --- FOOTER ---
-        const footerBg = this.add.rectangle(0, height - footerHeight, width, footerHeight, 0x1a252f);
-        footerBg.setOrigin(0, 0);
-        footerBg.setDepth(Z_INDEX.UI + 10);
+            // --- FOOTER ---
+            const footerBg = this.add.rectangle(0, height - footerHeight, width, footerHeight, 0x1a252f);
+            footerBg.setOrigin(0, 0);
+            footerBg.setDepth(Z_INDEX.UI + 10);
 
-        // Back button
-        new Button(this, {
-            x: 100,
-            y: height - footerHeight / 2,
-            width: 150,
-            height: 60,
-            text: this.localizationService.translate('menu.back'),
-            backgroundColor: COLORS.ACCENT,
-            fontSize: 24,
-            onClick: () => {
-                this.scene.start(SCENE_KEYS.MAIN_MENU);
-            },
-        }).setDepth(Z_INDEX.UI + 11);
+            // Back button
+            new Button(this, {
+                x: 100,
+                y: height - footerHeight / 2,
+                width: 150,
+                height: 60,
+                text: this.localizationService.translate('menu.back'),
+                backgroundColor: COLORS.ACCENT,
+                fontSize: 24,
+                onClick: () => {
+                    this.scene.start(SCENE_KEYS.MAIN_MENU);
+                },
+            }).setDepth(Z_INDEX.UI + 11);
 
-        // Stars display
-        this.updateStarsDisplay();
+            // Stars display
+            this.updateStarsDisplay();
+        } catch (error) {
+            console.error('CardBackSelectionScene create error:', error);
+            // Show explicit error to user instead of freeze
+            const centerX = GAME_CONFIG.WIDTH / 2;
+            const centerY = GAME_CONFIG.HEIGHT / 2;
+
+            this.add.text(centerX, centerY, 'Bir hata oluştu.', {
+                fontSize: '32px',
+                color: '#ff0000',
+                backgroundColor: '#000000'
+            }).setOrigin(0.5);
+
+            new Button(this, {
+                x: centerX,
+                y: centerY + 100,
+                width: 200,
+                height: 60,
+                text: 'Ana Menü',
+                backgroundColor: COLORS.ACCENT,
+                fontSize: 24,
+                onClick: () => {
+                    this.scene.start(SCENE_KEYS.MAIN_MENU);
+                }
+            });
+        }
     }
 
     private updateStarsDisplay(): void {
