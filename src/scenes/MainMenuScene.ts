@@ -46,11 +46,6 @@ export class MainMenuScene extends Scene {
             // Background
             this.cameras.main.setBackgroundColor(GAME_CONFIG.BACKGROUND_COLOR);
 
-            // Logo
-            const logo = this.add.image(centerX, centerY - 480, 'app-logo');
-            logo.setScale(0.6); // Adjust scale as needed
-            logo.setAlpha(0);
-
             // Title
             const title = this.add.text(
                 centerX,
@@ -64,16 +59,6 @@ export class MainMenuScene extends Scene {
                 }
             );
             title.setOrigin(0.5);
-            title.setAlpha(0);
-
-            // Animate logo and title in
-            this.tweens.add({
-                targets: [logo, title],
-                alpha: 1,
-                y: '+=20',
-                duration: 1000,
-                ease: 'Power2.easeOut'
-            });
 
             // Subtitle
             const subtitle = this.add.text(
