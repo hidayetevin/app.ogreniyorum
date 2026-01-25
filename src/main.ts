@@ -12,7 +12,7 @@ import { batteryOptimizer } from '@utils/BatteryOptimizer';
 /**
  * Main Phaser game configuration
  */
-const config: Phaser.Types.Core.GameConfig = {
+const config: Phaser.Types.Core.GameConfig & { resolution?: number } = {
     type: Phaser.AUTO,
     width: GAME_CONFIG.WIDTH,
     height: GAME_CONFIG.HEIGHT,
@@ -23,6 +23,8 @@ const config: Phaser.Types.Core.GameConfig = {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
     },
+    // High-DPI support
+    resolution: window.devicePixelRatio,
     fps: {
         target: 60,
         forceSetTimeOut: false,
@@ -30,8 +32,10 @@ const config: Phaser.Types.Core.GameConfig = {
         smoothStep: true,
     },
     render: {
-        antialias: false, // Disable for better performance
+        antialias: true, // Enable for smooth edges
         pixelArt: false,
+        roundPixels: true, // Prevent sub-pixel blurring
+        powerPreference: 'high-performance',
     },
     physics: {
         default: 'arcade',
