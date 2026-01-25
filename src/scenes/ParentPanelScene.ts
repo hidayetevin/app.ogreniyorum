@@ -284,8 +284,12 @@ export class ParentPanelScene extends Scene {
         confirmText.setOrigin(0.5);
         confirmText.setDepth(102);
 
+        // Yes button reference
+        let yesButton: Button;
+        let noButton: Button;
+
         // Yes button
-        new Button(this, {
+        yesButton = new Button(this, {
             x: GAME_CONFIG.WIDTH / 2 - 100,
             y: panelY + 190,
             width: 120,
@@ -299,11 +303,14 @@ export class ParentPanelScene extends Scene {
                 panel.destroy();
                 warningText.destroy();
                 confirmText.destroy();
+                yesButton.destroy();
+                noButton.destroy();
             },
-        }).setDepth(102);
+        });
+        yesButton.setDepth(102);
 
         // No button
-        new Button(this, {
+        noButton = new Button(this, {
             x: GAME_CONFIG.WIDTH / 2 + 100,
             y: panelY + 190,
             width: 120,
@@ -316,8 +323,11 @@ export class ParentPanelScene extends Scene {
                 panel.destroy();
                 warningText.destroy();
                 confirmText.destroy();
+                yesButton.destroy();
+                noButton.destroy();
             },
-        }).setDepth(102);
+        });
+        noButton.setDepth(102);
     }
 
     /**
