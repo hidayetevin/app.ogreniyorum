@@ -24,6 +24,8 @@ export class AdService {
     private static instance: AdService | null = null;
     private analyticsService: AnalyticsService;
     private isInitialized: boolean = false;
+    private isInterstitialPrepared: boolean = false;
+    private isRewardedPrepared: boolean = false;
 
     // Test IDs from Google (Use these during development)
     private readonly TEST_IDS = {
@@ -55,8 +57,50 @@ export class AdService {
             await AdMob.initialize({});
             this.isInitialized = true;
             console.log('AdService: AdMob Initialized successfully.');
+
+            // Start preloading ads
+            void this.preloadInterstitial();
+            void this.preloadRewarded();
         } catch (error) {
             console.error('AdService: Error initializing AdMob:', error);
+        }
+    }
+
+    /**
+     * Preloads an interstitial ad
+     */
+    private async preloadInterstitial(): Promise<void> {
+        if (this.isInterstitialPrepared) return;
+
+        try {
+            console.log('AdService: Preloading Interstitial Ad...');
+            await AdMob.prepareInterstitial({
+                adId: this.TEST_IDS.INTERSTITIAL,
+            });
+            this.isInterstitialPrepared = true;
+            console.log('AdService: Interstitial Ad Preloaded.');
+        } catch (error) {
+            console.error('AdService: Error preloading interstitial:', error);
+            this.isInterstitialPrepared = false;
+        }
+    }
+
+    /**
+     * Preloads a rewarded ad
+     */
+    private async preloadRewarded(): Promise<void> {
+        if (this.isRewardedPrepared) return;
+
+        try {
+            console.log('AdService: Preloading Rewarded Ad...');
+            await AdMob.prepareRewardVideoAd({
+                adId: this.TEST_IDS.REWARDED,
+            });
+            this.isRewardedPrepared = true;
+            console.log('AdService: Rewarded Ad Preloaded.');
+        } catch (error) {
+            console.error('AdService: Error preloading rewarded:', error);
+            this.isRewardedPrepared = false;
         }
     }
 
@@ -76,7 +120,7 @@ export class AdService {
             };
 
             await AdMob.showBanner(options);
-            this.analyticsService.trackEvent(AnalyticsEventType.AD_SHOW, { type: AdType.BANNER });
+            // this.analyticsService.trackEvent(AnalyticsEventType.AD_SHOW, { type: AdType.BANNER }); // Banner analytics can be spammy
             console.log('AdService: Banner Ad Shown');
         } catch (error) {
             console.error('AdService: Error showing banner ad:', error);
@@ -103,14 +147,18 @@ export class AdService {
         if (!this.isInitialized) await this.initialize();
 
         try {
-            console.log('AdService: Preparing Rewarded Ad...');
+            // Check if preloaded, otherwise load
+            if (!this.isRewardedPrepared) {
+                console.log('AdService: Rewarded Ad not ready, loading now...');
+                await this.preloadRewarded();
+            }
 
-            await AdMob.prepareRewardVideoAd({
-                adId: this.TEST_IDS.REWARDED,
-            });
-
-            // Using 'any' to avoid SDK version specific type mismatches for AdMobReward/AdReward
+            // Using 'any' to avoid SDK version specific type mismatches
             const reward: any = await AdMob.showRewardVideoAd();
+            this.isRewardedPrepared = false; // Consumed
+
+            // Preload next one immediately
+            void this.preloadRewarded();
 
             if (reward && reward.amount > 0) {
                 console.log('AdService: Rewarded Ad Watched Successfully:', reward);
@@ -125,6 +173,9 @@ export class AdService {
             return false;
         } catch (error) {
             console.error('AdService: Error showing rewarded ad:', error);
+            this.isRewardedPrepared = false;
+            // Try to recover for next time
+            void this.preloadRewarded();
             return false;
         }
     }
@@ -136,17 +187,39 @@ export class AdService {
         if (!this.isInitialized) await this.initialize();
 
         try {
-            console.log('AdService: Preparing Interstitial Ad...');
-
-            await AdMob.prepareInterstitial({
-                adId: this.TEST_IDS.INTERSTITIAL,
-            });
+            // Check if preloaded, otherwise load
+            if (!this.isInterstitialPrepared) {
+                console.log('AdService: Interstitial Ad not ready, loading now...');
+                await this.preloadInterstitial();
+            }
 
             await AdMob.showInterstitial();
             this.analyticsService.trackEvent(AnalyticsEventType.AD_SHOW, { type: AdType.INTERSTITIAL });
             console.log('AdService: Interstitial Ad Shown');
+
+            this.isInterstitialPrepared = false; // Consumed
+
+            // Preload next one immediately
+            void this.preloadInterstitial();
         } catch (error) {
             console.error('AdService: Error showing interstitial ad:', error);
+            this.isInterstitialPrepared = false;
+            // Try to recover for next time
+            void this.preloadInterstitial();
         }
+    }
+
+    /**
+     * Checks if interstitial ad is ready
+     */
+    public isInterstitialReady(): boolean {
+        return this.isInterstitialPrepared;
+    }
+
+    /**
+     * Checks if rewarded ad is ready
+     */
+    public isRewardedReady(): boolean {
+        return this.isRewardedPrepared;
     }
 }

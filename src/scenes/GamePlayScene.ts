@@ -441,8 +441,22 @@ export class GamePlayScene extends Scene {
     /**
      * Shows an interstitial ad
      */
+    /**
+     * Shows an interstitial ad
+     */
     private async showAd(): Promise<void> {
         this.isInputLocked = true;
+        let loadingText: Phaser.GameObjects.Text | null = null;
+
+        if (!this.adService.isInterstitialReady()) {
+            loadingText = this.add.text(GAME_CONFIG.WIDTH / 2, GAME_CONFIG.HEIGHT / 2,
+                this.localizationService.translate('ad.watching') || 'Loading...', {
+                fontSize: '32px',
+                color: '#ffffff',
+                backgroundColor: '#000000aa',
+                padding: { x: 20, y: 10 }
+            }).setOrigin(0.5).setDepth(2000); // High depth
+        }
 
         try {
             // Show interstitial ad directly
@@ -450,6 +464,7 @@ export class GamePlayScene extends Scene {
         } catch (error) {
             console.error('Ad failed to show:', error);
         } finally {
+            loadingText?.destroy();
             this.isInputLocked = false;
         }
     }

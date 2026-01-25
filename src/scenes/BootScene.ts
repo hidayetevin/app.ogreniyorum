@@ -5,6 +5,7 @@ import { StorageService } from '@core/StorageService';
 import { LevelService } from '@core/LevelService';
 import { LocalizationService } from '@core/LocalizationService';
 import { AnalyticsService } from '@core/AnalyticsService';
+import { AdService } from '@core/AdService';
 
 /**
  * BootScene handles initial loading and service initialization
@@ -194,6 +195,10 @@ export class BootScene extends Scene {
 
             // Initialize analytics
             analyticsService.initialize();
+
+            // Initialize AdService (Starts preloading ads early)
+            const adService = AdService.getInstance();
+            console.log('AdService initialized for preloading:', adService !== null);
 
             // Check for data corruption
             if (storageService.isDataCorrupted()) {
