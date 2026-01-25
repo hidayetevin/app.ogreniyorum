@@ -91,7 +91,7 @@ export class ParentGate extends Phaser.GameObjects.Container {
         this.generateQuestion();
 
         // Cancel button
-        this.createCancelButton(panelX, panelY + panelHeight - 60);
+        this.createCancelButton(GAME_CONFIG.WIDTH / 2, panelY + panelHeight - 60);
 
         this.setDepth(Z_INDEX.MODAL);
         this.setVisible(false);
@@ -213,7 +213,7 @@ export class ParentGate extends Phaser.GameObjects.Container {
      * Creates cancel button
      */
     private createCancelButton(x: number, y: number): void {
-        const container = this.scene.add.container(x + 200, y);
+        const container = this.scene.add.container(x, y);
 
         const bg = this.scene.add.graphics();
         bg.fillStyle(parseInt(COLORS.ACCENT.replace('#', ''), 16), 1);
