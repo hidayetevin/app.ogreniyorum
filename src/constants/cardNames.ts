@@ -93,7 +93,7 @@ export const CARD_NAMES: Record<string, string> = {
     'jobs/3.png': 'card.jobs.engineer',
     'jobs/4.png': 'card.jobs.dentist',
     'jobs/5.png': 'card.jobs.firefighter',
-    'jobs/6.png': 'card.jobs.artist',
+    'jobs/6.png': 'card.jobs.soldier',
     'jobs/7.png': 'card.jobs.chef',
     'jobs/8.png': 'card.jobs.teacher',
     'jobs/9.png': 'card.jobs.farmer',
