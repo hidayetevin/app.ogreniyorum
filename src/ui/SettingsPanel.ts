@@ -10,7 +10,6 @@ export class SettingsPanel extends Phaser.GameObjects.Container {
     private localizationService: LocalizationService;
     private storageService: StorageService;
 
-    private musicButton!: Button;
     private soundButton!: Button;
 
     constructor(scene: Phaser.Scene) {
@@ -40,7 +39,7 @@ export class SettingsPanel extends Phaser.GameObjects.Container {
 
         // 2. Panel Background
         const panelWidth = 500;
-        const panelHeight = 600;
+        const panelHeight = 500; // Reduced height since one button is removed
         const panelX = width / 2;
         const panelY = height / 2;
 
@@ -49,7 +48,7 @@ export class SettingsPanel extends Phaser.GameObjects.Container {
         this.add(panelBg);
 
         // 3. Title
-        const title = this.scene.add.text(panelX, panelY - 240, this.localizationService.translate('menu.settings'), {
+        const title = this.scene.add.text(panelX, panelY - 180, this.localizationService.translate('menu.settings'), {
             fontSize: '48px',
             color: COLORS.TEXT_DARK,
             fontFamily: 'Arial, sans-serif',
@@ -58,22 +57,10 @@ export class SettingsPanel extends Phaser.GameObjects.Container {
         title.setOrigin(0.5);
         this.add(title);
 
-        // 4. Music Toggle
-        this.musicButton = new Button(this.scene, {
-            x: panelX,
-            y: panelY - 120,
-            width: 300,
-            height: 70,
-            text: this.getMusicText(),
-            backgroundColor: this.audioService.isMusicEnabled() ? COLORS.SUCCESS : COLORS.DISABLED,
-            onClick: () => this.toggleMusic()
-        });
-        this.add(this.musicButton);
-
-        // 5. Sound Toggle
+        // 4. Sound Toggle
         this.soundButton = new Button(this.scene, {
             x: panelX,
-            y: panelY - 20,
+            y: panelY,
             width: 300,
             height: 70,
             text: this.getSoundText(),
@@ -85,7 +72,7 @@ export class SettingsPanel extends Phaser.GameObjects.Container {
         // Close Button
         const closeButton = new Button(this.scene, {
             x: panelX,
-            y: panelY + 220,
+            y: panelY + 150,
             width: 200,
             height: 60,
             text: 'Kapat',
@@ -123,23 +110,11 @@ export class SettingsPanel extends Phaser.GameObjects.Container {
         });
     }
 
-    private toggleMusic(): void {
-        const newState = !this.audioService.isMusicEnabled();
-        this.audioService.setMusicEnabled(newState);
-        this.saveSettings();
-        this.refreshState();
-    }
-
     private toggleSound(): void {
         const newState = !this.audioService.isSoundEnabled();
         this.audioService.setSoundEnabled(newState);
         this.saveSettings();
         this.refreshState();
-    }
-
-    private getMusicText(): string {
-        const status = this.audioService.isMusicEnabled() ? 'AÇIK' : 'KAPALI';
-        return `Müzik: ${status}`;
     }
 
     private getSoundText(): string {
@@ -148,9 +123,6 @@ export class SettingsPanel extends Phaser.GameObjects.Container {
     }
 
     private refreshState(): void {
-        this.musicButton.setText(this.getMusicText());
-        this.musicButton.setBackgroundColor(this.audioService.isMusicEnabled() ? COLORS.SUCCESS : COLORS.DISABLED);
-
         this.soundButton.setText(this.getSoundText());
         this.soundButton.setBackgroundColor(this.audioService.isSoundEnabled() ? COLORS.SUCCESS : COLORS.DISABLED);
     }
@@ -160,7 +132,6 @@ export class SettingsPanel extends Phaser.GameObjects.Container {
         this.storageService.saveSettings({
             ...currentSettings,
             soundEnabled: this.audioService.isSoundEnabled(),
-            musicEnabled: this.audioService.isMusicEnabled(),
             language: this.localizationService.getCurrentLanguage() as Language,
         });
     }
