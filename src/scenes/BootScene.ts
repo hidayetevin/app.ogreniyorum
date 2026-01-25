@@ -156,7 +156,8 @@ export class BootScene extends Scene {
         ];
 
         cardBacks.forEach(cb => {
-            this.load.svg(cb.key, cb.path);
+            // Load as image to prevent potential SVG parsing issues on native
+            this.load.image(cb.key, cb.path);
         });
 
         // NOTE: Card images are now loaded lazily per category via AssetLoaderService

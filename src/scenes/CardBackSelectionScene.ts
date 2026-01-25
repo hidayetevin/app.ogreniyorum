@@ -207,15 +207,15 @@ export class CardBackSelectionScene extends Scene {
         // Card back preview image
         // We use the key loaded in BootScene which is 'card-back-' + id
         const imgKey = `card-back-${cb.id}`;
-        const preview = this.add.image(0, -30, imgKey);
+        const preview = this.add.image(0, -50, imgKey);
         // Scale to fit half of the card
-        const imgScale = (width * 0.7) / preview.width;
+        const imgScale = (width * 0.6) / preview.width;
         preview.setScale(imgScale);
         container.add(preview);
 
         // Name
-        const name = this.add.text(0, height / 2 - 70, this.localizationService.translate(cb.nameKey), {
-            fontSize: '24px',
+        const name = this.add.text(0, height / 2 - 75, this.localizationService.translate(cb.nameKey), {
+            fontSize: '22px',
             color: COLORS.TEXT_DARK,
             fontFamily: 'Arial, sans-serif',
             fontStyle: 'bold'

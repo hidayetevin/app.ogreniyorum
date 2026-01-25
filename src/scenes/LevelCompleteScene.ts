@@ -170,6 +170,7 @@ export class LevelCompleteScene extends Scene {
 
             const star = this.add.text(starX, y, isFilled ? '⭐' : '☆', {
                 fontSize: `${starSize}px`,
+                padding: { top: 10, bottom: 10 },
             });
             star.setOrigin(0.5);
 
