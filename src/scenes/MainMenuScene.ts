@@ -62,7 +62,7 @@ export class MainMenuScene extends Scene {
         // Subtitle
         const subtitle = this.add.text(
             centerX,
-            centerY - 130,
+            centerY - 230,
             this.localizationService.translate('app.subtitle'),
             {
                 fontSize: '24px',
