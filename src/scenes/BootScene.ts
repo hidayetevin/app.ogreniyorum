@@ -161,9 +161,12 @@ export class BootScene extends Scene {
             this.load.image(cb.key, cb.path);
         });
 
-        // NOTE: Card images are now loaded lazily per category via AssetLoaderService
+        // Load app icon
+        this.load.image('app-logo', '/assets/images/icons/icon.png');
+
+        // Note: Card images are now loaded lazily per category via AssetLoaderService
         // This reduces initial load time from ~5s to ~1.5s (70% improvement)
-        console.log('[BootScene] Loading only essential assets (category icons + UI)');
+        console.log('[BootScene] Loading only essential assets (category icons + UI + Logo)');
     }
 
     /**

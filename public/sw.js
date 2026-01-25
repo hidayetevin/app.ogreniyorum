@@ -5,6 +5,7 @@ const ASSETS_TO_CACHE = [
     '/manifest.json',
     '/src/main.ts',
     '/src/styles/main.css',
+    '/assets/images/icons/icon.png',
     '/assets/images/categories/animals-icon.png',
     '/assets/images/categories/fruits-icon.png',
     '/assets/images/categories/vehicles-icon.png',
