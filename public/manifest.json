@@ -1,6 +1,6 @@
 {
-    "name": "Resim Eşleştirme Oyunu",
-    "short_name": "Eşleştirme",
+    "name": "Öğreniyorum",
+    "short_name": "Öğreniyorum",
     "description": "Çocuklar için eğlenceli ve eğitici resim eşleştirme oyunu.",
     "start_url": "/",
     "display": "fullscreen",
