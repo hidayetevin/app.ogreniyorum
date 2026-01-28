@@ -27,11 +27,11 @@ export class AdService {
     private isInterstitialPrepared: boolean = false;
     private isRewardedPrepared: boolean = false;
 
-    // Test IDs from Google (Use these during development)
-    private readonly TEST_IDS = {
-        BANNER: 'ca-app-pub-3940256099942544/6300978111',
-        INTERSTITIAL: 'ca-app-pub-3940256099942544/1033173712',
-        REWARDED: 'ca-app-pub-3940256099942544/5224354917',
+    // Production IDs
+    private readonly AD_IDS = {
+        BANNER: 'ca-app-pub-4190858087915294/9285554263',
+        INTERSTITIAL: 'ca-app-pub-4190858087915294/1131732079',
+        REWARDED: 'ca-app-pub-4190858087915294/6564796239',
     };
 
     private constructor() {
@@ -75,7 +75,7 @@ export class AdService {
         try {
             console.log('AdService: Preloading Interstitial Ad...');
             await AdMob.prepareInterstitial({
-                adId: this.TEST_IDS.INTERSTITIAL,
+                adId: this.AD_IDS.INTERSTITIAL,
             });
             this.isInterstitialPrepared = true;
             console.log('AdService: Interstitial Ad Preloaded.');
@@ -94,7 +94,7 @@ export class AdService {
         try {
             console.log('AdService: Preloading Rewarded Ad...');
             await AdMob.prepareRewardVideoAd({
-                adId: this.TEST_IDS.REWARDED,
+                adId: this.AD_IDS.REWARDED,
             });
             this.isRewardedPrepared = true;
             console.log('AdService: Rewarded Ad Preloaded.');
@@ -112,7 +112,7 @@ export class AdService {
 
         try {
             const options: BannerAdOptions = {
-                adId: this.TEST_IDS.BANNER,
+                adId: this.AD_IDS.BANNER,
                 adSize: BannerAdSize.ADAPTIVE_BANNER,
                 position: BannerAdPosition.BOTTOM_CENTER,
                 margin: 0,
