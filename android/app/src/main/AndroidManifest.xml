@@ -13,6 +13,21 @@
             android:value="ca-app-pub-4190858087915294~9574102958"
         />
 
+        <!-- Google Play Families Policy - COPPA Compliance -->
+        <meta-data
+            android:name="com.google.android.gms.ads.AD_MANAGER_APP"
+            android:value="true" />
+        
+        <!-- Tag for child-directed treatment -->
+        <meta-data
+            android:name="com.google.android.gms.ads.flag.TAG_FOR_CHILD_DIRECTED_TREATMENT"
+            android:value="true" />
+        
+        <!-- Max ad content rating - G for General Audiences -->
+        <meta-data
+            android:name="com.google.android.gms.ads.flag.MAX_AD_CONTENT_RATING"
+            android:value="G" />
+
         <activity
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation|density"
             android:name=".MainActivity"

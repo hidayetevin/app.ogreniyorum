@@ -2,7 +2,41 @@
 
 Google Play Console'da "Release notes" kısmına yapıştırmak için hazırlanan metinler. Her ` <tr-TR> ` veya ` <en-US> ` etiketinden sonraki kısmı ilgili dilin kutusuna yapıştırabilirsiniz.
 
-## Türkçe (tr-TR)
+---
+
+## Version 1.0.2 (Latest)
+
+### Türkçe (tr-TR)
+```text
+🔧 Sürüm 1.0.2 - Google Play Politika Uyumluluğu
+
+Bu güncelleme ile:
+✅ Çocuk odaklı reklam politikalarına tam uyum sağlandı (COPPA)
+✅ Kişiselleştirilmiş reklamlar devre dışı bırakıldı
+✅ Tüm reklamlar çocuklar için uygun (G-rated) 
+✅ 5 saniye sonra kapatılabilir reklamlar
+
+Ailenizin güvenliğini her şeyden önce tutuyoruz! 🛡️
+```
+
+### İngilizce (en-US)
+```text
+🔧 Version 1.0.2 - Google Play Policy Compliance
+
+This update includes:
+✅ Full compliance with child-directed ad policies (COPPA)
+✅ Non-personalized ads enabled
+✅ All ads are child-appropriate (G-rated)
+✅ Skippable ads after 5 seconds
+
+Your family's safety is our top priority! 🛡️
+```
+
+---
+
+## Version 1.0.0 (Initial Release)
+
+### Türkçe (tr-TR)
 ```text
 🎉 Öğreniyorum - Hafıza ve Eşleştirme Oyunu'nun İLK SÜRÜMÜ YAYINDA!
 
@@ -18,7 +52,7 @@ Bu sürümdeki özellikler:
 Keyifli oyunlar!
 ```
 
-## İngilizce (en-US)
+### İngilizce (en-US)
 ```text
 🎉 The FIRST RELEASE of Öğreniyorum - Memory Match Game is LIVE!
 

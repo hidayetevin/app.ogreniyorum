@@ -47,16 +47,22 @@ export class AdService {
     }
 
     /**
-     * Initialize AdMob SDK
+     * Initialize AdMob SDK with Families Policy compliance
      */
     private async initialize(): Promise<void> {
         if (this.isInitialized) return;
 
         try {
-            console.log('AdService: Initializing AdMob...');
+            console.log('AdService: Initializing AdMob with Families Policy settings...');
+
+            // Initialize AdMob
+            // COPPA compliance settings are configured in AndroidManifest.xml via:
+            // - com.google.android.gms.ads.flag.TAG_FOR_CHILD_DIRECTED_TREATMENT
+            // - com.google.android.gms.ads.flag.MAX_AD_CONTENT_RATING
             await AdMob.initialize({});
+
             this.isInitialized = true;
-            console.log('AdService: AdMob Initialized successfully.');
+            console.log('AdService: AdMob Initialized successfully with Families compliance.');
 
             // Start preloading ads
             void this.preloadInterstitial();
@@ -76,6 +82,7 @@ export class AdService {
             console.log('AdService: Preloading Interstitial Ad...');
             await AdMob.prepareInterstitial({
                 adId: this.AD_IDS.INTERSTITIAL,
+                npa: true, // Non-personalized ads for children
             });
             this.isInterstitialPrepared = true;
             console.log('AdService: Interstitial Ad Preloaded.');
@@ -95,6 +102,7 @@ export class AdService {
             console.log('AdService: Preloading Rewarded Ad...');
             await AdMob.prepareRewardVideoAd({
                 adId: this.AD_IDS.REWARDED,
+                npa: true, // Non-personalized ads for children
             });
             this.isRewardedPrepared = true;
             console.log('AdService: Rewarded Ad Preloaded.');
@@ -116,7 +124,7 @@ export class AdService {
                 adSize: BannerAdSize.ADAPTIVE_BANNER,
                 position: BannerAdPosition.BOTTOM_CENTER,
                 margin: 0,
-                // npa: true // Set this to true for non-personalized ads
+                npa: true, // Non-personalized ads for children (COPPA compliance)
             };
 
             await AdMob.showBanner(options);
