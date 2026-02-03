@@ -2,7 +2,8 @@ import {
     AdMob,
     BannerAdSize,
     BannerAdPosition,
-    BannerAdOptions
+    BannerAdOptions,
+    MaxAdContentRating,
 } from '@capacitor-community/admob';
 import { AnalyticsService } from './AnalyticsService';
 import { AnalyticsEventType } from '../types/models';
@@ -30,8 +31,8 @@ export class AdService {
     // Production IDs
     private readonly AD_IDS = {
         BANNER: 'ca-app-pub-4190858087915294/9285554263',
-        INTERSTITIAL: 'ca-app-pub-4190858087915294/1131732079',
-        REWARDED: 'ca-app-pub-4190858087915294/6564796239',
+        INTERSTITIAL: 'ca-app-pub-4190858087915294/5133570153',
+        REWARDED: 'ca-app-pub-4190858087915294/7136916962',
     };
 
     private constructor() {
@@ -59,7 +60,10 @@ export class AdService {
             // COPPA compliance settings are configured in AndroidManifest.xml via:
             // - com.google.android.gms.ads.flag.TAG_FOR_CHILD_DIRECTED_TREATMENT
             // - com.google.android.gms.ads.flag.MAX_AD_CONTENT_RATING
-            await AdMob.initialize({});
+            await AdMob.initialize({
+                tagForChildDirectedTreatment: true,
+                maxAdContentRating: MaxAdContentRating.General,
+            });
 
             this.isInitialized = true;
             console.log('AdService: AdMob Initialized successfully with Families compliance.');

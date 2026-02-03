@@ -400,9 +400,6 @@ export class GamePlayScene extends Scene {
             if (this.gameSession.matches === this.gameSession.totalPairs) {
                 await delay(TIMING.LEVEL_COMPLETE_DELAY);
                 await this.completeLevel();
-            } else if (this.gameSession.matches > 0 && this.gameSession.matches % 3 === 0) {
-                // Show ad every 3 matches
-                await this.showAd();
             }
         } else {
             // No match - Haptic feedback
