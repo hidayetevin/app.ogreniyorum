@@ -4,11 +4,13 @@ import { AudioService } from '@core/AudioService';
 import { LocalizationService } from '@core/LocalizationService';
 import { StorageService } from '@core/StorageService';
 import { Language } from '../types/models';
+import { ParentGate } from './ParentGate';
 
 export class SettingsPanel extends Phaser.GameObjects.Container {
     private audioService: AudioService;
     private localizationService: LocalizationService;
     private storageService: StorageService;
+    private parentGate: ParentGate;
 
     private soundButton!: Button;
 
@@ -21,6 +23,19 @@ export class SettingsPanel extends Phaser.GameObjects.Container {
 
         this.setDepth(Z_INDEX.OVERLAY);
         this.setVisible(false);
+
+        // Initialize Parent Gate for Privacy Policy
+        this.parentGate = new ParentGate(
+            scene,
+            () => {
+                // Success: Open Privacy Policy URL
+                window.open('https://hidayetevin.github.io/privacy-policy/app-ogreniyorum.html', '_blank');
+            },
+            () => {
+                // Fail: Just return to settings
+                this.show();
+            }
+        );
 
         this.createPanel();
 
@@ -77,10 +92,26 @@ export class SettingsPanel extends Phaser.GameObjects.Container {
         });
         this.add(this.soundButton);
 
+        // 5. Privacy Policy Button (Protected by Parental Gate)
+        const privacyButton = new Button(this.scene, {
+            x: panelX,
+            y: panelY + 65,
+            width: 300,
+            height: 60,
+            text: 'Gizlilik Politikası',
+            backgroundColor: COLORS.PRIMARY,
+            fontSize: 24,
+            onClick: () => {
+                this.hide();
+                this.parentGate.show();
+            }
+        });
+        this.add(privacyButton);
+
         // Close Button
         const closeButton = new Button(this.scene, {
             x: panelX,
-            y: panelY + 150,
+            y: panelY + 160,
             width: 200,
             height: 60,
             text: 'Kapat',
