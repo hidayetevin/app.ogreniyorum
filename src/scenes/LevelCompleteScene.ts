@@ -269,21 +269,49 @@ export class LevelCompleteScene extends Scene {
         this.scene.start(SCENE_KEYS.MAIN_MENU);
     }
 
+    private isHandlingAction: boolean = false;
+
     /**
      * Handles an action with a rewarded ad wrapper
      * Attempts to show an ad, then executes the action regardless of ad outcome
      */
     private async handleActionWithAd(action: () => void): Promise<void> {
+        if (this.isHandlingAction) return;
+        this.isHandlingAction = true;
+
+        let loadingText: Phaser.GameObjects.Text | null = null;
+        let overlayBg: Phaser.GameObjects.Rectangle | null = null;
+
+        // Show loading overlay and block inputs if ad needs to be fetched
+        if (!this.adService.isRewardedReady()) {
+            const centerX = GAME_CONFIG.WIDTH / 2;
+            const centerY = GAME_CONFIG.HEIGHT / 2;
+
+            overlayBg = this.add.rectangle(centerX, centerY, GAME_CONFIG.WIDTH, GAME_CONFIG.HEIGHT, 0x000000, 0.7);
+            overlayBg.setDepth(1999);
+            overlayBg.setInteractive(); // Intercepts clicks to buttons
+
+            loadingText = this.add.text(centerX, centerY, 'Reklam Yükleniyor...', {
+                fontSize: '32px',
+                color: '#ffffff',
+                fontFamily: 'Arial, sans-serif'
+            }).setOrigin(0.5).setDepth(2000);
+        }
+
         try {
             // Attempt to show rewarded ad
-            // logic: Users "pay" with their time watching an ad to proceed/retry
+            // Users "pay" with their time watching an ad to proceed/retry
             await this.adService.showRewardedAd();
         } catch (error) {
             console.error('Error showing rewarded ad:', error);
             // If ad fails, we still want the user to proceed
         } finally {
+            if (loadingText) loadingText.destroy();
+            if (overlayBg) overlayBg.destroy();
+
             // Execute the intended action (navigation)
             action();
+            this.isHandlingAction = false;
         }
     }
 }

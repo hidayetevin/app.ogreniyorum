@@ -444,14 +444,18 @@ export class GamePlayScene extends Scene {
     private async showAd(): Promise<void> {
         this.isInputLocked = true;
         let loadingText: Phaser.GameObjects.Text | null = null;
+        let overlayBg: Phaser.GameObjects.Rectangle | null = null;
 
         if (!this.adService.isInterstitialReady()) {
+            overlayBg = this.add.rectangle(GAME_CONFIG.WIDTH / 2, GAME_CONFIG.HEIGHT / 2, GAME_CONFIG.WIDTH, GAME_CONFIG.HEIGHT, 0x000000, 0.7);
+            overlayBg.setDepth(1999);
+            overlayBg.setInteractive();
+
             loadingText = this.add.text(GAME_CONFIG.WIDTH / 2, GAME_CONFIG.HEIGHT / 2,
-                this.localizationService.translate('ad.watching') || 'Loading...', {
+                'Reklam Yükleniyor...', {
                 fontSize: '32px',
                 color: '#ffffff',
-                backgroundColor: '#000000aa',
-                padding: { x: 20, y: 10 }
+                fontFamily: 'Arial, sans-serif'
             }).setOrigin(0.5).setDepth(2000); // High depth
         }
 
@@ -461,7 +465,8 @@ export class GamePlayScene extends Scene {
         } catch (error) {
             console.error('Ad failed to show:', error);
         } finally {
-            loadingText?.destroy();
+            if (loadingText) loadingText.destroy();
+            if (overlayBg) overlayBg.destroy();
             this.isInputLocked = false;
         }
     }

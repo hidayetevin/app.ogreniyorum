@@ -28,12 +28,11 @@ export class AdService {
     private analyticsService: AnalyticsService;
     private isInitialized: boolean = false;
 
-    // Ad Pooling
-    private readonly MAX_POOL_SIZE = 2;
-    private interstitialPoolCount: number = 0;
-    private rewardedPoolCount: number = 0;
-    private isPreparingInterstitial: boolean = false;
-    private isPreparingRewarded: boolean = false;
+    // Ad State & Locking
+    private interstitialReady: boolean = false;
+    private rewardedReady: boolean = false;
+    private interstitialLoadPromise: Promise<void> | null = null;
+    private rewardedLoadPromise: Promise<void> | null = null;
 
     // Production IDs
     private readonly AD_IDS = {
@@ -84,69 +83,65 @@ export class AdService {
     }
 
     /**
-     * Preloads an interstitial ad to maintain the pool
+     * Preloads an interstitial ad (Single instance for AdMob)
      */
     private async preloadInterstitial(): Promise<void> {
-        if (this.isPreparingInterstitial) return; // Prevent concurrent preparation calls
-        if (this.interstitialPoolCount >= this.MAX_POOL_SIZE) return; // Pool is full
+        if (this.interstitialReady) return Promise.resolve();
+        if (this.interstitialLoadPromise) return this.interstitialLoadPromise;
 
-        try {
-            this.isPreparingInterstitial = true;
-            console.log(`AdService: Preloading Interstitial Ad... (Current pool: ${this.interstitialPoolCount}/${this.MAX_POOL_SIZE})`);
+        this.interstitialLoadPromise = new Promise(async (resolve) => {
+            try {
+                console.log('AdService: Preloading Interstitial Ad...');
+                await AdMob.prepareInterstitial({
+                    adId: this.AD_IDS.INTERSTITIAL,
+                    npa: true,
+                });
+                this.interstitialReady = true;
+                console.log('AdService: Interstitial Ad Preloaded successfully.');
+            } catch (error) {
+                console.error('AdService: Error preloading interstitial:', error);
+                this.interstitialReady = false;
 
-            await AdMob.prepareInterstitial({
-                adId: this.AD_IDS.INTERSTITIAL,
-                npa: true, // Non-personalized ads for children
-            });
-
-            this.interstitialPoolCount++;
-            console.log(`AdService: Interstitial Ad Preloaded successfully. (New pool: ${this.interstitialPoolCount}/${this.MAX_POOL_SIZE})`);
-        } catch (error) {
-            console.error('AdService: Error preloading interstitial:', error);
-        } finally {
-            this.isPreparingInterstitial = false;
-
-            // If the pool is still not full, try to queue another load
-            if (this.interstitialPoolCount < this.MAX_POOL_SIZE) {
-                // Short delay to prevent hammering the ad network on rapid failures
-                setTimeout(() => {
-                    void this.preloadInterstitial();
-                }, 2000);
+                // Retry in background after delay if failed
+                setTimeout(() => { void this.preloadInterstitial(); }, 5000);
+            } finally {
+                this.interstitialLoadPromise = null;
+                resolve();
             }
-        }
+        });
+
+        return this.interstitialLoadPromise;
     }
 
     /**
-     * Preloads a rewarded ad to maintain the pool
+     * Preloads a rewarded ad (Single instance for AdMob)
      */
     private async preloadRewarded(): Promise<void> {
-        if (this.isPreparingRewarded) return; // Prevent concurrent preparation calls
-        if (this.rewardedPoolCount >= this.MAX_POOL_SIZE) return; // Pool is full
+        if (this.rewardedReady) return Promise.resolve();
+        if (this.rewardedLoadPromise) return this.rewardedLoadPromise;
 
-        try {
-            this.isPreparingRewarded = true;
-            console.log(`AdService: Preloading Rewarded Ad... (Current pool: ${this.rewardedPoolCount}/${this.MAX_POOL_SIZE})`);
+        this.rewardedLoadPromise = new Promise(async (resolve) => {
+            try {
+                console.log('AdService: Preloading Rewarded Ad...');
+                await AdMob.prepareRewardVideoAd({
+                    adId: this.AD_IDS.REWARDED,
+                    npa: true,
+                });
+                this.rewardedReady = true;
+                console.log('AdService: Rewarded Ad Preloaded successfully.');
+            } catch (error) {
+                console.error('AdService: Error preloading rewarded:', error);
+                this.rewardedReady = false;
 
-            await AdMob.prepareRewardVideoAd({
-                adId: this.AD_IDS.REWARDED,
-                npa: true, // Non-personalized ads for children
-            });
-
-            this.rewardedPoolCount++;
-            console.log(`AdService: Rewarded Ad Preloaded successfully. (New pool: ${this.rewardedPoolCount}/${this.MAX_POOL_SIZE})`);
-        } catch (error) {
-            console.error('AdService: Error preloading rewarded:', error);
-        } finally {
-            this.isPreparingRewarded = false;
-
-            // If the pool is still not full, try to queue another load
-            if (this.rewardedPoolCount < this.MAX_POOL_SIZE) {
-                // Short delay to prevent hammering the ad network on rapid failures
-                setTimeout(() => {
-                    void this.preloadRewarded();
-                }, 2000);
+                // Retry in background after delay if failed
+                setTimeout(() => { void this.preloadRewarded(); }, 5000);
+            } finally {
+                this.rewardedLoadPromise = null;
+                resolve();
             }
-        }
+        });
+
+        return this.rewardedLoadPromise;
     }
 
     /**
@@ -206,24 +201,31 @@ export class AdService {
                 isResolved = true;
                 cleanup();
 
-                // Keep trying to fill the pool
+                this.rewardedReady = false;
                 void this.preloadRewarded();
 
                 resolve(earnedReward);
             };
 
             try {
-                if (this.rewardedPoolCount <= 0) {
-                    console.log('AdService: Rewarded Ad pool empty, loading one now and waiting...');
-                    await this.preloadRewarded();
-                    if (this.rewardedPoolCount <= 0) {
+                // Wait for the ad to literally finish loading if it is currently loading
+                // or start a new load if it somehow dropped
+                if (!this.rewardedReady) {
+                    console.log('AdService: Rewarded Ad not ready, fetching...');
+
+                    const timeoutPromise = new Promise<void>((resolve) => {
+                        setTimeout(() => resolve(), 3000);
+                    });
+
+                    // Wait at most 3 seconds for the ad to preload
+                    await Promise.race([this.preloadRewarded(), timeoutPromise]);
+
+                    if (!this.rewardedReady) {
+                        console.log('AdService: Ad load timed out. Skipping ad.');
                         finish();
                         return;
                     }
                 }
-
-                // Consume one ad from the pool
-                this.rewardedPoolCount--;
 
                 const rewardListener = await AdMob.addListener(RewardAdPluginEvents.Rewarded, (reward: any) => {
                     console.log('AdService: Rewarded Ad Watched Successfully:', reward);
@@ -281,24 +283,29 @@ export class AdService {
                 isResolved = true;
                 cleanup();
 
-                // Keep trying to fill the pool
+                this.interstitialReady = false;
                 void this.preloadInterstitial();
 
                 resolve();
             };
 
             try {
-                if (this.interstitialPoolCount <= 0) {
-                    console.log('AdService: Interstitial Ad pool empty, loading one now and waiting...');
-                    await this.preloadInterstitial();
-                    if (this.interstitialPoolCount <= 0) {
+                if (!this.interstitialReady) {
+                    console.log('AdService: Interstitial Ad not ready, fetching...');
+
+                    const timeoutPromise = new Promise<void>((resolve) => {
+                        setTimeout(() => resolve(), 3000);
+                    });
+
+                    // Wait at most 3 seconds for the ad to preload
+                    await Promise.race([this.preloadInterstitial(), timeoutPromise]);
+
+                    if (!this.interstitialReady) {
+                        console.log('AdService: Ad load timed out. Skipping ad.');
                         finish();
                         return;
                     }
                 }
-
-                // Consume one from the pool
-                this.interstitialPoolCount--;
 
                 const dismissListener = await AdMob.addListener(InterstitialAdPluginEvents.Dismissed, () => {
                     console.log('AdService: Interstitial Ad Dismissed');
@@ -330,13 +337,13 @@ export class AdService {
      * Checks if interstitial ad is ready
      */
     public isInterstitialReady(): boolean {
-        return this.interstitialPoolCount > 0;
+        return this.interstitialReady;
     }
 
     /**
      * Checks if rewarded ad is ready
      */
     public isRewardedReady(): boolean {
-        return this.rewardedPoolCount > 0;
+        return this.rewardedReady;
     }
 }
