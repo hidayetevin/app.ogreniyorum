@@ -40,6 +40,20 @@ export class AudioService implements IAudioService {
      */
     public async initialize(scene: Phaser.Scene): Promise<void> {
         this.scene = scene;
+
+        // Setup Web Audio API unlock listener
+        if (this.audioContext && this.audioContext.state === 'suspended') {
+            const unlockAudio = () => {
+                if (this.audioContext && this.audioContext.state === 'suspended') {
+                    void this.audioContext.resume();
+                }
+                // Remove listener once unlocked
+                scene.input.off('pointerdown', unlockAudio);
+            };
+
+            // Listen to Phaser's global input manager
+            scene.input.on('pointerdown', unlockAudio);
+        }
     }
 
     /**
@@ -269,8 +283,12 @@ export class AudioService implements IAudioService {
         }
 
         try {
-            // Cancel current speech
-            await TextToSpeech.stop();
+            // Cancel current speech safely before starting new one
+            try {
+                await TextToSpeech.stop();
+            } catch (ignore) {
+                // Ignore errors from stopping if nothing was playing
+            }
 
             await TextToSpeech.speak({
                 text: text,
@@ -280,8 +298,12 @@ export class AudioService implements IAudioService {
                 volume: this.volume,
                 category: 'ambient',
             });
-        } catch (e) {
-            console.warn('TTS Error:', e);
+        } catch (e: any) {
+            // Capacitor TTS throws 'interrupted' naturally when stop() is called mid-sentence.
+            // This is expected behavior during rapid card flips, hide it from console to prevent spam.
+            if (e && e.error !== 'interrupted' && e.message !== 'interrupted') {
+                console.warn('[AudioService] TTS Error:', e);
+            }
         }
     }
 }
