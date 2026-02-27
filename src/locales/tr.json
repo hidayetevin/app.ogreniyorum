@@ -44,6 +44,8 @@
     "level.resume": "Devam Et",
     "ad.watchToContinue": "İzle ve Devam Et",
     "ad.watching": "Reklam İzleniyor...",
+    "game.hint": "İpucu",
+    "game.hint.ad": "İpucu Al",
     "stats.moves": "{count} Hamle",
     "stats.time": "{time} saniye",
     "stats.stars": "{count} Yıldız",

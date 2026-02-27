@@ -33,6 +33,7 @@ export class GamePlayScene extends Scene {
     private flippedCards: Card[] = [];
     private isInputLocked: boolean = false;
     private gameSession: IGameSession | null = null;
+    private starIcons: Phaser.GameObjects.Text[] = [];
 
     constructor() {
         super({ key: SCENE_KEYS.GAME_PLAY });
@@ -52,6 +53,7 @@ export class GamePlayScene extends Scene {
         // Ensure clean state
         this.cards = [];
         this.flippedCards = [];
+        this.starIcons = [];
         this.isInputLocked = false;
 
         const level = this.levelService.getLevelById(data.levelId);
@@ -158,12 +160,20 @@ export class GamePlayScene extends Scene {
         );
         title.setOrigin(0.5);
 
-        // Moves counter
-        const movesText = this.add.text(100, 100, `${this.localizationService.translate('level.moves')}: 0`, {
-            fontSize: '24px',
-            color: COLORS.TEXT_LIGHT,
-            fontFamily: 'Arial, sans-serif',
-        });
+        // Moves counter (Replaced with visual Star Progress Bar)
+        const initStarsX = 40;
+        const initStarsY = 100;
+
+        for (let i = 0; i < 3; i++) {
+            const star = this.add.text(initStarsX + i * 45, initStarsY, '⭐', {
+                fontSize: '32px',
+                padding: { left: 5, right: 5, top: 5, bottom: 5 }
+            })
+                .setOrigin(0.5)
+                .setAlpha(1);
+
+            this.starIcons.push(star);
+        }
 
         // Back button
         new Button(this, {
@@ -179,10 +189,42 @@ export class GamePlayScene extends Scene {
             },
         });
 
-        // Store reference for updates
-        this.data.set('movesText', movesText);
+        // Hint button (Ad-backed)
+        let isHinting = false;
+        new Button(this, {
+            x: GAME_CONFIG.WIDTH - 100,
+            y: 100, // Top right corner across from stars
+            width: 150,
+            height: 60,
+            text: this.localizationService.translate('game.hint'),
+            backgroundColor: COLORS.WARNING,
+            fontSize: 24,
+            onClick: () => {
+                if (isHinting || this.isInputLocked) return;
 
-        this.data.set('movesText', movesText);
+                // Pause interaction
+                isHinting = true;
+                this.isInputLocked = true;
+
+                const prevColor = GAME_CONFIG.BACKGROUND_COLOR;
+
+                // Show rewarded ad
+                this.adService.showRewardedAd().then(() => {
+                    // Ad Complete/Success -> Use Hint
+                    this.useHint().finally(() => {
+                        isHinting = false;
+                        this.isInputLocked = false;
+                        this.cameras.main.setBackgroundColor(prevColor);
+                    });
+                }).catch((error) => {
+                    console.error('Hint ad failed:', error);
+                    isHinting = false;
+                    this.isInputLocked = false;
+                });
+            }
+        });
+
+        // No need to store text reference anymore as we use starIcons
     }
 
 
@@ -421,16 +463,27 @@ export class GamePlayScene extends Scene {
     }
 
     /**
-     * Updates the moves display
+     * Updates the stars display based on moves
      */
     private updateMovesDisplay(): void {
-        const movesText = this.data.get('movesText') as Phaser.GameObjects.Text | undefined;
-
-        if (movesText !== undefined && this.gameSession !== null) {
-            movesText.setText(
-                `${this.localizationService.translate('level.moves')}: ${this.gameSession.moves}`
-            );
+        if (this.gameSession === null || this.currentLevel === null) {
+            return;
         }
+
+        const thresholds = this.currentLevel.starThresholds;
+        const moves = this.gameSession.moves;
+
+        // If moves exceed the 3-star threshold, dim the 3rd star
+        if (moves > thresholds.threeStars && this.starIcons.length >= 3) {
+            this.starIcons[2]?.setAlpha(0.3); // Dim it via transparency
+        }
+
+        // If moves exceed the 2-star threshold, dim the 2nd star
+        if (moves > thresholds.twoStars && this.starIcons.length >= 2) {
+            this.starIcons[1]?.setAlpha(0.3); // Dim it via transparency
+        }
+
+        // Note: 1st star is always kept unless they fail completely, but currently the game doesn't strictly fail on moves.
     }
 
 
@@ -469,6 +522,28 @@ export class GamePlayScene extends Scene {
             if (overlayBg) overlayBg.destroy();
             this.isInputLocked = false;
         }
+    }
+
+    /**
+     * Executes the hint system: Maps all unflipped cards to front temporarily
+     */
+    private async useHint(): Promise<void> {
+        console.log('[GamePlayScene] using hint...');
+        const unflippedCards = this.cards.filter(card => card.getState() === CardState.FACE_DOWN);
+
+        if (unflippedCards.length === 0) return;
+
+        // Force lock input during animation sequence
+        this.isInputLocked = true;
+
+        // Flip all unflipped cards to show the user
+        await Promise.all(unflippedCards.map(card => card.flipToFront()));
+
+        // Keep them open for exactly [1.5 seconds]
+        await delay(1500);
+
+        // Turn them all back securely
+        await Promise.all(unflippedCards.map(card => card.flipToBack()));
     }
 
     /**

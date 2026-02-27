@@ -44,6 +44,8 @@
     "level.resume": "Resume",
     "ad.watchToContinue": "Watch and Continue",
     "ad.watching": "Watching Ad...",
+    "game.hint": "Hint",
+    "game.hint.ad": "Get Hint",
     "stats.moves": "{count} Moves",
     "stats.time": "{time} seconds",
     "stats.stars": "{count} Stars",
