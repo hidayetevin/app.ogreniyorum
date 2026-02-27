@@ -11,6 +11,7 @@ import { StorageService } from '@core/StorageService';
 import { LevelService } from '@core/LevelService';
 import { Language } from '../types/models';
 import { AdService } from '@core/AdService';
+import { FeedbackService } from '@core/FeedbackService';
 
 /**
  * MainMenuScene displays the main menu
@@ -42,6 +43,9 @@ export class MainMenuScene extends Scene {
         try {
             const centerX = GAME_CONFIG.WIDTH / 2;
             const centerY = GAME_CONFIG.HEIGHT / 2;
+
+            // Initialize feedback service
+            FeedbackService.getInstance().initialize(this);
 
             // 1. Background Gradient (Deep Space)
             const bgGraphics = this.add.graphics();

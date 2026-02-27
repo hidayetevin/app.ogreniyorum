@@ -9,6 +9,7 @@ import {
 } from '@capacitor-community/admob';
 import { AnalyticsService } from './AnalyticsService';
 import { AnalyticsEventType } from '../types/models';
+import { FeedbackService } from './FeedbackService';
 
 /**
  * Ad Types
@@ -185,6 +186,11 @@ export class AdService {
      * Returns true if the ad was watched successfully and reward was granted
      */
     public async showRewardedAd(): Promise<boolean> {
+        if (!navigator.onLine) {
+            FeedbackService.getInstance().showToast('İnternet yok! Lütfen Wi-Fi açın.');
+            return false;
+        }
+
         if (!this.isInitialized) await this.initialize();
 
         return new Promise<boolean>(async (resolve) => {
@@ -268,6 +274,11 @@ export class AdService {
      * Shows an interstitial ad
      */
     public async showInterstitialAd(): Promise<void> {
+        if (!navigator.onLine) {
+            FeedbackService.getInstance().showToast('İnternet yok! Lütfen Wi-Fi açın.');
+            return;
+        }
+
         if (!this.isInitialized) await this.initialize();
 
         return new Promise<void>(async (resolve) => {

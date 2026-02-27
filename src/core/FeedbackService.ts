@@ -145,6 +145,65 @@ export class FeedbackService implements IFeedbackService {
     }
 
     /**
+     * Shows a toast notification message
+     */
+    public showToast(message: string): void {
+        if (this.scene === null) {
+            console.warn('[FeedbackService] Scene not initialized, cannot show toast:', message);
+            return;
+        }
+
+        const scene = this.scene;
+        const centerX = 360; // GAME_CONFIG.WIDTH / 2 usually
+        const bottomY = 700; // Target position
+
+        const container = scene.add.container(centerX, bottomY + 50);
+        container.setDepth(2000);
+
+        // Background (Glassmorphism)
+        const textObj = scene.add.text(0, 0, message, {
+            fontSize: '28px',
+            color: '#ffffff',
+            fontFamily: 'Arial, sans-serif',
+            fontStyle: 'bold',
+            padding: { x: 20, y: 10 }
+        });
+        textObj.setOrigin(0.5);
+
+        const bg = scene.add.graphics();
+        bg.fillStyle(0x000000, 0.8);
+        const bgWidth = textObj.width + 40;
+        const bgHeight = textObj.height + 20;
+        bg.fillRoundedRect(-bgWidth / 2, -bgHeight / 2, bgWidth, bgHeight, 15);
+        bg.lineStyle(2, 0xffffff, 0.2);
+        bg.strokeRoundedRect(-bgWidth / 2, -bgHeight / 2, bgWidth, bgHeight, 15);
+
+        container.add(bg);
+        container.add(textObj);
+
+        // Animation: Slide up and fade in
+        scene.tweens.add({
+            targets: container,
+            y: bottomY,
+            alpha: { from: 0, to: 1 },
+            duration: 300,
+            ease: 'Back.out',
+            onComplete: () => {
+                // Stay for 2 seconds then fade out
+                scene.time.delayedCall(2500, () => {
+                    scene.tweens.add({
+                        targets: container,
+                        y: bottomY - 50,
+                        alpha: 0,
+                        duration: 300,
+                        onComplete: () => container.destroy()
+                    });
+                });
+            }
+        });
+    }
+
+    /**
      * Cleanup resources
      */
     public cleanup(): void {
