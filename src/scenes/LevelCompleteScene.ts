@@ -83,8 +83,41 @@ export class LevelCompleteScene extends Scene {
             // Stars display
             this.displayStars(centerX, centerY - 100);
 
+            // Fetch next level to determine flow
+            const nextLevel = this.levelService.getNextLevel(this.levelId);
+
+            // Dynamic stats positioning
+            let statsY = centerY + 20;
+
+            if (nextLevel === null) {
+                const categoryCompleted = this.add.text(
+                    centerX,
+                    centerY - 35,
+                    this.localizationService.translate('category.completed'),
+                    {
+                        fontSize: '32px',
+                        color: COLORS.WARNING,
+                        fontFamily: 'Arial, sans-serif',
+                        fontStyle: 'bold',
+                    }
+                );
+                categoryCompleted.setOrigin(0.5);
+
+                // Add simple pulse animation
+                this.tweens.add({
+                    targets: categoryCompleted,
+                    scale: 1.1,
+                    duration: 600,
+                    yoyo: true,
+                    repeat: -1,
+                    ease: 'Sine.easeInOut'
+                });
+
+                // Push stats further down to make room
+                statsY = centerY + 30;
+            }
+
             // Stats
-            const statsY = centerY + 20;
             const movesText = this.add.text(
                 centerX,
                 statsY,
@@ -100,51 +133,63 @@ export class LevelCompleteScene extends Scene {
             // Buttons
             const buttonY = centerY + 150;
 
-            // Next level button
-            const nextLevel = this.levelService.getNextLevel(this.levelId);
-
             if (nextLevel !== null) {
+                // Next
                 new Button(this, {
-                    x: centerX - 160,
-                    y: buttonY,
-                    width: 250,
-                    height: 70,
+                    x: centerX - 140, y: buttonY, width: 260, height: 70,
                     text: this.localizationService.translate('menu.next'),
-                    backgroundColor: COLORS.PRIMARY,
-                    fontSize: 28,
-                    onClick: () => {
-                        void this.handleActionWithAd(() => this.playNextLevel());
-                    },
+                    backgroundColor: COLORS.PRIMARY, fontSize: 26,
+                    onClick: () => { void this.handleActionWithAd(() => this.playNextLevel()); },
+                });
+
+                // Retry
+                new Button(this, {
+                    x: centerX + 140, y: buttonY, width: 260, height: 70,
+                    text: this.localizationService.translate('menu.retry'),
+                    backgroundColor: COLORS.SECONDARY, fontSize: 26,
+                    onClick: () => { void this.handleActionWithAd(() => this.retryLevel()); },
+                });
+
+                // Categories
+                new Button(this, {
+                    x: centerX - 140, y: buttonY + 90, width: 260, height: 70,
+                    text: this.localizationService.translate('menu.categories'),
+                    backgroundColor: COLORS.WARNING, fontSize: 26,
+                    onClick: () => { void this.handleActionWithAd(() => this.goToCategories()); },
+                });
+
+                // Main Menu
+                new Button(this, {
+                    x: centerX + 140, y: buttonY + 90, width: 260, height: 70,
+                    text: this.localizationService.translate('menu.mainMenu'),
+                    backgroundColor: COLORS.ACCENT, fontSize: 26,
+                    onClick: () => { void this.handleActionWithAd(() => this.goToMainMenu()); },
+                });
+            } else {
+                // Retry
+                new Button(this, {
+                    x: centerX, y: buttonY, width: 250, height: 70,
+                    text: this.localizationService.translate('menu.retry'),
+                    backgroundColor: COLORS.SECONDARY, fontSize: 28,
+                    onClick: () => { void this.handleActionWithAd(() => this.retryLevel()); },
+                });
+
+                // Categories
+                new Button(this, {
+                    x: centerX, y: buttonY + 90, width: 250, height: 70,
+                    text: this.localizationService.translate('menu.categories'),
+                    backgroundColor: COLORS.WARNING, fontSize: 28,
+                    onClick: () => { void this.handleActionWithAd(() => this.goToCategories()); },
+                });
+
+                // Main Menu
+                new Button(this, {
+                    x: centerX, y: buttonY + 180, width: 250, height: 70,
+                    text: this.localizationService.translate('menu.mainMenu'),
+                    backgroundColor: COLORS.ACCENT, fontSize: 28,
+                    onClick: () => { void this.handleActionWithAd(() => this.goToMainMenu()); },
                 });
             }
-
-            // Retry button
-            new Button(this, {
-                x: centerX + (nextLevel !== null ? 160 : 0),
-                y: buttonY,
-                width: 250,
-                height: 70,
-                text: this.localizationService.translate('menu.retry'),
-                backgroundColor: COLORS.SECONDARY,
-                fontSize: 28,
-                onClick: () => {
-                    void this.handleActionWithAd(() => this.retryLevel());
-                },
-            });
-
-            // Main menu button
-            new Button(this, {
-                x: centerX,
-                y: buttonY + 90,
-                width: 250,
-                height: 70,
-                text: this.localizationService.translate('menu.mainMenu'),
-                backgroundColor: COLORS.ACCENT,
-                fontSize: 28,
-                onClick: () => {
-                    void this.handleActionWithAd(() => this.goToMainMenu());
-                },
-            });
 
             // Animate title
             this.tweens.add({
@@ -267,6 +312,13 @@ export class LevelCompleteScene extends Scene {
      */
     private goToMainMenu(): void {
         this.scene.start(SCENE_KEYS.MAIN_MENU);
+    }
+
+    /**
+     * Returns to categories selection
+     */
+    private goToCategories(): void {
+        this.scene.start(SCENE_KEYS.CATEGORY_SELECTION);
     }
 
     private isHandlingAction: boolean = false;
