@@ -75,7 +75,7 @@ export class MainMenuScene extends Scene {
                 centerY - 340,
                 this.localizationService.translate('app.title'),
                 {
-                    fontSize: '72px',
+                    fontSize: '60px', // Reduced from 72px for better fit
                     color: COLORS.TEXT_LIGHT,
                     fontFamily: FONTS.PRIMARY,
                     fontStyle: '900',
@@ -85,6 +85,12 @@ export class MainMenuScene extends Scene {
                 }
             );
             title.setOrigin(0.5);
+
+            // Scale down if it still overflows (Safe guard for long translations)
+            const maxTitleWidth = GAME_CONFIG.WIDTH - 80;
+            if (title.width > maxTitleWidth) {
+                title.setScale(maxTitleWidth / title.width);
+            }
 
             // Subtitle
             const subtitle = this.add.text(

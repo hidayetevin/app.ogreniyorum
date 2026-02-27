@@ -76,9 +76,9 @@ export class LevelCompleteScene extends Scene {
             // Results Plate (Glassmorphism)
             const plate = this.add.graphics();
             plate.fillStyle(0xffffff, 0.05);
-            plate.fillRoundedRect(40, centerY - 250, GAME_CONFIG.WIDTH - 80, 500, 30);
+            plate.fillRoundedRect(40, centerY - 300, GAME_CONFIG.WIDTH - 80, 700, 30);
             plate.lineStyle(2, 0xffffff, 0.1);
-            plate.strokeRoundedRect(40, centerY - 250, GAME_CONFIG.WIDTH - 80, 500, 30);
+            plate.strokeRoundedRect(40, centerY - 300, GAME_CONFIG.WIDTH - 80, 700, 30);
 
             // Show banner ad via AdMob
             void this.adService.showBanner();
@@ -92,7 +92,7 @@ export class LevelCompleteScene extends Scene {
             // Title
             const title = this.add.text(
                 centerX,
-                centerY - 180,
+                centerY - 230,
                 this.localizationService.translate('level.complete'),
                 {
                     fontSize: '72px',
@@ -104,13 +104,13 @@ export class LevelCompleteScene extends Scene {
             title.setOrigin(0.5);
 
             // Stars display
-            this.displayStars(centerX, centerY - 100);
+            this.displayStars(centerX, centerY - 150);
 
             // Fetch next level to determine flow
             const nextLevel = this.levelService.getNextLevel(this.levelId);
 
             // Dynamic stats positioning
-            let statsY = centerY + 10; // Moved stats up a bit
+            let statsY = centerY - 40; // Moved stats up significantly to create room
 
             if (nextLevel === null) {
                 const categoryCompleted = this.add.text(
@@ -159,7 +159,7 @@ export class LevelCompleteScene extends Scene {
             if (this.stars > 0) {
                 doubleRewardBtn = new Button(this, {
                     x: centerX,
-                    y: centerY + 70, // 60px distance from statsY (10) to here (70)
+                    y: centerY + 40, // Reduced Y to fit other buttons below
                     width: 540,
                     height: 70,
                     text: this.localizationService.translate('game.doubleReward'),
@@ -182,7 +182,7 @@ export class LevelCompleteScene extends Scene {
             }
 
             // Buttons
-            const buttonY = centerY + 160; // 90px distance from 2xBtn (70) to here (160) - perfectly even gaps
+            const buttonY = centerY + 130; // Adjusted for better vertical flow
 
             const createMainButtons = () => {
                 if (nextLevel !== null) {

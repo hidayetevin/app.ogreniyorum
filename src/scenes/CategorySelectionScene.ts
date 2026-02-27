@@ -83,7 +83,7 @@ export class CategorySelectionScene extends Scene {
             headerBg.fillRect(0, 0, width, headerHeight / 2);
             headerBg.setDepth(Z_INDEX.UI + 10);
 
-            const title = this.add.text(width / 2, headerHeight / 2, this.localizationService.translate('category.title') || 'Kategori Seç', {
+            const title = this.add.text(width / 2, headerHeight / 2, this.localizationService.translate('menu.categories'), {
                 fontSize: '48px',
                 color: COLORS.TEXT_LIGHT,
                 fontFamily: FONTS.PRIMARY,
