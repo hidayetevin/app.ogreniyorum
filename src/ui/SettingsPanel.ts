@@ -83,8 +83,8 @@ export class SettingsPanel extends Phaser.GameObjects.Container {
         // 4. Sound Toggle
         this.soundButton = new Button(this.scene, {
             x: panelX,
-            y: panelY,
-            width: 300,
+            y: panelY - 70,
+            width: 320,
             height: 70,
             text: this.getSoundText(),
             backgroundColor: this.audioService.isSoundEnabled() ? COLORS.SUCCESS : COLORS.DISABLED,
@@ -95,8 +95,8 @@ export class SettingsPanel extends Phaser.GameObjects.Container {
         // 5. Privacy Policy Button (Protected by Parental Gate)
         const privacyButton = new Button(this.scene, {
             x: panelX,
-            y: panelY + 65,
-            width: 300,
+            y: panelY + 30,
+            width: 320,
             height: 60,
             text: 'Gizlilik Politikası',
             backgroundColor: COLORS.PRIMARY,
