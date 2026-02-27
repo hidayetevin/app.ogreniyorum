@@ -75,7 +75,7 @@ export class MainMenuScene extends Scene {
                 centerY - 340,
                 this.localizationService.translate('app.title'),
                 {
-                    fontSize: '60px', // Reduced from 72px for better fit
+                    fontSize: '50px', // Reduced from 72px for better fit
                     color: COLORS.TEXT_LIGHT,
                     fontFamily: FONTS.PRIMARY,
                     fontStyle: '900',

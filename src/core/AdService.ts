@@ -208,27 +208,30 @@ export class AdService {
                 resolve(earnedReward);
             };
 
+            // Safety timeout: If ad doesn't finish/dismiss in 15 seconds, proceed anyway
+            const safetyTimeout = setTimeout(() => {
+                console.warn('AdService: Rewarded Ad safety timeout triggered.');
+                finish();
+            }, 15000);
+
+            const internalFinish = () => {
+                clearTimeout(safetyTimeout);
+                finish();
+            };
+
             try {
-                // Wait for the ad to literally finish loading if it is currently loading
-                // or start a new load if it somehow dropped
                 if (!this.rewardedReady) {
                     console.log('AdService: Rewarded Ad not ready, fetching...');
-
-                    const timeoutPromise = new Promise<void>((resolve) => {
-                        setTimeout(() => resolve(), 3000);
-                    });
-
-                    // Wait at most 3 seconds for the ad to preload
+                    const timeoutPromise = new Promise<void>((r) => setTimeout(r, 3000));
                     await Promise.race([this.preloadRewarded(), timeoutPromise]);
 
                     if (!this.rewardedReady) {
-                        console.log('AdService: Ad load timed out. Skipping ad.');
-                        finish();
+                        internalFinish();
                         return;
                     }
                 }
 
-                const rewardListener = await AdMob.addListener(RewardAdPluginEvents.Rewarded, (reward: any) => {
+                listeners.push(await AdMob.addListener(RewardAdPluginEvents.Rewarded, (reward: any) => {
                     console.log('AdService: Rewarded Ad Watched Successfully:', reward);
                     if (reward && reward.amount > 0) {
                         earnedReward = true;
@@ -238,28 +241,25 @@ export class AdService {
                             currency: reward.type
                         });
                     }
-                });
-                listeners.push(rewardListener);
+                }));
 
-                const dismissListener = await AdMob.addListener(RewardAdPluginEvents.Dismissed, () => {
+                listeners.push(await AdMob.addListener(RewardAdPluginEvents.Dismissed, () => {
                     console.log('AdService: Rewarded Ad Dismissed');
-                    finish();
-                });
-                listeners.push(dismissListener);
+                    internalFinish();
+                }));
 
-                const failListener = await AdMob.addListener(RewardAdPluginEvents.FailedToShow, (error: any) => {
+                listeners.push(await AdMob.addListener(RewardAdPluginEvents.FailedToShow, (error: any) => {
                     console.error('AdService: Rewarded Ad Failed To Show:', error);
-                    finish();
-                });
-                listeners.push(failListener);
+                    internalFinish();
+                }));
 
                 await AdMob.showRewardVideoAd().catch((e) => {
                     console.error('AdService: showRewardVideoAd promise rejected:', e);
-                    finish();
+                    internalFinish();
                 });
             } catch (error) {
                 console.error('AdService: Error setting up rewarded ad:', error);
-                finish();
+                internalFinish();
             }
         });
     }
@@ -290,46 +290,48 @@ export class AdService {
                 resolve();
             };
 
+            // Safety timeout: If ad doesn't finish/dismiss in 15 seconds, proceed anyway
+            const safetyTimeout = setTimeout(() => {
+                console.warn('AdService: Interstitial Ad safety timeout triggered.');
+                finish();
+            }, 15000);
+
+            const internalFinish = () => {
+                clearTimeout(safetyTimeout);
+                finish();
+            };
+
             try {
                 if (!this.interstitialReady) {
                     console.log('AdService: Interstitial Ad not ready, fetching...');
-
-                    const timeoutPromise = new Promise<void>((resolve) => {
-                        setTimeout(() => resolve(), 3000);
-                    });
-
-                    // Wait at most 3 seconds for the ad to preload
+                    const timeoutPromise = new Promise<void>((r) => setTimeout(r, 3000));
                     await Promise.race([this.preloadInterstitial(), timeoutPromise]);
 
                     if (!this.interstitialReady) {
-                        console.log('AdService: Ad load timed out. Skipping ad.');
-                        finish();
+                        internalFinish();
                         return;
                     }
                 }
 
-                const dismissListener = await AdMob.addListener(InterstitialAdPluginEvents.Dismissed, () => {
+                listeners.push(await AdMob.addListener(InterstitialAdPluginEvents.Dismissed, () => {
                     console.log('AdService: Interstitial Ad Dismissed');
-                    finish();
-                });
-                listeners.push(dismissListener);
+                    internalFinish();
+                }));
 
-                const failListener = await AdMob.addListener(InterstitialAdPluginEvents.FailedToShow, (error: any) => {
+                listeners.push(await AdMob.addListener(InterstitialAdPluginEvents.FailedToShow, (error: any) => {
                     console.error('AdService: Interstitial Ad Failed To Show:', error);
-                    finish();
-                });
-                listeners.push(failListener);
+                    internalFinish();
+                }));
 
                 await AdMob.showInterstitial().catch((e) => {
                     console.error('AdService: showInterstitial promise rejected:', e);
-                    finish();
+                    internalFinish();
                 });
 
                 this.analyticsService.trackEvent(AnalyticsEventType.AD_SHOW, { type: AdType.INTERSTITIAL });
-                console.log('AdService: Interstitial Ad Shown');
             } catch (error) {
                 console.error('AdService: Error setting up interstitial ad:', error);
-                finish();
+                internalFinish();
             }
         });
     }

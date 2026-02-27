@@ -246,7 +246,7 @@ export class LevelCompleteScene extends Scene {
 
             // Delay main buttons if there's a 2x reward to watch
             if (this.stars > 0) {
-                this.time.delayedCall(2000, createMainButtons);
+                this.time.delayedCall(500, createMainButtons);
             } else {
                 createMainButtons();
             }

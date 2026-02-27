@@ -29,7 +29,7 @@ export class SettingsPanel extends Phaser.GameObjects.Container {
             scene,
             () => {
                 // Success: Open Privacy Policy URL
-                window.open('https://hidayetevin.github.io/privacy-policy/app-ogreniyorum.html', '_blank');
+                window.open('https://github.com/hidayetevin/app.ogreniyorum/blob/main/privacy-policy.md', '_blank');
             },
             () => {
                 // Fail: Just return to settings
