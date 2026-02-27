@@ -4,6 +4,36 @@ Google Play Console'da "Release notes" kısmına yapıştırmak için hazırlana
 
 ---
 
+## Version 2.0.0 (Code 5) - Major Update 🚀
+
+### Türkçe (tr-TR)
+```text
+🚀 Sürüm 2.0.0 - Büyük Güncelleme!
+
+✨ Tamamen yenilenen modern "Derin Uzay" teması.
+🎁 2 kat ödül sistemi ve yeni kart desenleri.
+🛠️ Reklam hatası ve donmalara karşı "Güvenlik Zaman Aşımı" eklendi.
+📶 "İnternet Yok" bilgilendirme sistemi eklendi.
+🛡️ Google Play Aile Politikası'na (Ebeveyn Kapısı) tam uyumlu.
+
+Daha akıcı, daha güvenli ve daha eğlenceli! 🎮
+```
+
+### İngilizce (en-US)
+```text
+🚀 Version 2.0.0 - Major Update!
+
+✨ Completely redesigned modern "Deep Space" theme.
+🎁 2x reward system and new card back designs.
+🛠️ "Safety Timeouts" added to prevent ad-related freezes.
+📶 "No Internet" notification system added.
+🛡️ Full Google Play Families Policy compliance (Parental Gate).
+
+Smoother, safer, and more fun! 🎮
+```
+
+---
+
 ## Version 1.0.2 (Latest)
 
 ### Türkçe (tr-TR)

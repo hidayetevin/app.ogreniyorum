@@ -26,18 +26,19 @@
 ### Temel Özellikler
 - ✅ Çoklu kategori sistemi (9 kategori: Hayvanlar, Meyveler, Araçlar, Uzay, Deniz, Dinozorlar, Duygular, Meslekler, Şekiller)
 - ✅ Zorluk seviyeleri (Kolay, Orta, Zor)
-- ✅ Yıldız tabanlı ilerleme sistemi
+- ✅ Yıldız tabanlı ilerleme sistemi (2x Kazan butonu ile ödülleri katlama)
 - ✅ Kategori kilitleme/açma mekanizması
 - ✅ Çift dil desteği (Türkçe/İngilizce)
 - ✅ LocalStorage ile ilerleme kaydetme
-- ✅ Görsel ve işitsel geri bildirim
+- ✅ Görsel ve işitsel geri bildirim (Dynamic Toast bildirimleri)
 - ✅ **PWA Desteği** (Offline oynama, ana ekrana ekleme)
-- ✅ **AdMob Entegrasyonu** (Standard @capacitor-community/admob plugin)
-- ✅ **Performans Optimizasyonu** (Lazy loading, memory leak önleme, hardware acceleration)
+- ✅ **AdMob Entegrasyonu** (Families Policy uyumlu: Banner, Interstitial, Rewarded)
+- ✅ **Google Play Politika Uyumluluğu** (Ebeveyn Kapısı - Parental Gate, Privacy Policy)
+- ✅ **Performans Optimizasyonu** (Lazy loading, safety timeouts, hardware acceleration)
 - ✅ **İlerleme Takibi** (ProgressBar, StatsPanel, günlük streak sistemi)
 - ✅ **Başarı Rozetleri** (10 achievement, konfeti efektli bildirimler)
 - ✅ **Ebeveyn Paneli** (Matematik koruması, istatistik dashboard, ilerleme sıfırlama)
-- ✅ **Mobil Optimizasyon** (Haptic feedback, battery optimization)
+- ✅ **Mobil Optimizasyon** (Haptic feedback, battery optimization, offline handling)
 
 ---
 
@@ -131,13 +132,14 @@ Proje_Dosyaları/
 │   │   ├── Button.ts
 │   │   ├── Card.ts
 │   │   ├── SettingsPanel.ts
+│   │   ├── ParentGate.ts          # ⭐ YENİ - Ebeveyn Kapısı
 │   │   └── LoadingOverlay.ts      # ⭐ YENİ - Loading feedback
 │   │
 │   ├── utils/               # Yardımcı fonksiyonlar
 │   │   ├── array.ts
 │   │   ├── async.ts
-│   │   ├── validation.ts
-│   │   ├── math.ts
+│   │   ├── HapticFeedback.ts      # ⭐ YENİ - Dokunsal Geri Bildirim
+│   │   ├── BatteryOptimizer.ts    # ⭐ YENİ - Pil Optimizasyonu
 │   │   └── TweenPool.ts           # ⭐ YENİ - Tween optimization
 │   │
 │   ├── locales/             # Çeviri dosyaları
@@ -1740,88 +1742,33 @@ Her kategoride en az 5 seviye olması hedefleniyor:
 
 Proje başarıyla tamamlandı ve temel oyun mekaniği çalışır durumda. Clean code prensipleri uygulandı, TypeScript strict mode kullanıldı ve kapsamlı bir mimari oluşturuldu.
 
-**Oyun şu an oynanabilir durumda!** Kartlar açılıyor, eşleşme kontrolü yapılıyor ve ilerleme kaydediliyor.
+**Oyun şu an yayına hazır!** Kartlar açılıyor, eşleşme kontrolü yapılıyor, ilerleme kaydediliyor ve tüm Google Play politikalarıyla uyumlu.
 
-### Başarılar
+### Başarılar (v2.0.0 - 28 Şubat 2026)
 ✅ **Varlık (Asset) Yönetimi**: Vite uyumlu `public` klasörü yapısı ile resimlerin yüklenememe sorunu kökten çözüldü.
-✅ **Reklam Modeli**: Oyunun altına (footer) standart banner reklam alanı ve oyun içi geçiş reklamları (interstitial) entegre edildi. Reklamlar her 3 başarılı eşleşmede bir ve seviye sonunda gösterilecek şekilde optimize edildi.
-✅ **Hücresel Veri Odaklı Tasarım**: Asset yönetimi ve sahneler arası veri aktarımı düşük gecikme için optimize edildi.
+✅ **Reklam Modeli**: Families Policy uyumlu AdMob entegrasyonu tamamlandı. Banner, Interstitial ve Rewarded (2x Yıldız) reklamlar aktif.
+✅ **Hücresel Veri & Offline**: İnternet yokken reklam donmalarını engelleyen `navigator.onLine` kontrolü ve **Toast Bildirim Sistemi** eklendi.
+✅ **Ebeveyn Kapısı (Parental Gate)**: Gizlilik politikası ve dış linkler için matematik tabanlı doğrulama sistemi entegre edildi.
+✅ **Güvenlik Zaman Aşımı (Ad Safety Timeout)**: Reklam yükleme hatalarında oyunun donmasını engelleyen 15 saniyelik otomatik geçiş mekanizması eklendi.
+✅ **UI/UX Yenileme**: "Deep Space" teması ve cam efekti (glassmorphism) ile premium bir görsel deneyim sunuldu.
 ✅ **TypeScript & Lint**: Tüm kod tabanı strict TypeScript kurallarına göre temizlendi ve lint hataları giderildi.
-✅ **SOLID & Temiz Kod**: Mimari, kolay genişletilebilir ve modüler hale getirildi.
-✅ **Eğitici Oyun Modeli**: Ceza/Can sistemi kaldırılarak çocukların kesintisiz oynaması sağlandı. Reklam stratejisi (3 eşleşme ve seviye sonu) eğitici akışı bozmayacak şekilde güncellendi.
 ✅ **9 Toplam Kategori**: Uzay, Deniz, Dinozorlar, Duygular, Meslekler ve Şekiller dahil 6 yeni kategori eklenerek içerik çeşitliliği artırıldı.
-✅ **Gelişmiş Seviye Sistemi**: Her kategori için farklı zorluk seviyeleri ve yıldız gereksinimleri tanımlandı.
 ✅ **Mobil & Play Store Optimizasyonu**: `manifest.json` ve `sw.js` (Service Worker) ile PWA desteği eklendi.
-✅ **APK Paketleme Altyapısı**: Capacitor enegrasyonu tamamlandı, Android projesi oluşturuldu ve [Android Studio Rehberi](file:///c:/Users/hiday/Desktop/çocuk oyun/Proje_Dosyaları/Docs/Android_Studio_Rehberi.md) hazırlandı.
+✅ **APK Paketleme Altyapısı**: Capacitor enegrasyonu tamamlandı, Android projesi oluşturuldu.
 ✅ **Responsive Tasarım**: Safe Area (notch) desteği ve viewport optimizasyonları ile tüm mobil cihazlara uyumlu hale getirildi.
-✅ **Çoklu Tıklama Koruması**: Hızlı tıklama ile 2'den fazla kartın açılmasını engelleyen güvenlik kontrolü eklendi.
-✅ **AdMob Entegrasyonu** (11 Ocak 2026): Gerçek AdMob SDK entegrasyonu tamamlandı. Tüm sahnelerde banner reklamlar aktif edildi, oyun sonlarında tam ekran reklamlar gösteriliyor. Layout kayma sorunları CSS padding ile giderildi.
-✅ **Hücresel Veri Odaklı Tasarım**: Asset yönetimi ve sahneler arası veri aktarımı düşük gecikme için optimize edildi.
 
-### Kritik Bug Düzeltmeleri (13 Ocak 2026)
+### Kritik Bug Düzeltmeleri (v2.0.0)
 
-#### 1. Kart Eşleştirme Algoritması Hatası
-**Sorun:** Oyunda bazı kartların eşi olmadığı tespit edildi. Kullanıcılar eşleşmeyen tekil kartlarla karşılaşıyordu.
+#### 1. Broken Functionality (Bozuk İşlevsellik)
+**Sorun:** Google Play testlerinde uygulamanın bazı butonlarda veya reklam geçişlerinde "Bozuk İşlevsellik" sebebiyle reddedilmesi.
+**Çözüm:** `AdService.ts` içinde 15 saniyelik **Safety Timeout** uygulandı. Reklam sunucusu yanıt vermezse veya yükleme takılırsa oyun otomatik devam eder. Ayrıca `LevelCompleteScene` buton gecikmesi 2 saniyeden 500ms'ye indirilerek donma hissi giderildi.
 
-**Kök Neden:** `GamePlayScene.ts` içinde kart seçim mantığında hata vardı:
-```typescript
-// HATALI KOD (satır 167)
-const selectedImages = imagePaths.slice(0, pairCount);
-// Bu sadece ilk pairCount kadar resmi alıyordu, rastgele seçim yapmıyordu
-```
-
-**Çözüm:** Kart seçim algoritması yeniden yazıldı:
-```typescript
-// DÜZELTİLMİŞ KOD
-const shuffledPaths = shuffle([...imagePaths]);  // Önce karıştır
-const selectedImages = shuffledPaths.slice(0, pairCount);  // Sonra seç
-const cardData = createPairs(selectedImages);  // Her resim tam 2 kez
-const shuffledData = shuffle(cardData);  // Pozisyonları karıştır
-```
-
-**Garanti:** Artık her resmin **tam olarak 1 eşi** var. Örnek:
-- 3 pair gerekiyorsa → 3 farklı resim seçilir → 6 kart oluşturulur (her resim 2 kez)
-- Eşsiz kart kalmaz
-
-**Etkilenen Dosyalar:**
-- `src/scenes/GamePlayScene.ts` (satır 163-184)
-
-#### 2. Card.ts Tween Crash Hatası
-**Sorun:** Kart animasyonları sırasında `Cannot read properties of undefined (reading 'tweens')` hatası alınıyordu.
-
-**Kök Neden:** Kart destroy edildikten veya scene hazır olmadan önce `this.scene.tweens` çağrılıyordu.
-
-**Çözüm:** Tüm tween kullanımlarına null-safety kontrolleri eklendi:
-```typescript
-// playFlipAnimation içinde
-if (!this.scene || !this.scene.tweens) {
-    console.warn('Card: Scene or tweens not available');
-    resolve();
-    return;
-}
-```
-
-**Etkilenen Metodlar:**
-- `playFlipAnimation()` - İki aşamalı kontrol
-- `onHover()` - Early return
-- `onHoverEnd()` - Early return  
-- `setMatched()` - Conditional execution
-- `destroy()` - Safe cleanup
-
-**Etkilenen Dosyalar:**
-- `src/ui/Card.ts` (satır 84, 96, 152, 165, 190, 243)
-
-**Test Sonucu:** Artık oyun akışı kesintisiz çalışıyor, kart animasyonları stabil.
-
-### Sonraki Adımlar
-1. **Asset Üretimi (Quota Reset Sonrası)**: Yeni eklenen 6 kategori için özgün görsel asset'lerin üretilmesi.
-2. **Gerçek Reklam SDK Entegrasyonu**: AdMob veya benzeri bir SDK'nın AdService üzerinden canlıya alınması.
-3. **Ses Paketleri**: Doğru/yanlış cevaplar için çocuk dostu seslendirmelerin eklenmesi.
-4. **İçerik Genişletme**: Daha fazla kategori ve seviye eklenmesi.
-5. **Test ve Deployment**: Production'a hazırlık ve store yayınlama.
+#### 2. Families Policy Compliance (Aile Politikası)
+**Sorun:** Çocuk uygulamalarında dış linklerin (Privacy Policy) korumasız olması.
+**Çözüm:** `SettingsPanel.ts` ve `ParentGate.ts` aracılığıyla matematik tabanlı **Parental Gate** (Ebeveyn Kapısı) zorunlu hale getirildi. Reklamlar için `tagForUnderAgeOfConsent` flag'i aktif edildi.
 
 ---
 
-**Proje Durumu:** ✅ MVP + Performans + UX + Mobil + AdMob + Bug Fixes Tamamlandı
-**Son Güncelleme:** 13 Ocak 2026
-**Versiyon:** 1.4.1
+**Proje Durumu:** ✅ Yayın Öncesi Final Sürüm - Tüm Politikalarla Uyumlu (v2.0.0)
+**Son Güncelleme:** 28 Şubat 2026
+**Versiyon:** 2.0.0 (Code 5)
