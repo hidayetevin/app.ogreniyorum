@@ -46,6 +46,8 @@
     "ad.watching": "Reklam İzleniyor...",
     "game.hint": "İpucu",
     "game.hint.ad": "İpucu Al",
+    "game.doubleReward": "İzle 2x Kazan",
+    "game.rewardReceived": "+{count} Yıldız!",
     "stats.moves": "{count} Hamle",
     "stats.time": "{time} saniye",
     "stats.stars": "{count} Yıldız",

@@ -46,6 +46,8 @@
     "ad.watching": "Watching Ad...",
     "game.hint": "Hint",
     "game.hint.ad": "Get Hint",
+    "game.doubleReward": "Watch & Claim 2x",
+    "game.rewardReceived": "+{count} Stars!",
     "stats.moves": "{count} Moves",
     "stats.time": "{time} seconds",
     "stats.stars": "{count} Stars",

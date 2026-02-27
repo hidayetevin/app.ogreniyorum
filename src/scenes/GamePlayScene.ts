@@ -491,38 +491,7 @@ export class GamePlayScene extends Scene {
     /**
      * Shows an interstitial ad
      */
-    /**
-     * Shows an interstitial ad
-     */
-    private async showAd(): Promise<void> {
-        this.isInputLocked = true;
-        let loadingText: Phaser.GameObjects.Text | null = null;
-        let overlayBg: Phaser.GameObjects.Rectangle | null = null;
 
-        if (!this.adService.isInterstitialReady()) {
-            overlayBg = this.add.rectangle(GAME_CONFIG.WIDTH / 2, GAME_CONFIG.HEIGHT / 2, GAME_CONFIG.WIDTH, GAME_CONFIG.HEIGHT, 0x000000, 0.7);
-            overlayBg.setDepth(1999);
-            overlayBg.setInteractive();
-
-            loadingText = this.add.text(GAME_CONFIG.WIDTH / 2, GAME_CONFIG.HEIGHT / 2,
-                'Reklam Yükleniyor...', {
-                fontSize: '32px',
-                color: '#ffffff',
-                fontFamily: 'Arial, sans-serif'
-            }).setOrigin(0.5).setDepth(2000); // High depth
-        }
-
-        try {
-            // Show interstitial ad directly
-            await this.adService.showInterstitialAd();
-        } catch (error) {
-            console.error('Ad failed to show:', error);
-        } finally {
-            if (loadingText) loadingText.destroy();
-            if (overlayBg) overlayBg.destroy();
-            this.isInputLocked = false;
-        }
-    }
 
     /**
      * Executes the hint system: Maps all unflipped cards to front temporarily
@@ -566,9 +535,6 @@ export class GamePlayScene extends Scene {
             moves: this.gameSession.moves,
             stars,
         });
-
-        // Show Ad before completing level
-        await this.showAd();
 
         // Transition to completion scene
         this.scene.start(SCENE_KEYS.LEVEL_COMPLETE, {

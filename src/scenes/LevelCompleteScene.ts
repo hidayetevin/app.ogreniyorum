@@ -23,6 +23,7 @@ export class LevelCompleteScene extends Scene {
     private categoryId: string = '';
     private moves: number = 0;
     private stars: number = 0;
+    private hasWatched2xAd: boolean = false;
 
     constructor() {
         super({ key: SCENE_KEYS.LEVEL_COMPLETE });
@@ -41,6 +42,7 @@ export class LevelCompleteScene extends Scene {
         this.categoryId = data.categoryId;
         this.moves = data.moves;
         this.stars = data.stars;
+        this.hasWatched2xAd = false; // Reset on new scene initialization
 
         // Save progress
         this.saveProgress();
@@ -87,7 +89,7 @@ export class LevelCompleteScene extends Scene {
             const nextLevel = this.levelService.getNextLevel(this.levelId);
 
             // Dynamic stats positioning
-            let statsY = centerY + 20;
+            let statsY = centerY + 10; // Moved stats up a bit
 
             if (nextLevel === null) {
                 const categoryCompleted = this.add.text(
@@ -114,7 +116,7 @@ export class LevelCompleteScene extends Scene {
                 });
 
                 // Push stats further down to make room
-                statsY = centerY + 30;
+                statsY = centerY + 20;
             }
 
             // Stats
@@ -130,65 +132,101 @@ export class LevelCompleteScene extends Scene {
             );
             movesText.setOrigin(0.5);
 
+            // 2x Reward Button
+            let doubleRewardBtn: Button | null = null;
+            if (this.stars > 0) {
+                doubleRewardBtn = new Button(this, {
+                    x: centerX,
+                    y: centerY + 70, // 60px distance from statsY (10) to here (70)
+                    width: 540,
+                    height: 70,
+                    text: this.localizationService.translate('game.doubleReward'),
+                    backgroundColor: COLORS.WARNING,
+                    fontSize: 32,
+                    onClick: () => {
+                        void this.handleDoubleReward(doubleRewardBtn);
+                    }
+                });
+
+                // Add pulse animation to make it stand out
+                this.tweens.add({
+                    targets: doubleRewardBtn,
+                    scale: 1.05,
+                    duration: 600,
+                    yoyo: true,
+                    repeat: -1,
+                    ease: 'Sine.easeInOut'
+                });
+            }
+
             // Buttons
-            const buttonY = centerY + 150;
+            const buttonY = centerY + 160; // 90px distance from 2xBtn (70) to here (160) - perfectly even gaps
 
-            if (nextLevel !== null) {
-                // Next
-                new Button(this, {
-                    x: centerX - 140, y: buttonY, width: 260, height: 70,
-                    text: this.localizationService.translate('menu.next'),
-                    backgroundColor: COLORS.PRIMARY, fontSize: 26,
-                    onClick: () => { void this.handleActionWithAd(() => this.playNextLevel()); },
-                });
+            const createMainButtons = () => {
+                if (nextLevel !== null) {
+                    // Next
+                    new Button(this, {
+                        x: centerX - 140, y: buttonY, width: 260, height: 70,
+                        text: this.localizationService.translate('menu.next'),
+                        backgroundColor: COLORS.PRIMARY, fontSize: 26,
+                        onClick: () => { void this.handleActionWithAd(() => this.playNextLevel()); },
+                    });
 
-                // Retry
-                new Button(this, {
-                    x: centerX + 140, y: buttonY, width: 260, height: 70,
-                    text: this.localizationService.translate('menu.retry'),
-                    backgroundColor: COLORS.SECONDARY, fontSize: 26,
-                    onClick: () => { void this.handleActionWithAd(() => this.retryLevel()); },
-                });
+                    // Retry
+                    new Button(this, {
+                        x: centerX + 140, y: buttonY, width: 260, height: 70,
+                        text: this.localizationService.translate('menu.retry'),
+                        backgroundColor: COLORS.SECONDARY, fontSize: 26,
+                        onClick: () => { void this.handleActionWithAd(() => this.retryLevel()); },
+                    });
 
-                // Categories
-                new Button(this, {
-                    x: centerX - 140, y: buttonY + 90, width: 260, height: 70,
-                    text: this.localizationService.translate('menu.categories'),
-                    backgroundColor: COLORS.WARNING, fontSize: 26,
-                    onClick: () => { void this.handleActionWithAd(() => this.goToCategories()); },
-                });
+                    // Categories
+                    new Button(this, {
+                        x: centerX - 140, y: buttonY + 90, width: 260, height: 70,
+                        text: this.localizationService.translate('menu.categories'),
+                        backgroundColor: COLORS.WARNING, fontSize: 26,
+                        onClick: () => { void this.handleActionWithAd(() => this.goToCategories()); },
+                    });
 
-                // Main Menu
-                new Button(this, {
-                    x: centerX + 140, y: buttonY + 90, width: 260, height: 70,
-                    text: this.localizationService.translate('menu.mainMenu'),
-                    backgroundColor: COLORS.ACCENT, fontSize: 26,
-                    onClick: () => { void this.handleActionWithAd(() => this.goToMainMenu()); },
-                });
+                    // Main Menu
+                    new Button(this, {
+                        x: centerX + 140, y: buttonY + 90, width: 260, height: 70,
+                        text: this.localizationService.translate('menu.mainMenu'),
+                        backgroundColor: COLORS.ACCENT, fontSize: 26,
+                        onClick: () => { void this.handleActionWithAd(() => this.goToMainMenu()); },
+                    });
+                } else {
+                    // Retry
+                    new Button(this, {
+                        x: centerX, y: buttonY, width: 250, height: 70,
+                        text: this.localizationService.translate('menu.retry'),
+                        backgroundColor: COLORS.SECONDARY, fontSize: 28,
+                        onClick: () => { void this.handleActionWithAd(() => this.retryLevel()); },
+                    });
+
+                    // Categories
+                    new Button(this, {
+                        x: centerX, y: buttonY + 90, width: 250, height: 70,
+                        text: this.localizationService.translate('menu.categories'),
+                        backgroundColor: COLORS.WARNING, fontSize: 28,
+                        onClick: () => { void this.handleActionWithAd(() => this.goToCategories()); },
+                    });
+
+                    // Main Menu
+                    new Button(this, {
+                        x: centerX, y: buttonY + 180, width: 250, height: 70,
+                        text: this.localizationService.translate('menu.mainMenu'),
+                        backgroundColor: COLORS.ACCENT, fontSize: 28,
+                        onClick: () => { void this.handleActionWithAd(() => this.goToMainMenu()); },
+                    });
+                }
+            };
+
+            // Delay main buttons if there's a 2x reward to watch
+            if (this.stars > 0) {
+                this.time.delayedCall(2000, createMainButtons);
             } else {
-                // Retry
-                new Button(this, {
-                    x: centerX, y: buttonY, width: 250, height: 70,
-                    text: this.localizationService.translate('menu.retry'),
-                    backgroundColor: COLORS.SECONDARY, fontSize: 28,
-                    onClick: () => { void this.handleActionWithAd(() => this.retryLevel()); },
-                });
-
-                // Categories
-                new Button(this, {
-                    x: centerX, y: buttonY + 90, width: 250, height: 70,
-                    text: this.localizationService.translate('menu.categories'),
-                    backgroundColor: COLORS.WARNING, fontSize: 28,
-                    onClick: () => { void this.handleActionWithAd(() => this.goToCategories()); },
-                });
-
-                // Main Menu
-                new Button(this, {
-                    x: centerX, y: buttonY + 180, width: 250, height: 70,
-                    text: this.localizationService.translate('menu.mainMenu'),
-                    backgroundColor: COLORS.ACCENT, fontSize: 28,
-                    onClick: () => { void this.handleActionWithAd(() => this.goToMainMenu()); },
-                });
+                createMainButtons();
             }
 
             // Animate title
@@ -324,18 +362,24 @@ export class LevelCompleteScene extends Scene {
     private isHandlingAction: boolean = false;
 
     /**
-     * Handles an action with a rewarded ad wrapper
-     * Attempts to show an ad, then executes the action regardless of ad outcome
+     * Wrapper for button actions that require waiting for an ad
      */
     private async handleActionWithAd(action: () => void): Promise<void> {
         if (this.isHandlingAction) return;
+
+        // Skip interstitial if user already watched the 2x Reward ad
+        if (this.hasWatched2xAd) {
+            action();
+            return;
+        }
+
         this.isHandlingAction = true;
 
         let loadingText: Phaser.GameObjects.Text | null = null;
         let overlayBg: Phaser.GameObjects.Rectangle | null = null;
 
         // Show loading overlay and block inputs if ad needs to be fetched
-        if (!this.adService.isRewardedReady()) {
+        if (!this.adService.isInterstitialReady()) {
             const centerX = GAME_CONFIG.WIDTH / 2;
             const centerY = GAME_CONFIG.HEIGHT / 2;
 
@@ -351,11 +395,10 @@ export class LevelCompleteScene extends Scene {
         }
 
         try {
-            // Attempt to show rewarded ad
-            // Users "pay" with their time watching an ad to proceed/retry
-            await this.adService.showRewardedAd();
+            // Attempt to show interstitial ad
+            await this.adService.showInterstitialAd();
         } catch (error) {
-            console.error('Error showing rewarded ad:', error);
+            console.error('Error showing interstitial ad:', error);
             // If ad fails, we still want the user to proceed
         } finally {
             if (loadingText) loadingText.destroy();
@@ -363,6 +406,78 @@ export class LevelCompleteScene extends Scene {
 
             // Execute the intended action (navigation)
             action();
+            this.isHandlingAction = false;
+        }
+    }
+
+    /**
+     * Handles the Double Reward logic when 2x button is clicked
+     */
+    private async handleDoubleReward(buttonObj: Button | null): Promise<void> {
+        if (this.isHandlingAction) return;
+        this.isHandlingAction = true;
+
+        let loadingText: Phaser.GameObjects.Text | null = null;
+        let overlayBg: Phaser.GameObjects.Rectangle | null = null;
+
+        if (!this.adService.isRewardedReady()) {
+            const centerX = GAME_CONFIG.WIDTH / 2;
+            const centerY = GAME_CONFIG.HEIGHT / 2;
+
+            overlayBg = this.add.rectangle(centerX, centerY, GAME_CONFIG.WIDTH, GAME_CONFIG.HEIGHT, 0x000000, 0.7);
+            overlayBg.setDepth(1999);
+            overlayBg.setInteractive();
+
+            loadingText = this.add.text(centerX, centerY, this.localizationService.translate('ad.watching'), {
+                fontSize: '32px',
+                color: '#ffffff',
+                fontFamily: 'Arial, sans-serif'
+            }).setOrigin(0.5).setDepth(2000);
+        }
+
+        try {
+            const earnedReward = await this.adService.showRewardedAd();
+
+            if (earnedReward) {
+                this.hasWatched2xAd = true; // Flag to prevent interstitial ad next
+
+                const extraStars = this.stars;
+                this.stars *= 2;
+
+                // Save the new doubled stars amount
+                this.saveProgress();
+
+                // Show visual feedback animation (+X Yıldız!)
+                const centerX = GAME_CONFIG.WIDTH / 2;
+                const centerY = GAME_CONFIG.HEIGHT / 2;
+
+                const rewardText = this.add.text(
+                    centerX,
+                    centerY + 85,
+                    this.localizationService.translate('game.rewardReceived', { count: extraStars.toString() }),
+                    { fontSize: '32px', color: COLORS.SUCCESS, fontStyle: 'bold' }
+                ).setOrigin(0.5).setDepth(100);
+
+                this.tweens.add({
+                    targets: rewardText,
+                    y: centerY + 30, // Float up
+                    alpha: 0,
+                    duration: 2000,
+                    ease: 'Power2',
+                    onComplete: () => rewardText.destroy()
+                });
+            }
+        } catch (error) {
+            console.error('Error handling double reward:', error);
+        } finally {
+            if (loadingText) loadingText.destroy();
+            if (overlayBg) overlayBg.destroy();
+
+            // Remove the 2x button entirely so it cannot be spammed, regardless of ad outcome
+            if (buttonObj) {
+                buttonObj.destroy();
+            }
+
             this.isHandlingAction = false;
         }
     }
