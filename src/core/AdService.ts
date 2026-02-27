@@ -4,6 +4,8 @@ import {
     BannerAdPosition,
     BannerAdOptions,
     MaxAdContentRating,
+    RewardAdPluginEvents,
+    InterstitialAdPluginEvents,
 } from '@capacitor-community/admob';
 import { AnalyticsService } from './AnalyticsService';
 import { AnalyticsEventType } from '../types/models';
@@ -25,8 +27,13 @@ export class AdService {
     private static instance: AdService | null = null;
     private analyticsService: AnalyticsService;
     private isInitialized: boolean = false;
-    private isInterstitialPrepared: boolean = false;
-    private isRewardedPrepared: boolean = false;
+
+    // Ad Pooling
+    private readonly MAX_POOL_SIZE = 2;
+    private interstitialPoolCount: number = 0;
+    private rewardedPoolCount: number = 0;
+    private isPreparingInterstitial: boolean = false;
+    private isPreparingRewarded: boolean = false;
 
     // Production IDs
     private readonly AD_IDS = {
@@ -77,42 +84,68 @@ export class AdService {
     }
 
     /**
-     * Preloads an interstitial ad
+     * Preloads an interstitial ad to maintain the pool
      */
     private async preloadInterstitial(): Promise<void> {
-        if (this.isInterstitialPrepared) return;
+        if (this.isPreparingInterstitial) return; // Prevent concurrent preparation calls
+        if (this.interstitialPoolCount >= this.MAX_POOL_SIZE) return; // Pool is full
 
         try {
-            console.log('AdService: Preloading Interstitial Ad...');
+            this.isPreparingInterstitial = true;
+            console.log(`AdService: Preloading Interstitial Ad... (Current pool: ${this.interstitialPoolCount}/${this.MAX_POOL_SIZE})`);
+
             await AdMob.prepareInterstitial({
                 adId: this.AD_IDS.INTERSTITIAL,
                 npa: true, // Non-personalized ads for children
             });
-            this.isInterstitialPrepared = true;
-            console.log('AdService: Interstitial Ad Preloaded.');
+
+            this.interstitialPoolCount++;
+            console.log(`AdService: Interstitial Ad Preloaded successfully. (New pool: ${this.interstitialPoolCount}/${this.MAX_POOL_SIZE})`);
         } catch (error) {
             console.error('AdService: Error preloading interstitial:', error);
-            this.isInterstitialPrepared = false;
+        } finally {
+            this.isPreparingInterstitial = false;
+
+            // If the pool is still not full, try to queue another load
+            if (this.interstitialPoolCount < this.MAX_POOL_SIZE) {
+                // Short delay to prevent hammering the ad network on rapid failures
+                setTimeout(() => {
+                    void this.preloadInterstitial();
+                }, 2000);
+            }
         }
     }
 
     /**
-     * Preloads a rewarded ad
+     * Preloads a rewarded ad to maintain the pool
      */
     private async preloadRewarded(): Promise<void> {
-        if (this.isRewardedPrepared) return;
+        if (this.isPreparingRewarded) return; // Prevent concurrent preparation calls
+        if (this.rewardedPoolCount >= this.MAX_POOL_SIZE) return; // Pool is full
 
         try {
-            console.log('AdService: Preloading Rewarded Ad...');
+            this.isPreparingRewarded = true;
+            console.log(`AdService: Preloading Rewarded Ad... (Current pool: ${this.rewardedPoolCount}/${this.MAX_POOL_SIZE})`);
+
             await AdMob.prepareRewardVideoAd({
                 adId: this.AD_IDS.REWARDED,
                 npa: true, // Non-personalized ads for children
             });
-            this.isRewardedPrepared = true;
-            console.log('AdService: Rewarded Ad Preloaded.');
+
+            this.rewardedPoolCount++;
+            console.log(`AdService: Rewarded Ad Preloaded successfully. (New pool: ${this.rewardedPoolCount}/${this.MAX_POOL_SIZE})`);
         } catch (error) {
             console.error('AdService: Error preloading rewarded:', error);
-            this.isRewardedPrepared = false;
+        } finally {
+            this.isPreparingRewarded = false;
+
+            // If the pool is still not full, try to queue another load
+            if (this.rewardedPoolCount < this.MAX_POOL_SIZE) {
+                // Short delay to prevent hammering the ad network on rapid failures
+                setTimeout(() => {
+                    void this.preloadRewarded();
+                }, 2000);
+            }
         }
     }
 
@@ -158,38 +191,74 @@ export class AdService {
     public async showRewardedAd(): Promise<boolean> {
         if (!this.isInitialized) await this.initialize();
 
-        try {
-            // Check if preloaded, otherwise load
-            if (!this.isRewardedPrepared) {
-                console.log('AdService: Rewarded Ad not ready, loading now...');
-                await this.preloadRewarded();
-            }
+        return new Promise<boolean>(async (resolve) => {
+            let isResolved = false;
+            let earnedReward = false;
+            let listeners: { remove: () => void }[] = [];
 
-            // Using 'any' to avoid SDK version specific type mismatches
-            const reward: any = await AdMob.showRewardVideoAd();
-            this.isRewardedPrepared = false; // Consumed
+            const cleanup = () => {
+                listeners.forEach(l => l.remove && l.remove());
+                listeners = [];
+            };
 
-            // Preload next one immediately
-            void this.preloadRewarded();
+            const finish = () => {
+                if (isResolved) return;
+                isResolved = true;
+                cleanup();
 
-            if (reward && reward.amount > 0) {
-                console.log('AdService: Rewarded Ad Watched Successfully:', reward);
-                this.analyticsService.trackEvent(AnalyticsEventType.AD_REWARD, {
-                    type: AdType.REWARDED,
-                    amount: reward.amount,
-                    currency: reward.type
+                // Keep trying to fill the pool
+                void this.preloadRewarded();
+
+                resolve(earnedReward);
+            };
+
+            try {
+                if (this.rewardedPoolCount <= 0) {
+                    console.log('AdService: Rewarded Ad pool empty, loading one now and waiting...');
+                    await this.preloadRewarded();
+                    if (this.rewardedPoolCount <= 0) {
+                        finish();
+                        return;
+                    }
+                }
+
+                // Consume one ad from the pool
+                this.rewardedPoolCount--;
+
+                const rewardListener = await AdMob.addListener(RewardAdPluginEvents.Rewarded, (reward: any) => {
+                    console.log('AdService: Rewarded Ad Watched Successfully:', reward);
+                    if (reward && reward.amount > 0) {
+                        earnedReward = true;
+                        this.analyticsService.trackEvent(AnalyticsEventType.AD_REWARD, {
+                            type: AdType.REWARDED,
+                            amount: reward.amount,
+                            currency: reward.type
+                        });
+                    }
                 });
-                return true;
-            }
+                listeners.push(rewardListener);
 
-            return false;
-        } catch (error) {
-            console.error('AdService: Error showing rewarded ad:', error);
-            this.isRewardedPrepared = false;
-            // Try to recover for next time
-            void this.preloadRewarded();
-            return false;
-        }
+                const dismissListener = await AdMob.addListener(RewardAdPluginEvents.Dismissed, () => {
+                    console.log('AdService: Rewarded Ad Dismissed');
+                    finish();
+                });
+                listeners.push(dismissListener);
+
+                const failListener = await AdMob.addListener(RewardAdPluginEvents.FailedToShow, (error: any) => {
+                    console.error('AdService: Rewarded Ad Failed To Show:', error);
+                    finish();
+                });
+                listeners.push(failListener);
+
+                await AdMob.showRewardVideoAd().catch((e) => {
+                    console.error('AdService: showRewardVideoAd promise rejected:', e);
+                    finish();
+                });
+            } catch (error) {
+                console.error('AdService: Error setting up rewarded ad:', error);
+                finish();
+            }
+        });
     }
 
     /**
@@ -198,40 +267,76 @@ export class AdService {
     public async showInterstitialAd(): Promise<void> {
         if (!this.isInitialized) await this.initialize();
 
-        try {
-            // Check if preloaded, otherwise load
-            if (!this.isInterstitialPrepared) {
-                console.log('AdService: Interstitial Ad not ready, loading now...');
-                await this.preloadInterstitial();
+        return new Promise<void>(async (resolve) => {
+            let isResolved = false;
+            let listeners: { remove: () => void }[] = [];
+
+            const cleanup = () => {
+                listeners.forEach(l => l.remove && l.remove());
+                listeners = [];
+            };
+
+            const finish = () => {
+                if (isResolved) return;
+                isResolved = true;
+                cleanup();
+
+                // Keep trying to fill the pool
+                void this.preloadInterstitial();
+
+                resolve();
+            };
+
+            try {
+                if (this.interstitialPoolCount <= 0) {
+                    console.log('AdService: Interstitial Ad pool empty, loading one now and waiting...');
+                    await this.preloadInterstitial();
+                    if (this.interstitialPoolCount <= 0) {
+                        finish();
+                        return;
+                    }
+                }
+
+                // Consume one from the pool
+                this.interstitialPoolCount--;
+
+                const dismissListener = await AdMob.addListener(InterstitialAdPluginEvents.Dismissed, () => {
+                    console.log('AdService: Interstitial Ad Dismissed');
+                    finish();
+                });
+                listeners.push(dismissListener);
+
+                const failListener = await AdMob.addListener(InterstitialAdPluginEvents.FailedToShow, (error: any) => {
+                    console.error('AdService: Interstitial Ad Failed To Show:', error);
+                    finish();
+                });
+                listeners.push(failListener);
+
+                await AdMob.showInterstitial().catch((e) => {
+                    console.error('AdService: showInterstitial promise rejected:', e);
+                    finish();
+                });
+
+                this.analyticsService.trackEvent(AnalyticsEventType.AD_SHOW, { type: AdType.INTERSTITIAL });
+                console.log('AdService: Interstitial Ad Shown');
+            } catch (error) {
+                console.error('AdService: Error setting up interstitial ad:', error);
+                finish();
             }
-
-            await AdMob.showInterstitial();
-            this.analyticsService.trackEvent(AnalyticsEventType.AD_SHOW, { type: AdType.INTERSTITIAL });
-            console.log('AdService: Interstitial Ad Shown');
-
-            this.isInterstitialPrepared = false; // Consumed
-
-            // Preload next one immediately
-            void this.preloadInterstitial();
-        } catch (error) {
-            console.error('AdService: Error showing interstitial ad:', error);
-            this.isInterstitialPrepared = false;
-            // Try to recover for next time
-            void this.preloadInterstitial();
-        }
+        });
     }
 
     /**
      * Checks if interstitial ad is ready
      */
     public isInterstitialReady(): boolean {
-        return this.isInterstitialPrepared;
+        return this.interstitialPoolCount > 0;
     }
 
     /**
      * Checks if rewarded ad is ready
      */
     public isRewardedReady(): boolean {
-        return this.isRewardedPrepared;
+        return this.rewardedPoolCount > 0;
     }
 }

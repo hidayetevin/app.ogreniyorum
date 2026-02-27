@@ -9,7 +9,8 @@ export const CARD_NAMES: Record<string, string> = {
     'animals/7.png': 'card.animals.lion',
     'animals/8.png': 'card.animals.elephant',
     'animals/9.png': 'card.animals.monkey',
-    'animals/10.png': 'card.animals.giraffe',
+    'animals/10.png': 'card.animals.turtle',
+    'animals/11.png': 'card.animals.giraffe',
 
     // Fruits
     'fruits/apple.png': 'card.fruits.apple',
