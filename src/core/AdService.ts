@@ -68,6 +68,7 @@ export class AdService {
             // - com.google.android.gms.ads.flag.MAX_AD_CONTENT_RATING
             await AdMob.initialize({
                 tagForChildDirectedTreatment: true,
+                tagForUnderAgeOfConsent: true,
                 maxAdContentRating: MaxAdContentRating.General,
             });
 
