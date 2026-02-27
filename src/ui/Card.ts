@@ -1,5 +1,5 @@
 import { CardState } from '../types/models';
-import { COLORS, ANIMATION_DURATION, GRID_CONFIG, Z_INDEX } from '@constants/index';
+import { COLORS, ANIMATION_DURATION, GRID_CONFIG, Z_INDEX, FONTS } from '@constants/index';
 import { FeedbackService } from '@core/FeedbackService';
 
 /**
@@ -10,12 +10,13 @@ export class Card extends Phaser.GameObjects.Container {
     private imagePath: string;
     private cardState: CardState;
     private frontImage: Phaser.GameObjects.Image | null = null;
-    private backBg: Phaser.GameObjects.Rectangle;
+    private visuals: Phaser.GameObjects.Graphics;
     private backImage: Phaser.GameObjects.Image | null = null;
     private feedbackService: FeedbackService;
     private label: string;
     private textObj: Phaser.GameObjects.Text | null = null;
     private isFlipping: boolean = false;
+    private cardSize: number;
 
     constructor(
         scene: Phaser.Scene,
@@ -32,24 +33,19 @@ export class Card extends Phaser.GameObjects.Container {
         this.pairId = pairId;
         this.imagePath = imagePath;
         this.label = label;
+        this.cardSize = size;
         this.cardState = CardState.FACE_DOWN;
         this.feedbackService = FeedbackService.getInstance();
 
-        // Create card back background (fallback/border)
-        this.backBg = scene.add.rectangle(
-            0,
-            0,
-            size,
-            size,
-            parseInt(COLORS.CARD_BACK.replace('#', ''), 16)
-        );
-        this.backBg.setStrokeStyle(Math.max(2, size / 30), parseInt(COLORS.PRIMARY.replace('#', ''), 16));
-        this.add(this.backBg);
+        // Create high-fidelity visuals
+        this.visuals = scene.add.graphics();
+        this.drawCardBack();
+        this.add(this.visuals);
 
         // Create card back image
         try {
             this.backImage = scene.add.image(0, 0, cardBackKey);
-            this.backImage.setDisplaySize(size, size);
+            this.backImage.setDisplaySize(size * 0.8, size * 0.8);
             this.add(this.backImage);
         } catch (e) {
             console.error(`Error loading card back image: ${cardBackKey}`, e);
@@ -58,275 +54,189 @@ export class Card extends Phaser.GameObjects.Container {
         // Setup interactivity
         this.setupInteractivity();
 
-        // **PRE-RENDER PERFORMANCE OPTIMIZATION:** 
-        // Create front components immediately but keep them hidden. 
-        // Text rendering in WebGL is extremely expensive and causes stutter if done during animation.
-        this.frontImage = scene.add.image(0, 0, this.imagePath);
-        this.frontImage.setDisplaySize(size - 20, size - 20);
+        // Front components (pre-rendered)
+        this.frontImage = scene.add.image(0, -10, this.imagePath);
+        this.frontImage.setDisplaySize(size - 40, size - 40);
         this.frontImage.setVisible(false);
         this.add(this.frontImage);
 
-        // Add text (label) with a semi-transparent background for readability
-        const textBg = scene.add.rectangle(0, size / 2 - 20, size - 10, 30, 0xffffff, 0.8);
-        textBg.setOrigin(0.5);
+        // Modern glassy label
+        const textBg = scene.add.graphics();
+        textBg.fillStyle(0xffffff, 0.9);
+        textBg.fillRoundedRect(-size / 2 + 10, size / 2 - 45, size - 20, 35, 10);
         textBg.setVisible(false);
 
-        this.textObj = scene.add.text(0, size / 2 - 20, this.label, {
-            fontSize: '16px',
-            color: '#000000',
-            fontFamily: 'Arial',
-            fontStyle: 'bold',
+        this.textObj = scene.add.text(0, size / 2 - 28, this.label, {
+            fontSize: '18px',
+            color: '#2C3E50',
+            fontFamily: FONTS.PRIMARY,
+            fontStyle: '800',
             align: 'center',
-            wordWrap: { width: size - 20 }
+            wordWrap: { width: size - 30 }
         });
         this.textObj.setOrigin(0.5);
         this.textObj.setVisible(false);
 
-        // Store reference to background to toggle visibility
         this.textObj.setData('bg', textBg);
         this.add(textBg);
         this.add(this.textObj);
 
-        // Add to scene
         scene.add.existing(this);
         this.setDepth(Z_INDEX.CARDS);
     }
 
-    /**
-     * Sets up interactive behavior
-     */
     private setupInteractivity(): void {
-        this.backBg.setInteractive({ useHandCursor: true });
+        const hitArea = new Phaser.Geom.Rectangle(-this.cardSize / 2, -this.cardSize / 2, this.cardSize, this.cardSize);
+        this.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+        if (this.input) this.input.cursor = 'pointer';
 
-        this.backBg.on('pointerover', () => {
+        this.on('pointerover', () => {
             if (this.cardState === CardState.FACE_DOWN && !this.isFlipping) {
                 this.onHover();
             }
         });
 
-        this.backBg.on('pointerout', () => {
+        this.on('pointerout', () => {
             if (this.cardState === CardState.FACE_DOWN && !this.isFlipping) {
                 this.onHoverEnd();
             }
         });
-
-        // Add click handler
-        this.backBg.on('pointerdown', () => {
-            this.emit('pointerdown');
-        });
     }
 
-    /**
-     * Hover effect
-     */
+    private drawCardBack(): void {
+        this.visuals.clear();
+        // Shadow
+        this.visuals.fillStyle(0x000000, 0.2);
+        this.visuals.fillRoundedRect(-this.cardSize / 2 + 5, -this.cardSize / 2 + 5, this.cardSize, this.cardSize, 15);
+        // Stroke
+        this.visuals.lineStyle(4, Phaser.Display.Color.HexStringToColor(COLORS.PRIMARY).color, 1);
+        this.visuals.strokeRoundedRect(-this.cardSize / 2, -this.cardSize / 2, this.cardSize, this.cardSize, 15);
+        // Body
+        this.visuals.fillStyle(Phaser.Display.Color.HexStringToColor(COLORS.CARD_BACK).color);
+        this.visuals.fillRoundedRect(-this.cardSize / 2, -this.cardSize / 2, this.cardSize, this.cardSize, 15);
+    }
+
+    private drawCardFront(): void {
+        this.visuals.clear();
+        // Shadow
+        this.visuals.fillStyle(0x000000, 0.2);
+        this.visuals.fillRoundedRect(-this.cardSize / 2 + 5, -this.cardSize / 2 + 5, this.cardSize, this.cardSize, 15);
+        // Body
+        this.visuals.fillStyle(Phaser.Display.Color.HexStringToColor(COLORS.CARD_FRONT).color);
+        this.visuals.fillRoundedRect(-this.cardSize / 2, -this.cardSize / 2, this.cardSize, this.cardSize, 15);
+        // Inner highlight
+        this.visuals.fillStyle(0xffffff, 0.1);
+        this.visuals.fillRoundedRect(-this.cardSize / 2 + 5, -this.cardSize / 2 + 5, this.cardSize - 10, this.cardSize / 2, { tl: 10, tr: 10, bl: 0, br: 0 });
+    }
+
     private onHover(): void {
         if (!this.scene || !this.scene.tweens) return;
-
         this.scene.tweens.add({
             targets: this,
             scale: 1.05,
-            duration: 100,
-            ease: 'Power2',
+            duration: 150,
+            ease: 'Cubic.easeOut',
         });
     }
 
-    /**
-     * Hover end effect
-     */
     private onHoverEnd(): void {
         if (!this.scene || !this.scene.tweens) return;
-
         this.scene.tweens.add({
             targets: this,
             scale: 1,
-            duration: 100,
-            ease: 'Power2',
+            duration: 150,
+            ease: 'Cubic.easeOut',
         });
     }
 
-    // ... (interactivity methods remain same)
-
-    /**
-     * Flips the card to show front
-     */
     public async flipToFront(): Promise<void> {
-        if (this.cardState !== CardState.FACE_DOWN || this.isFlipping) {
-            return;
-        }
-
+        if (this.cardState !== CardState.FACE_DOWN || this.isFlipping) return;
         this.isFlipping = true;
         this.cardState = CardState.FACE_UP;
-
-        // Flip animation
         await this.playFlipAnimation(true);
-
         this.isFlipping = false;
     }
 
-    /**
-     * Flips the card to show back
-     */
     public async flipToBack(): Promise<void> {
-        if (this.cardState !== CardState.FACE_UP || this.isFlipping) {
-            return;
-        }
-
+        if (this.cardState !== CardState.FACE_UP || this.isFlipping) return;
         this.isFlipping = true;
         this.cardState = CardState.FACE_DOWN;
-
         await this.playFlipAnimation(false);
-
         this.isFlipping = false;
     }
 
-    /**
-     * Plays the flip animation
-     */
     private playFlipAnimation(showFront: boolean): Promise<void> {
         return new Promise((resolve) => {
-            // Check if scene and tweens are available
             if (!this.scene || !this.scene.tweens) {
-                console.warn('Card: Scene or tweens not available for flip animation');
                 resolve();
                 return;
             }
 
-            // First half: scale down
             this.scene.tweens.add({
                 targets: this,
                 scaleX: 0,
                 duration: ANIMATION_DURATION.CARD_FLIP / 2,
-                ease: 'Power2',
+                ease: 'Cubic.easeIn',
                 onComplete: () => {
-                    // Switch visibility
-                    this.backBg.setVisible(!showFront);
-                    if (this.backImage) {
-                        this.backImage.setVisible(!showFront);
-                    }
-                    if (this.frontImage !== null) {
-                        this.frontImage.setVisible(showFront);
-                    }
-                    if (this.textObj !== null) {
+                    if (showFront) this.drawCardFront();
+                    else this.drawCardBack();
+
+                    if (this.backImage) this.backImage.setVisible(!showFront);
+                    if (this.frontImage) this.frontImage.setVisible(showFront);
+                    if (this.textObj) {
                         this.textObj.setVisible(showFront);
-                        const bg = this.textObj.getData('bg');
+                        const bg = this.textObj.getData('bg') as Phaser.GameObjects.Graphics;
                         if (bg) bg.setVisible(showFront);
                     }
 
-                    // Check again before second half
-                    if (!this.scene || !this.scene.tweens) {
-                        resolve();
-                        return;
-                    }
-
-                    // Second half: scale up
                     this.scene.tweens.add({
                         targets: this,
                         scaleX: 1,
                         duration: ANIMATION_DURATION.CARD_FLIP / 2,
-                        ease: 'Power2',
-                        onComplete: () => {
-                            resolve();
-                        },
+                        ease: 'Back.easeOut',
+                        onComplete: () => resolve(),
                     });
                 },
             });
         });
     }
 
-    /**
-     * Marks the card as matched
-     */
     public setMatched(): void {
         this.cardState = CardState.MATCHED;
-        this.backBg.disableInteractive();
-
-        // Glow effect
-        this.feedbackService.showGlow(this as unknown as Phaser.GameObjects.GameObject);
-
-        // Fade out slightly
+        this.disableInteractive();
+        this.feedbackService.showGlow(this);
         if (this.scene && this.scene.tweens) {
             this.scene.tweens.add({
                 targets: this,
-                alpha: 0.7,
+                alpha: 0.8,
                 duration: ANIMATION_DURATION.CARD_MATCH,
                 ease: 'Power2',
             });
         }
     }
 
-    /**
-     * Shows wrong match effect
-     */
     public showWrongMatch(): void {
-        this.feedbackService.showShake(this as unknown as Phaser.GameObjects.GameObject);
+        this.feedbackService.showShake(this);
     }
 
-    /**
-     * Gets the pair ID
-     */
-    public getPairId(): string {
-        return this.pairId;
-    }
+    public getPairId(): string { return this.pairId; }
+    public getState(): CardState { return this.cardState; }
+    public isCurrentlyFlipping(): boolean { return this.isFlipping; }
+    public getImagePath(): string { return this.imagePath; }
 
-    /**
-     * Gets the current state
-     */
-    public getState(): CardState {
-        return this.cardState;
-    }
-
-    /**
-     * Checks if card is flipping
-     */
-    public isCurrentlyFlipping(): boolean {
-        return this.isFlipping;
-    }
-
-    /**
-     * Helper to get image path
-     */
-    public getImagePath(): string {
-        return this.imagePath;
-    }
-
-    /**
-     * Cleanup - Destroys the card and all its resources
-     */
     public override destroy(fromScene?: boolean): void {
-        // Remove event listeners
-        this.backBg.off('pointerover');
-        this.backBg.off('pointerout');
-        this.backBg.off('pointerdown');
-
-        // Kill any tweens targeting this card
-        if (this.scene && this.scene.tweens) {
-            this.scene.tweens.killTweensOf(this);
-        }
-
-        // Destroy front image if it exists
-        if (this.frontImage !== null) {
-            this.frontImage.destroy();
-            this.frontImage = null;
-        }
-
-        // Destroy text object if it exists
-        if (this.textObj !== null) {
-            const bg = this.textObj.getData('bg');
+        this.off('pointerover');
+        this.off('pointerout');
+        this.off('pointerdown');
+        if (this.scene && this.scene.tweens) this.scene.tweens.killTweensOf(this);
+        if (this.frontImage) this.frontImage.destroy();
+        if (this.textObj) {
+            const bg = this.textObj.getData('bg') as Phaser.GameObjects.Graphics;
             if (bg) bg.destroy();
             this.textObj.destroy();
-            this.textObj = null;
         }
-
-        // Destroy back background
-        this.backBg.destroy();
-
-        // Destroy back image
-        if (this.backImage) {
-            this.backImage.destroy();
-            this.backImage = null;
-        }
-
-        // Call parent destroy
+        if (this.visuals) this.visuals.destroy();
+        if (this.backImage) this.backImage.destroy();
         super.destroy(fromScene);
     }
 }

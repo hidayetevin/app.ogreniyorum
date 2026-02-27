@@ -1,5 +1,5 @@
 import { Scene } from 'phaser';
-import { SCENE_KEYS, GAME_CONFIG, COLORS, Z_INDEX } from '@constants/index';
+import { SCENE_KEYS, GAME_CONFIG, COLORS, Z_INDEX, FONTS } from '@constants/index';
 import { Button } from '@ui/Button';
 import { LevelService } from '@core/LevelService';
 import { StorageService } from '@core/StorageService';
@@ -59,19 +59,36 @@ export class CategorySelectionScene extends Scene {
             // Show banner ad via AdMob
             void this.adService.showBanner();
 
-            // Background
-            this.cameras.main.setBackgroundColor(GAME_CONFIG.BACKGROUND_COLOR);
+            // Background Gradient
+            const bgGraphics = this.add.graphics();
+            bgGraphics.fillGradientStyle(
+                Phaser.Display.Color.HexStringToColor(COLORS.BACKGROUND).color,
+                Phaser.Display.Color.HexStringToColor(COLORS.BACKGROUND).color,
+                Phaser.Display.Color.HexStringToColor('#0F0F1A').color,
+                Phaser.Display.Color.HexStringToColor('#0F0F1A').color,
+                1
+            );
+            bgGraphics.fillRect(0, 0, width, height);
 
-            // --- HEADER ---
-            const headerBg = this.add.rectangle(0, 0, width, headerHeight, 0x2c3e50);
-            headerBg.setOrigin(0, 0);
+            // --- HEADER (Premium Glassmorphism) ---
+            const headerBg = this.add.graphics();
+            // Shadow
+            headerBg.fillStyle(0x000000, 0.4);
+            headerBg.fillRect(0, 0, width, headerHeight + 5);
+            // Body
+            headerBg.fillStyle(Phaser.Display.Color.HexStringToColor(COLORS.PRIMARY).color, 0.95);
+            headerBg.fillRect(0, 0, width, headerHeight);
+            // Glass Highlight
+            headerBg.fillStyle(0xffffff, 0.1);
+            headerBg.fillRect(0, 0, width, headerHeight / 2);
             headerBg.setDepth(Z_INDEX.UI + 10);
 
-            const title = this.add.text(width / 2, headerHeight / 2, 'Kategori Seç', {
-                fontSize: '42px',
+            const title = this.add.text(width / 2, headerHeight / 2, this.localizationService.translate('category.title') || 'Kategori Seç', {
+                fontSize: '48px',
                 color: COLORS.TEXT_LIGHT,
-                fontFamily: 'Arial, sans-serif',
-                fontStyle: 'bold',
+                fontFamily: FONTS.PRIMARY,
+                fontStyle: '900',
+                shadow: { offsetX: 2, offsetY: 2, color: '#000000', blur: 5, fill: true }
             });
             title.setOrigin(0.5);
             title.setDepth(Z_INDEX.UI + 11);
@@ -131,16 +148,24 @@ export class CategorySelectionScene extends Scene {
                 }, 50);
             });
 
-            // --- FOOTER ---
-            const footerBg = this.add.rectangle(0, height - footerHeight, width, footerHeight, 0x1a252f);
-            footerBg.setOrigin(0, 0);
+            // --- FOOTER (Glassy) ---
+            const footerBg = this.add.graphics();
+            // Shadow
+            footerBg.fillStyle(0x000000, 0.4);
+            footerBg.fillRect(0, height - footerHeight - 5, width, footerHeight + 5);
+            // Body
+            footerBg.fillStyle(0x0F0F1A, 0.98);
+            footerBg.fillRect(0, height - footerHeight, width, footerHeight);
+            // Border
+            footerBg.lineStyle(2, 0xffffff, 0.1);
+            footerBg.strokeLineShape(new Phaser.Geom.Line(0, height - footerHeight, width, height - footerHeight));
             footerBg.setDepth(Z_INDEX.UI + 10);
 
             // Back button
             const backButton = new Button(this, {
-                x: 100,
+                x: 120,
                 y: height - footerHeight / 2,
-                width: 150,
+                width: 180,
                 height: 60,
                 text: this.localizationService.translate('menu.back'),
                 backgroundColor: COLORS.ACCENT,
@@ -151,20 +176,27 @@ export class CategorySelectionScene extends Scene {
             });
             backButton.setDepth(Z_INDEX.UI + 11);
 
-            // Stars
+            // Stars Display (Premium Chip)
+            const starBg = this.add.graphics();
+            starBg.fillStyle(0xffffff, 0.05);
+            starBg.fillRoundedRect(width - 250, height - footerHeight / 2 - 35, 220, 70, 35);
+            starBg.lineStyle(2, Phaser.Display.Color.HexStringToColor(COLORS.WARNING).color, 0.3);
+            starBg.strokeRoundedRect(width - 250, height - footerHeight / 2 - 35, 220, 70, 35);
+            starBg.setDepth(Z_INDEX.UI + 11);
+
             const starsText = this.add.text(
-                width - 100,
+                width - 140,
                 height - footerHeight / 2,
                 `⭐ ${progress.totalStars}`,
                 {
-                    fontSize: '32px',
+                    fontSize: '34px',
                     color: COLORS.WARNING,
-                    fontFamily: 'Arial, sans-serif',
+                    fontFamily: FONTS.PRIMARY,
                     fontStyle: 'bold',
                 }
             );
             starsText.setOrigin(0.5);
-            starsText.setDepth(Z_INDEX.UI + 11);
+            starsText.setDepth(Z_INDEX.UI + 12);
         } catch (error) {
             console.error('[CategorySelection] Scene Create Error:', error);
             this.isLoading = false;
@@ -245,86 +277,116 @@ export class CategorySelectionScene extends Scene {
         const card = this.add.container(x, y);
         this.scrollContainer?.add(card);
 
-        const bg = this.add.rectangle(0, 0, width, height, parseInt(COLORS.CARD_FRONT.replace('#', ''), 16));
-        bg.setStrokeStyle(4, parseInt(COLORS.PRIMARY.replace('#', ''), 16));
+        // Premium card background
+        const cardBg = this.add.graphics();
+        const cardMainCol = isUnlocked ? 0x1A1A2E : 0x0F0F1A;
+        const cardBorderCol = isUnlocked ? 0x6C5CE7 : 0x2C3E50;
+
+        // Shadow
+        cardBg.fillStyle(0x000000, 0.4);
+        cardBg.fillRoundedRect(-width / 2 + 8, -height / 2 + 8, width, height, 25);
+
+        // Body
+        cardBg.fillStyle(cardMainCol, 0.95);
+        cardBg.fillRoundedRect(-width / 2, -height / 2, width, height, 25);
+        // Inner Highlight
+        cardBg.fillStyle(0xffffff, 0.03);
+        cardBg.fillRoundedRect(-width / 2, -height / 2, width, height / 2, { tl: 25, tr: 25, bl: 0, br: 0 });
+
+        // Border
+        cardBg.lineStyle(3, cardBorderCol, isUnlocked ? 0.6 : 0.3);
+        cardBg.strokeRoundedRect(-width / 2, -height / 2, width, height, 25);
 
         const nameText = this.add.text(0, -70, this.localizationService.translate(category.nameKey), {
-            fontSize: '32px',
-            color: COLORS.TEXT_DARK,
-            fontFamily: 'Arial, sans-serif',
-            fontStyle: 'bold',
+            fontSize: '36px',
+            color: COLORS.TEXT_LIGHT,
+            fontFamily: FONTS.PRIMARY,
+            fontStyle: '900',
         });
         nameText.setOrigin(0.5);
 
-        const descText = this.add.text(0, -20, this.localizationService.translate(category.descriptionKey), {
+        const descText = this.add.text(0, -15, this.localizationService.translate(category.descriptionKey), {
             fontSize: '18px',
-            color: COLORS.TEXT_DARK,
-            fontFamily: 'Arial, sans-serif',
+            color: isUnlocked ? '#BBBBBB' : '#888888',
+            fontFamily: FONTS.SECONDARY,
+            fontStyle: '600',
             align: 'center',
-            wordWrap: { width: width - 40 }
+            wordWrap: { width: width - 60 }
         });
         descText.setOrigin(0.5);
 
-        const levelCount = this.add.text(0, 30, `${category.levels.length} Seviye`, {
-            fontSize: '18px',
-            color: COLORS.TEXT_DARK,
-            fontFamily: 'Arial, sans-serif',
+        const levelCount = this.add.text(0, 45, `${category.levels.length} SEVİYE`, {
+            fontSize: '22px',
+            color: isUnlocked ? COLORS.PRIMARY : COLORS.DISABLED,
+            fontFamily: FONTS.PRIMARY,
+            fontStyle: '800'
         });
         levelCount.setOrigin(0.5);
 
-        card.add([bg, nameText, descText, levelCount]);
+        card.add([cardBg, nameText, descText, levelCount]);
 
         if (isUnlocked) {
-            bg.setInteractive({ useHandCursor: true });
+            // Hit area for the entire card
+            const hitArea = new Phaser.Geom.Rectangle(-width / 2, -height / 2, width, height);
+            card.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+            if (card.input) card.input.cursor = 'pointer';
 
             let pressX = 0;
             let pressY = 0;
 
-            bg.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+            card.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
                 pressX = pointer.x;
                 pressY = pointer.y;
             });
 
-            bg.on('pointerup', (pointer: Phaser.Input.Pointer) => {
+            card.on('pointerup', (pointer: Phaser.Input.Pointer) => {
                 console.log('[CategorySelection] Pointerup - isLoading:', this.isLoading, 'category:', category.id);
 
-                // Prevent selection if already loading
-                if (this.isLoading) {
-                    console.log('[CategorySelection] BLOCKED - Already loading');
-                    return;
-                }
+                if (this.isLoading) return;
 
                 const dist = Phaser.Math.Distance.Between(pressX, pressY, pointer.x, pointer.y);
 
-                // Trigger only if not dragging and movement is small
                 if (!this.isDragging && dist < 15) {
-                    console.log('[CategorySelection] Click valid, starting selection animation');
                     this.tweens.add({
                         targets: card,
-                        scale: 0.95,
-                        duration: 50,
+                        scale: 0.92,
+                        duration: 100,
                         yoyo: true,
-                        onComplete: () => {
-                            this.selectCategory(category);
-                        }
+                        ease: 'Back.easeOut',
+                        onComplete: () => this.selectCategory(category)
                     });
                 }
             });
 
-            bg.on('pointerover', () => {
-                this.tweens.add({ targets: card, scale: 1.05, duration: 100 });
+            card.on('pointerover', () => {
+                this.tweens.add({ targets: card, scale: 1.05, duration: 250, ease: 'Cubic.easeOut' });
+                cardBg.clear();
+                // Redraw with highlight (Premium)
+                cardBg.fillStyle(0x000000, 0.5);
+                cardBg.fillRoundedRect(-width / 2 + 10, -height / 2 + 10, width, height, 25);
+                cardBg.fillStyle(0x252545, 0.98);
+                cardBg.fillRoundedRect(-width / 2, -height / 2, width, height, 25);
+                cardBg.lineStyle(4, 0x6C5CE7, 1);
+                cardBg.strokeRoundedRect(-width / 2, -height / 2, width, height, 25);
             });
 
-            bg.on('pointerout', () => {
-                this.tweens.add({ targets: card, scale: 1, duration: 100 });
+            card.on('pointerout', () => {
+                this.tweens.add({ targets: card, scale: 1, duration: 250, ease: 'Cubic.easeOut' });
+                cardBg.clear();
+                cardBg.fillStyle(0x000000, 0.4);
+                cardBg.fillRoundedRect(-width / 2 + 8, -height / 2 + 8, width, height, 25);
+                cardBg.fillStyle(cardMainCol, 0.95);
+                cardBg.fillRoundedRect(-width / 2, -height / 2, width, height, 25);
+                cardBg.lineStyle(3, cardBorderCol, 0.6);
+                cardBg.strokeRoundedRect(-width / 2, -height / 2, width, height, 25);
             });
         } else {
-            const lockIcon = this.add.text(0, 60, '🔒', { fontSize: '32px' });
+            const lockIcon = this.add.text(0, 75, '🔒', { fontSize: '40px' });
             lockIcon.setOrigin(0.5);
 
-            const unlockText = this.add.text(0, 90,
+            const unlockText = this.add.text(0, 105,
                 this.localizationService.translate('category.unlock', { stars: category.unlockRequirement.toString() }),
-                { fontSize: '14px', color: COLORS.DISABLED, fontFamily: 'Arial, sans-serif' }
+                { fontSize: '18px', color: COLORS.DISABLED, fontFamily: FONTS.SECONDARY, fontStyle: 'bold' }
             );
             unlockText.setOrigin(0.5);
 

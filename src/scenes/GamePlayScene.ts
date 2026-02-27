@@ -1,5 +1,5 @@
 import { Scene } from 'phaser';
-import { SCENE_KEYS, GAME_CONFIG, COLORS, TIMING, GRID_CONFIG } from '@constants/index';
+import { SCENE_KEYS, GAME_CONFIG, COLORS, TIMING, GRID_CONFIG, FONTS } from '@constants/index';
 import { Card } from '@ui/Card';
 import { Button } from '@ui/Button';
 import { LevelService } from '@core/LevelService';
@@ -94,8 +94,16 @@ export class GamePlayScene extends Scene {
                 return;
             }
 
-            // Background
-            this.cameras.main.setBackgroundColor(GAME_CONFIG.BACKGROUND_COLOR);
+            // Background Gradient
+            const bgGraphics = this.add.graphics();
+            bgGraphics.fillGradientStyle(
+                Phaser.Display.Color.HexStringToColor(COLORS.BACKGROUND).color,
+                Phaser.Display.Color.HexStringToColor(COLORS.BACKGROUND).color,
+                Phaser.Display.Color.HexStringToColor('#0F0F1A').color,
+                Phaser.Display.Color.HexStringToColor('#0F0F1A').color,
+                1
+            );
+            bgGraphics.fillRect(0, 0, GAME_CONFIG.WIDTH, GAME_CONFIG.HEIGHT);
 
             // Show banner ad via AdMob
             void this.adService.showBanner();
@@ -144,32 +152,39 @@ export class GamePlayScene extends Scene {
             return;
         }
 
+        // Header UI Bar
+        const headerBg = this.add.graphics();
+        headerBg.fillStyle(0x000000, 0.2);
+        headerBg.fillRoundedRect(20, 20, GAME_CONFIG.WIDTH - 40, 140, 25);
+        headerBg.lineStyle(2, 0xffffff, 0.1);
+        headerBg.strokeRoundedRect(20, 20, GAME_CONFIG.WIDTH - 40, 140, 25);
+
         // Level title
         const title = this.add.text(
             GAME_CONFIG.WIDTH / 2,
-            40,
+            55,
             this.localizationService.translate('level.title', {
                 number: this.currentLevel.levelNumber.toString(),
             }),
             {
-                fontSize: '32px',
+                fontSize: '38px',
                 color: COLORS.TEXT_LIGHT,
-                fontFamily: 'Arial, sans-serif',
-                fontStyle: 'bold',
+                fontFamily: FONTS.PRIMARY,
+                fontStyle: '800',
             }
         );
         title.setOrigin(0.5);
 
-        // Moves counter (Replaced with visual Star Progress Bar)
+        // Moves counter (Visual Star Progress Bar)
         const initStarsX = 40;
-        const initStarsY = 100;
+        const initStarsY = 115;
 
         for (let i = 0; i < 3; i++) {
-            const star = this.add.text(initStarsX + i * 45, initStarsY, '⭐', {
-                fontSize: '32px',
+            const star = this.add.text(initStarsX + i * 50, initStarsY, '⭐', {
+                fontSize: '38px',
                 padding: { left: 5, right: 5, top: 5, bottom: 5 }
             })
-                .setOrigin(0.5)
+                .setOrigin(0, 0.5)
                 .setAlpha(1);
 
             this.starIcons.push(star);
@@ -177,13 +192,13 @@ export class GamePlayScene extends Scene {
 
         // Back button
         new Button(this, {
-            x: 100,
-            y: GAME_CONFIG.HEIGHT - 60,
-            width: 150,
-            height: 60,
+            x: 120,
+            y: GAME_CONFIG.HEIGHT - 80,
+            width: 180,
+            height: 70,
             text: this.localizationService.translate('menu.back'),
             backgroundColor: COLORS.ACCENT,
-            fontSize: 24,
+            fontSize: 26,
             onClick: () => {
                 this.exitToMenu();
             },
@@ -192,13 +207,13 @@ export class GamePlayScene extends Scene {
         // Hint button (Ad-backed)
         let isHinting = false;
         new Button(this, {
-            x: GAME_CONFIG.WIDTH - 100,
-            y: 100, // Top right corner across from stars
-            width: 150,
-            height: 60,
+            x: GAME_CONFIG.WIDTH - 120,
+            y: 115, // Aligned with stars
+            width: 180,
+            height: 70,
             text: this.localizationService.translate('game.hint'),
             backgroundColor: COLORS.WARNING,
-            fontSize: 24,
+            fontSize: 26,
             onClick: () => {
                 if (isHinting || this.isInputLocked) return;
 
@@ -206,15 +221,12 @@ export class GamePlayScene extends Scene {
                 isHinting = true;
                 this.isInputLocked = true;
 
-                const prevColor = GAME_CONFIG.BACKGROUND_COLOR;
-
                 // Show rewarded ad
                 this.adService.showRewardedAd().then(() => {
                     // Ad Complete/Success -> Use Hint
                     this.useHint().finally(() => {
                         isHinting = false;
                         this.isInputLocked = false;
-                        this.cameras.main.setBackgroundColor(prevColor);
                     });
                 }).catch((error) => {
                     console.error('Hint ad failed:', error);

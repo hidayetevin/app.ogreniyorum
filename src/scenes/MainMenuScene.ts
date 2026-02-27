@@ -1,5 +1,5 @@
 import { Scene } from 'phaser';
-import { SCENE_KEYS, GAME_CONFIG, COLORS } from '@constants/index';
+import { SCENE_KEYS, GAME_CONFIG, COLORS, FONTS } from '@constants/index';
 import { Button } from '@ui/Button';
 import { LocalizationService } from '@core/LocalizationService';
 import { AudioService } from '@core/AudioService';
@@ -43,19 +43,45 @@ export class MainMenuScene extends Scene {
             const centerX = GAME_CONFIG.WIDTH / 2;
             const centerY = GAME_CONFIG.HEIGHT / 2;
 
-            // Background
-            this.cameras.main.setBackgroundColor(GAME_CONFIG.BACKGROUND_COLOR);
+            // 1. Background Gradient (Deep Space)
+            const bgGraphics = this.add.graphics();
+            bgGraphics.fillGradientStyle(
+                Phaser.Display.Color.HexStringToColor(COLORS.BACKGROUND).color,
+                Phaser.Display.Color.HexStringToColor(COLORS.BACKGROUND).color,
+                Phaser.Display.Color.HexStringToColor('#0F0F1A').color,
+                Phaser.Display.Color.HexStringToColor('#0F0F1A').color,
+                1
+            );
+            bgGraphics.fillRect(0, 0, GAME_CONFIG.WIDTH, GAME_CONFIG.HEIGHT);
 
-            // Title
+            // 2. Background Grid Pattern (Subtle)
+            const grid = this.add.grid(
+                GAME_CONFIG.WIDTH / 2,
+                GAME_CONFIG.HEIGHT / 2,
+                GAME_CONFIG.WIDTH,
+                GAME_CONFIG.HEIGHT,
+                60,
+                60,
+                0xffffff,
+                0.02,
+                0xffffff,
+                0.05
+            );
+            grid.setAlpha(0.3);
+
+            // 3. Title (Logo Area)
             const title = this.add.text(
                 centerX,
-                centerY - 300,
+                centerY - 340,
                 this.localizationService.translate('app.title'),
                 {
-                    fontSize: '54px',
+                    fontSize: '72px',
                     color: COLORS.TEXT_LIGHT,
-                    fontFamily: 'Arial, sans-serif',
-                    fontStyle: 'bold',
+                    fontFamily: FONTS.PRIMARY,
+                    fontStyle: '900',
+                    stroke: COLORS.PRIMARY,
+                    strokeThickness: 2,
+                    shadow: { offsetX: 4, offsetY: 4, color: '#000000', blur: 10, stroke: true, fill: true }
                 }
             );
             title.setOrigin(0.5);
@@ -63,12 +89,14 @@ export class MainMenuScene extends Scene {
             // Subtitle
             const subtitle = this.add.text(
                 centerX,
-                centerY - 230,
+                centerY - 260,
                 this.localizationService.translate('app.subtitle'),
                 {
                     fontSize: '24px',
-                    color: COLORS.TEXT_LIGHT,
-                    fontFamily: 'Arial, sans-serif',
+                    color: COLORS.SECONDARY,
+                    fontFamily: FONTS.SECONDARY,
+                    fontStyle: '600',
+                    letterSpacing: 2
                 }
             );
             subtitle.setOrigin(0.5);
@@ -132,15 +160,34 @@ export class MainMenuScene extends Scene {
                 },
             });
 
-            // Add pulsing animation to title
+            // Floating Logo Animation
             this.tweens.add({
                 targets: title,
+                y: title.y - 20,
                 scale: 1.05,
-                duration: 1000,
+                duration: 2500,
                 yoyo: true,
                 repeat: -1,
                 ease: 'Sine.easeInOut',
             });
+
+            // Glassmorphism Footer (Polished)
+            const footerBg = this.add.graphics();
+            // Shadow
+            footerBg.fillStyle(0x000000, 0.3);
+            footerBg.fillRoundedRect(50, GAME_CONFIG.HEIGHT - 130, GAME_CONFIG.WIDTH - 100, 90, 25);
+            // Body
+            footerBg.fillStyle(0xffffff, 0.03);
+            footerBg.fillRoundedRect(40, GAME_CONFIG.HEIGHT - 140, GAME_CONFIG.WIDTH - 80, 90, 25);
+            // Border
+            footerBg.lineStyle(2, 0xffffff, 0.1);
+            footerBg.strokeRoundedRect(40, GAME_CONFIG.HEIGHT - 140, GAME_CONFIG.WIDTH - 80, 90, 25);
+
+            this.add.text(centerX, GAME_CONFIG.HEIGHT - 80, 'v1.0.0 - EvnLabs', {
+                fontSize: '18px',
+                color: '#888888',
+                fontFamily: FONTS.SECONDARY
+            }).setOrigin(0.5);
 
             // Play background music
             this.audioService.playMusic('background-music', true);

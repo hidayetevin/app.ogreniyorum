@@ -1,10 +1,18 @@
 :root {
-  --primary-color: #3498db;
-  --secondary-color: #2ecc71;
-  --accent-color: #e74c3c;
-  --bg-color: #2c3e50;
-  --text-dark: #2c3e50;
-  --text-light: #ecf0f1;
+  --primary-color: #8E44AD;
+  --secondary-color: #27AE60;
+  --accent-color: #FF6B6B;
+  --bg-color: #1A1A2E;
+  --text-dark: #2C3E50;
+  --text-light: #ECF0F1;
+  --font-primary: 'Outfit', sans-serif;
+  --font-secondary: 'Inter', sans-serif;
+}
+
+body {
+  font-family: var(--font-primary);
+  background-color: var(--bg-color);
+  color: var(--text-light);
 }
 
 /* CSS Reset */

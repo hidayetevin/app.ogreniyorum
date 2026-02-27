@@ -1,8 +1,8 @@
-import { GAME_CONFIG, COLORS, Z_INDEX } from '@constants/index';
+import { GAME_CONFIG, COLORS, Z_INDEX, FONTS } from '@constants/index';
 import type { IAchievement } from '../types/models';
 
 /**
- * AchievementNotification displays a popup when an achievement is unlocked
+ * AchievementNotification displays a premium popup when an achievement is unlocked
  */
 export class AchievementNotification extends Phaser.GameObjects.Container {
     private background: Phaser.GameObjects.Graphics;
@@ -10,141 +10,126 @@ export class AchievementNotification extends Phaser.GameObjects.Container {
     private titleText: Phaser.GameObjects.Text;
     private descriptionText: Phaser.GameObjects.Text;
     private rewardText: Phaser.GameObjects.Text;
-    // confettiParticles removed - feature removed per user request
 
     constructor(scene: Phaser.Scene) {
-        super(scene, GAME_CONFIG.WIDTH / 2, -200); // Start off-screen
+        super(scene, GAME_CONFIG.WIDTH / 2, -250); // Start off-screen
 
-        const width = 400;
-        const height = 180;
+        const width = 450;
+        const height = 200;
 
-        // Background with glow effect
+        // Background (Glassy Header)
         this.background = scene.add.graphics();
-        this.background.fillStyle(parseInt(COLORS.PRIMARY.replace('#', ''), 16), 0.95);
-        this.background.fillRoundedRect(-width / 2, 0, width, height, 16);
-        this.background.lineStyle(4, parseInt(COLORS.WARNING.replace('#', ''), 16), 1);
-        this.background.strokeRoundedRect(-width / 2, 0, width, height, 16);
+        // Shadow
+        this.background.fillStyle(0x000000, 0.4);
+        this.background.fillRoundedRect(-width / 2 + 5, 5, width, height, 25);
+        // Body (Gradient)
+        this.background.fillGradientStyle(
+            Phaser.Display.Color.HexStringToColor(COLORS.PRIMARY).color,
+            Phaser.Display.Color.HexStringToColor(COLORS.PRIMARY).color,
+            Phaser.Display.Color.HexStringToColor('#3D1B7B').color,
+            Phaser.Display.Color.HexStringToColor('#3D1B7B').color,
+            0.9
+        );
+        this.background.fillRoundedRect(-width / 2, 0, width, height, 25);
+        // Stroke
+        this.background.lineStyle(3, 0xffffff, 0.2);
+        this.background.strokeRoundedRect(-width / 2, 0, width, height, 25);
         this.add(this.background);
 
-        // "NEW ACHIEVEMENT!" header
-        const headerText = scene.add.text(0, 15, '🎉 YENİ BAŞARI!', {
-            fontSize: '24px',
+        // Header text with Outfit
+        const headerText = scene.add.text(0, 20, '🎉 YENİ BAŞARI!', {
+            fontSize: '28px',
             color: COLORS.WARNING,
-            fontFamily: 'Arial, sans-serif',
-            fontStyle: 'bold',
+            fontFamily: FONTS.PRIMARY,
+            fontStyle: '800',
         });
         headerText.setOrigin(0.5);
         this.add(headerText);
 
         // Icon (emoji)
-        this.iconText = scene.add.text(-150, 70, '', {
-            fontSize: '48px',
+        this.iconText = scene.add.text(-160, 85, '', {
+            fontSize: '56px',
         });
         this.iconText.setOrigin(0.5);
         this.add(this.iconText);
 
         // Achievement title
-        this.titleText = scene.add.text(0, 60, '', {
-            fontSize: '22px',
+        this.titleText = scene.add.text(20, 70, '', {
+            fontSize: '26px',
             color: COLORS.TEXT_LIGHT,
-            fontFamily: 'Arial, sans-serif',
-            fontStyle: 'bold',
+            fontFamily: FONTS.PRIMARY,
+            fontStyle: '800',
         });
         this.titleText.setOrigin(0.5, 0);
         this.add(this.titleText);
 
         // Achievement description
-        this.descriptionText = scene.add.text(0, 90, '', {
-            fontSize: '16px',
+        this.descriptionText = scene.add.text(20, 105, '', {
+            fontSize: '18px',
             color: COLORS.TEXT_LIGHT,
-            fontFamily: 'Arial, sans-serif',
+            fontFamily: FONTS.SECONDARY,
             align: 'center',
-            wordWrap: { width: width - 100 },
+            wordWrap: { width: width - 120 },
         });
         this.descriptionText.setOrigin(0.5, 0);
         this.add(this.descriptionText);
 
         // Reward text
-        this.rewardText = scene.add.text(0, 140, '', {
-            fontSize: '18px',
+        this.rewardText = scene.add.text(0, 165, '', {
+            fontSize: '20px',
             color: COLORS.WARNING,
-            fontFamily: 'Arial, sans-serif',
-            fontStyle: 'bold',
+            fontFamily: FONTS.PRIMARY,
+            fontStyle: '800',
         });
         this.rewardText.setOrigin(0.5);
         this.add(this.rewardText);
 
         this.setDepth(Z_INDEX.OVERLAY + 10);
         this.setVisible(false);
-
-        // Add to scene
         scene.add.existing(this);
     }
 
-    /**
-     * Shows the notification with achievement data
-     */
     public show(achievement: IAchievement, achievementName: string, achievementDescription: string): void {
-        // Update texts
         this.iconText.setText(achievement.iconEmoji);
         this.titleText.setText(achievementName);
         this.descriptionText.setText(achievementDescription);
         this.rewardText.setText(`+${achievement.reward} Bonus Yıldız ⭐`);
-
-        // Make visible
         this.setVisible(true);
 
-        // Confetti removed - user doesn't like the visual effect
-
-        // Slide in animation
         this.scene.tweens.add({
             targets: this,
-            y: 150,
-            duration: 600,
+            y: 180,
+            duration: 700,
             ease: 'Back.out',
             onComplete: () => {
-                // Auto-hide after 3 seconds
-                this.scene.time.delayedCall(3000, () => {
-                    this.hide();
-                });
+                this.scene.time.delayedCall(3500, () => this.hide());
             },
         });
 
-        // Pulsing animation
         this.scene.tweens.add({
             targets: this.iconText,
-            scale: 1.2,
+            scale: 1.3,
             duration: 500,
             yoyo: true,
             repeat: 2,
-            ease: 'Sine.easeInOut',
+            ease: 'Cubic.easeInOut',
         });
     }
 
-    /**
-     * Hides the notification
-     */
     public hide(): void {
         this.scene.tweens.add({
             targets: this,
-            y: -200,
-            duration: 400,
-            ease: 'Back.in',
+            y: -250,
+            duration: 500,
+            ease: 'Cubic.easeIn',
             onComplete: () => {
                 this.setVisible(false);
-                // confettiParticles cleanup removed - feature removed
             },
         });
     }
 
-    // createConfetti method removed - feature removed per user request
-
-    /**
-     * Cleanup
-     */
     public override destroy(fromScene?: boolean): void {
         this.background.destroy();
-        // confettiParticles cleanup removed - feature removed
         super.destroy(fromScene);
     }
 }

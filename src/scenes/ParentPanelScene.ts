@@ -28,25 +28,52 @@ export class ParentPanelScene extends Scene {
      */
     public create(): void {
         try {
-            const centerX = GAME_CONFIG.WIDTH / 2;
-            const centerY = GAME_CONFIG.HEIGHT / 2;
+            const width = GAME_CONFIG.WIDTH;
+            const height = GAME_CONFIG.HEIGHT;
+            const headerHeight = 120;
 
-            // Background
-            this.cameras.main.setBackgroundColor(GAME_CONFIG.BACKGROUND_COLOR);
+            // Background Gradient with Grid Pattern
+            const bgGraphics = this.add.graphics();
+            bgGraphics.fillGradientStyle(
+                Phaser.Display.Color.HexStringToColor(COLORS.BACKGROUND).color,
+                Phaser.Display.Color.HexStringToColor(COLORS.BACKGROUND).color,
+                Phaser.Display.Color.HexStringToColor('#0F0F1A').color,
+                Phaser.Display.Color.HexStringToColor('#0F0F1A').color,
+                1
+            );
+            bgGraphics.fillRect(0, 0, width, height);
+
+            // Subtly overlay a grid pattern
+            const grid = this.add.grid(width / 2, height / 2, width, height, 40, 40, 0xffffff, 0.02);
+            grid.setAlpha(0.2);
+
+            // (Removing redundant background calls)
 
             // Show banner ad via AdMob
             void this.adService.showBanner();
 
-            // Title
+            // --- HEADER (Premium Glassmorphism) ---
+            const headerBg = this.add.graphics();
+            // Shadow
+            headerBg.fillStyle(0x000000, 0.4);
+            headerBg.fillRect(0, 0, width, headerHeight + 5);
+            // Body
+            headerBg.fillStyle(Phaser.Display.Color.HexStringToColor(COLORS.PRIMARY).color, 0.95);
+            headerBg.fillRect(0, 0, width, headerHeight);
+            // Glass Highlight
+            headerBg.fillStyle(0xffffff, 0.1);
+            headerBg.fillRect(0, 0, width, headerHeight / 2);
+
             const title = this.add.text(
-                centerX,
-                100,
-                '📊 EBEVEYİN PANELİ',
+                width / 2,
+                headerHeight / 2,
+                '📊 EBEVEYN PANELİ', // Fixed spelling (EBEVEYN)
                 {
                     fontSize: '48px',
-                    color: COLORS.WARNING,
-                    fontFamily: 'Arial, sans-serif',
-                    fontStyle: 'bold',
+                    color: COLORS.TEXT_LIGHT,
+                    fontFamily: 'Outfit, sans-serif',
+                    fontStyle: '900',
+                    shadow: { offsetX: 2, offsetY: 2, color: '#000000', blur: 5, fill: true }
                 }
             );
             title.setOrigin(0.5);
@@ -63,7 +90,7 @@ export class ParentPanelScene extends Scene {
             });
 
             // Statistics panel
-            this.createStatsPanel(centerX, centerY - 200, {
+            this.createStatsPanel(width / 2, height / 2 - 180, {
                 totalStars: progress.totalStars,
                 maxStars: totalPossibleStars,
                 levelsCompleted: progress.levelsCompleted,
@@ -76,16 +103,16 @@ export class ParentPanelScene extends Scene {
                 totalAchievements: this.achievementService.getAllAchievements().length,
             });
 
-            // Category performance (moved down)
-            this.createCategoryPerformance(centerX, centerY + 150, categories, progress);
+            // Category performance
+            this.createCategoryPerformance(width / 2, height / 2 + 150, categories, progress);
 
             // Reset button
             new Button(this, {
-                x: centerX,
-                y: GAME_CONFIG.HEIGHT - 200,
-                width: 350,
+                x: width / 2,
+                y: height - 190,
+                width: 380,
                 height: 70,
-                text: '🗑️ İlerlemeyi Sıfırla',
+                text: '🗑️ İLERLEMEYİ SIFIRLA',
                 backgroundColor: COLORS.ACCENT,
                 fontSize: 24,
                 onClick: () => {
@@ -95,11 +122,11 @@ export class ParentPanelScene extends Scene {
 
             // Back button
             new Button(this, {
-                x: centerX,
-                y: GAME_CONFIG.HEIGHT - 110,
-                width: 350,
+                x: width / 2,
+                y: height - 100,
+                width: 380,
                 height: 70,
-                text: '← Ana Menü',
+                text: '← ANA MENÜ',
                 backgroundColor: COLORS.SECONDARY,
                 fontSize: 24,
                 onClick: () => {
@@ -152,12 +179,20 @@ export class ParentPanelScene extends Scene {
         const panelWidth = 600;
         const panelHeight = 280;
 
-        // Background
-        const bg = this.add.graphics();
-        bg.fillStyle(parseInt(COLORS.CARD_BACK.replace('#', ''), 16), 0.9);
-        bg.fillRoundedRect(x - panelWidth / 2, y, panelWidth, panelHeight, 12);
-        bg.lineStyle(3, parseInt(COLORS.PRIMARY.replace('#', ''), 16), 1);
-        bg.strokeRoundedRect(x - panelWidth / 2, y, panelWidth, panelHeight, 12);
+        // Premium Background
+        const statsPanelBg = this.add.graphics();
+        // Shadow
+        statsPanelBg.fillStyle(0x000000, 0.4);
+        statsPanelBg.fillRoundedRect(x - panelWidth / 2 + 8, y + 8, panelWidth, panelHeight, 25);
+        // Body
+        statsPanelBg.fillStyle(Phaser.Display.Color.HexStringToColor(COLORS.BACKGROUND).color, 0.9);
+        statsPanelBg.fillRoundedRect(x - panelWidth / 2, y, panelWidth, panelHeight, 25);
+        // Glass Highlight
+        statsPanelBg.fillStyle(0xffffff, 0.03);
+        statsPanelBg.fillRoundedRect(x - panelWidth / 2, y, panelWidth, panelHeight / 2, { tl: 25, tr: 25, bl: 0, br: 0 });
+        // Border
+        statsPanelBg.lineStyle(3, Phaser.Display.Color.HexStringToColor(COLORS.PRIMARY).color, 0.6);
+        statsPanelBg.strokeRoundedRect(x - panelWidth / 2, y, panelWidth, panelHeight, 25);
 
         const padding = 30;
         const lineHeight = 40;
@@ -181,7 +216,8 @@ export class ParentPanelScene extends Scene {
                 {
                     fontSize: '22px',
                     color: COLORS.TEXT_LIGHT,
-                    fontFamily: 'Arial, sans-serif',
+                    fontFamily: 'Outfit, sans-serif',
+                    fontStyle: '600'
                 }
             );
             yOffset += lineHeight;
@@ -199,12 +235,13 @@ export class ParentPanelScene extends Scene {
         const titleText = this.add.text(
             x,
             y - 20,
-            'Kategori Performansı',
+            'KATEGORİ PERFORMANSI',
             {
-                fontSize: '24px',
+                fontSize: '28px',
                 color: COLORS.WARNING,
-                fontFamily: 'Arial, sans-serif',
-                fontStyle: 'bold',
+                fontFamily: 'Outfit, sans-serif',
+                fontStyle: '900',
+                shadow: { offsetX: 1, offsetY: 1, color: '#000000', blur: 3, fill: true }
             }
         );
         titleText.setOrigin(0.5);
@@ -226,9 +263,10 @@ export class ParentPanelScene extends Scene {
                 yOffset,
                 category.name,
                 {
-                    fontSize: '18px',
+                    fontSize: '20px',
                     color: COLORS.TEXT_LIGHT,
-                    fontFamily: 'Arial, sans-serif',
+                    fontFamily: 'Outfit, sans-serif',
+                    fontStyle: '800'
                 }
             );
 
@@ -242,7 +280,12 @@ export class ParentPanelScene extends Scene {
             barBg.fillRoundedRect(barX, yOffset, barWidth, barHeight, 4);
 
             const barFill = this.add.graphics();
-            const fillColor = percentage >= 100 ? 0x2ecc71 : percentage >= 50 ? 0xf39c12 : 0x3498db;
+            const colors = {
+                success: Phaser.Display.Color.HexStringToColor(COLORS.SUCCESS).color,
+                warning: Phaser.Display.Color.HexStringToColor(COLORS.WARNING).color,
+                primary: Phaser.Display.Color.HexStringToColor(COLORS.PRIMARY).color
+            };
+            const fillColor = percentage >= 100 ? colors.success : percentage >= 50 ? colors.warning : colors.primary;
             barFill.fillStyle(fillColor, 1);
             barFill.fillRoundedRect(barX, yOffset, (barWidth * percentage) / 100, barHeight, 4);
 
@@ -252,9 +295,10 @@ export class ParentPanelScene extends Scene {
                 yOffset + barHeight / 2,
                 `${Math.round(percentage)}%`,
                 {
-                    fontSize: '16px',
+                    fontSize: '18px',
                     color: COLORS.TEXT_LIGHT,
-                    fontFamily: 'Arial, sans-serif',
+                    fontFamily: 'Outfit, sans-serif',
+                    fontStyle: '800'
                 }
             );
             percentText.setOrigin(0, 0.5);
@@ -278,20 +322,31 @@ export class ParentPanelScene extends Scene {
         const panelX = (GAME_CONFIG.WIDTH - panelWidth) / 2;
         const panelY = (GAME_CONFIG.HEIGHT - panelHeight) / 2;
 
-        const panel = this.add.graphics();
-        panel.fillStyle(parseInt(COLORS.CARD_BACK.replace('#', ''), 16), 1);
-        panel.fillRoundedRect(panelX, panelY, panelWidth, panelHeight, 16);
-        panel.setDepth(101);
+        const confirmPanel = this.add.graphics();
+        // Shadow
+        confirmPanel.fillStyle(0x000000, 0.4);
+        confirmPanel.fillRoundedRect(panelX + 8, panelY + 8, panelWidth, panelHeight, 25);
+        // Body
+        confirmPanel.fillStyle(0x1A1A2E, 0.95);
+        confirmPanel.fillRoundedRect(panelX, panelY, panelWidth, panelHeight, 25);
+        // Glass Highlight
+        confirmPanel.fillStyle(0xffffff, 0.05);
+        confirmPanel.fillRoundedRect(panelX, panelY, panelWidth, panelHeight / 2, { tl: 25, tr: 25, bl: 0, br: 0 });
+        // Border
+        confirmPanel.lineStyle(3, 0x6C5CE7, 0.6); // PRIMARY
+        confirmPanel.strokeRoundedRect(panelX, panelY, panelWidth, panelHeight, 25);
+        confirmPanel.setDepth(101);
 
         const warningText = this.add.text(
             GAME_CONFIG.WIDTH / 2,
             panelY + 60,
             '⚠️ UYARI',
             {
-                fontSize: '32px',
+                fontSize: '38px', // Slightly larger
                 color: COLORS.ACCENT,
-                fontFamily: 'Arial, sans-serif',
-                fontStyle: 'bold',
+                fontFamily: 'Outfit, sans-serif',
+                fontStyle: '900',
+                shadow: { offsetX: 1, offsetY: 1, color: '#000000', blur: 3, fill: true }
             }
         );
         warningText.setOrigin(0.5);
@@ -302,9 +357,10 @@ export class ParentPanelScene extends Scene {
             panelY + 120,
             'Tüm ilerleme silinecek.\nEmin misiniz?',
             {
-                fontSize: '20px',
+                fontSize: '22px',
                 color: COLORS.TEXT_LIGHT,
-                fontFamily: 'Arial, sans-serif',
+                fontFamily: 'Outfit, sans-serif',
+                fontStyle: '600',
                 align: 'center',
             }
         );
@@ -327,7 +383,7 @@ export class ParentPanelScene extends Scene {
             onClick: () => {
                 this.resetProgress();
                 overlay.destroy();
-                panel.destroy();
+                confirmPanel.destroy();
                 warningText.destroy();
                 confirmText.destroy();
                 yesButton.destroy();
@@ -347,7 +403,7 @@ export class ParentPanelScene extends Scene {
             fontSize: 20,
             onClick: () => {
                 overlay.destroy();
-                panel.destroy();
+                confirmPanel.destroy();
                 warningText.destroy();
                 confirmText.destroy();
                 yesButton.destroy();
@@ -370,10 +426,11 @@ export class ParentPanelScene extends Scene {
             GAME_CONFIG.HEIGHT / 2,
             '✅ İlerleme Sıfırlandı',
             {
-                fontSize: '32px',
-                color: COLORS.SUCCESS,
-                fontFamily: 'Arial, sans-serif',
-                fontStyle: 'bold',
+                fontSize: '44px',
+                color: '#2ecc71', // SUCCESS color hex
+                fontFamily: 'Outfit, sans-serif',
+                fontStyle: '900',
+                shadow: { offsetX: 2, offsetY: 2, color: '#000000', blur: 5, fill: true }
             }
         );
         successText.setOrigin(0.5);

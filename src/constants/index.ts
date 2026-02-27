@@ -46,17 +46,25 @@ export const TIMING = {
  * Color palette for the game
  */
 export const COLORS = {
-    PRIMARY: '#3498DB',
-    SECONDARY: '#2ECC71',
-    ACCENT: '#E74C3C',
-    WARNING: '#F39C12',
-    SUCCESS: '#27AE60',
-    BACKGROUND: '#ECF0F1',
+    PRIMARY: '#8E44AD',   // Soft Vibrant Purple
+    SECONDARY: '#27AE60', // Fresh Mint
+    ACCENT: '#FF6B6B',    // Soft Coral
+    WARNING: '#F39C12',   // Playful Amber
+    SUCCESS: '#2ecc71',   // Emerald
+    BACKGROUND: '#1A1A2E', // Deep Space
     TEXT_DARK: '#2C3E50',
-    TEXT_LIGHT: '#FFFFFF',
+    TEXT_LIGHT: '#ECF0F1',
     CARD_BACK: '#34495E',
     CARD_FRONT: '#FFFFFF',
     DISABLED: '#95A5A6',
+} as const;
+
+/**
+ * Font families used in the game
+ */
+export const FONTS = {
+    PRIMARY: 'Outfit, Arial, sans-serif',
+    SECONDARY: 'Inter, Arial, sans-serif',
 } as const;
 
 /**

@@ -1,4 +1,4 @@
-import { COLORS, GAME_CONFIG, Z_INDEX } from '@constants/index';
+import { COLORS, GAME_CONFIG, Z_INDEX, FONTS } from '@constants/index';
 import { Button } from './Button';
 import { AudioService } from '@core/AudioService';
 import { LocalizationService } from '@core/LocalizationService';
@@ -37,22 +37,30 @@ export class SettingsPanel extends Phaser.GameObjects.Container {
         blocker.setInteractive(); // Blocks clicks below
         this.add(blocker);
 
-        // 2. Panel Background
-        const panelWidth = 500;
-        const panelHeight = 500; // Reduced height since one button is removed
+        // 2. Panel Background (Premium Glassmorphism)
+        const panelWidth = 550;
+        const panelHeight = 500;
         const panelX = width / 2;
         const panelY = height / 2;
 
-        const panelBg = this.scene.add.rectangle(panelX, panelY, panelWidth, panelHeight, 0xffffff);
-        panelBg.setStrokeStyle(4, parseInt(COLORS.PRIMARY.replace('#', ''), 16));
+        const panelBg = this.scene.add.graphics();
+        // Shadow
+        panelBg.fillStyle(0x000000, 0.4);
+        panelBg.fillRoundedRect(panelX - panelWidth / 2 + 8, panelY - panelHeight / 2 + 8, panelWidth, panelHeight, 30);
+        // Body
+        panelBg.fillStyle(0x1A1A2E, 0.95);
+        panelBg.fillRoundedRect(panelX - panelWidth / 2, panelY - panelHeight / 2, panelWidth, panelHeight, 30);
+        // Stroke
+        panelBg.lineStyle(3, 0xffffff, 0.15);
+        panelBg.strokeRoundedRect(panelX - panelWidth / 2, panelY - panelHeight / 2, panelWidth, panelHeight, 30);
         this.add(panelBg);
 
         // 3. Title
         const title = this.scene.add.text(panelX, panelY - 180, this.localizationService.translate('menu.settings'), {
-            fontSize: '48px',
-            color: COLORS.TEXT_DARK,
-            fontFamily: 'Arial, sans-serif',
-            fontStyle: 'bold'
+            fontSize: '56px',
+            color: COLORS.TEXT_LIGHT,
+            fontFamily: FONTS.PRIMARY,
+            fontStyle: '800'
         });
         title.setOrigin(0.5);
         this.add(title);
@@ -86,12 +94,14 @@ export class SettingsPanel extends Phaser.GameObjects.Container {
         this.setVisible(true);
         this.refreshState();
 
-        // Simple pop-in animation
+        // Premium pop-in animation
         this.setScale(0.9);
+        this.setAlpha(0);
         this.scene.tweens.add({
             targets: this,
             scale: 1,
-            duration: 200,
+            alpha: 1,
+            duration: 300,
             ease: 'Back.out'
         });
     }
@@ -101,11 +111,9 @@ export class SettingsPanel extends Phaser.GameObjects.Container {
             targets: this,
             scale: 0.9,
             alpha: 0,
-            duration: 150,
+            duration: 200,
             onComplete: () => {
                 this.setVisible(false);
-                this.setAlpha(1);
-                this.setScale(1);
             }
         });
     }

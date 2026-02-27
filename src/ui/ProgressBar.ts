@@ -1,4 +1,4 @@
-import { COLORS } from '@constants/index';
+import { COLORS, FONTS } from '@constants/index';
 
 /**
  * ProgressBar component for displaying progress with animated fill
@@ -23,27 +23,34 @@ export class ProgressBar extends Phaser.GameObjects.Container {
         this.barWidth = width;
         this.barHeight = height;
 
-        // Background
+        // Background (Glassy)
         this.background = scene.add.graphics();
-        this.background.fillStyle(0x222222, 0.8);
-        this.background.fillRoundedRect(0, 0, width, height, 8);
+        this.background.fillStyle(0x000000, 0.3);
+        this.background.fillRoundedRect(0, 0, width, height, 15);
+        this.background.lineStyle(2, 0xffffff, 0.1);
+        this.background.strokeRoundedRect(0, 0, width, height, 15);
         this.add(this.background);
 
         // Fill
         this.fill = scene.add.graphics();
         this.add(this.fill);
 
+        // Glassy Highlight
+        const highlight = scene.add.graphics();
+        highlight.fillStyle(0xffffff, 0.05);
+        highlight.fillRoundedRect(2, 2, width - 4, height / 2 - 2, { tl: 10, tr: 10, bl: 0, br: 0 });
+        this.add(highlight);
+
         // Percentage text
         this.percentText = scene.add.text(width / 2, height / 2, '0%', {
             fontSize: '18px',
             color: COLORS.TEXT_LIGHT,
-            fontFamily: 'Arial, sans-serif',
-            fontStyle: 'bold',
+            fontFamily: FONTS.PRIMARY,
+            fontStyle: '800',
         });
         this.percentText.setOrigin(0.5);
         this.add(this.percentText);
 
-        // Add to scene
         scene.add.existing(this);
     }
 
@@ -54,15 +61,12 @@ export class ProgressBar extends Phaser.GameObjects.Container {
         const percentage = Math.min(100, Math.max(0, (current / max) * 100));
 
         if (animate) {
-            // Animate from current to new value
             this.scene.tweens.add({
                 targets: this,
                 currentProgress: percentage,
                 duration: 800,
-                ease: 'Power2',
-                onUpdate: () => {
-                    this.redrawFill();
-                },
+                ease: 'Cubic.easeOut',
+                onUpdate: () => this.redrawFill(),
             });
         } else {
             this.currentProgress = percentage;
@@ -77,23 +81,23 @@ export class ProgressBar extends Phaser.GameObjects.Container {
         const fillWidth = (this.barWidth * this.currentProgress) / 100;
         const percentage = Math.round(this.currentProgress);
 
-        // Clear and redraw fill
         this.fill.clear();
 
-        // Gradient color based on progress
-        let color = 0x3498db; // Blue
+        // Theme colors
+        let color = Phaser.Display.Color.HexStringToColor(COLORS.PRIMARY).color;
         if (percentage >= 100) {
-            color = 0x2ecc71; // Green
+            color = Phaser.Display.Color.HexStringToColor(COLORS.SUCCESS).color;
         } else if (percentage >= 75) {
-            color = 0x27ae60; // Dark green
+            color = Phaser.Display.Color.HexStringToColor(COLORS.SECONDARY).color;
         } else if (percentage >= 50) {
-            color = 0xf39c12; // Orange
+            color = Phaser.Display.Color.HexStringToColor(COLORS.WARNING).color;
         }
 
         this.fill.fillStyle(color, 1);
-        this.fill.fillRoundedRect(0, 0, fillWidth, this.barHeight, 8);
+        if (fillWidth > 0) {
+            this.fill.fillRoundedRect(0, 0, fillWidth, this.barHeight, 15);
+        }
 
-        // Update text
         this.percentText.setText(`${percentage}%`);
     }
 

@@ -1,5 +1,5 @@
 import { Scene } from 'phaser';
-import { SCENE_KEYS, GAME_CONFIG, COLORS } from '@constants/index';
+import { SCENE_KEYS, GAME_CONFIG, COLORS, FONTS } from '@constants/index';
 import { Button } from '@ui/Button';
 import { StorageService } from '@core/StorageService';
 import { LevelService } from '@core/LevelService';
@@ -62,8 +62,23 @@ export class LevelCompleteScene extends Scene {
             const centerX = GAME_CONFIG.WIDTH / 2;
             const centerY = GAME_CONFIG.HEIGHT / 2;
 
-            // Background
-            this.cameras.main.setBackgroundColor(GAME_CONFIG.BACKGROUND_COLOR);
+            // Background Gradient
+            const bgGraphics = this.add.graphics();
+            bgGraphics.fillGradientStyle(
+                Phaser.Display.Color.HexStringToColor(COLORS.BACKGROUND).color,
+                Phaser.Display.Color.HexStringToColor(COLORS.BACKGROUND).color,
+                Phaser.Display.Color.HexStringToColor('#0F0F1A').color,
+                Phaser.Display.Color.HexStringToColor('#0F0F1A').color,
+                1
+            );
+            bgGraphics.fillRect(0, 0, GAME_CONFIG.WIDTH, GAME_CONFIG.HEIGHT);
+
+            // Results Plate (Glassmorphism)
+            const plate = this.add.graphics();
+            plate.fillStyle(0xffffff, 0.05);
+            plate.fillRoundedRect(40, centerY - 250, GAME_CONFIG.WIDTH - 80, 500, 30);
+            plate.lineStyle(2, 0xffffff, 0.1);
+            plate.strokeRoundedRect(40, centerY - 250, GAME_CONFIG.WIDTH - 80, 500, 30);
 
             // Show banner ad via AdMob
             void this.adService.showBanner();
@@ -77,13 +92,13 @@ export class LevelCompleteScene extends Scene {
             // Title
             const title = this.add.text(
                 centerX,
-                centerY - 200,
+                centerY - 180,
                 this.localizationService.translate('level.complete'),
                 {
-                    fontSize: '64px',
+                    fontSize: '72px',
                     color: COLORS.SUCCESS,
-                    fontFamily: 'Arial, sans-serif',
-                    fontStyle: 'bold',
+                    fontFamily: FONTS.PRIMARY,
+                    fontStyle: '800',
                 }
             );
             title.setOrigin(0.5);
@@ -131,9 +146,10 @@ export class LevelCompleteScene extends Scene {
                 statsY,
                 this.localizationService.translate('stats.moves', { count: this.moves.toString() }),
                 {
-                    fontSize: '28px',
+                    fontSize: '32px',
                     color: COLORS.TEXT_LIGHT,
-                    fontFamily: 'Arial, sans-serif',
+                    fontFamily: FONTS.SECONDARY,
+                    fontStyle: 'bold'
                 }
             );
             movesText.setOrigin(0.5);
@@ -302,11 +318,14 @@ export class LevelCompleteScene extends Scene {
                 this.time.delayedCall(i * (maxStars > 3 ? 100 : 200), () => {
                     this.tweens.add({
                         targets: star,
-                        scale: 1.3,
-                        duration: 300,
+                        scale: 1.4,
+                        duration: 400,
                         yoyo: true,
                         ease: 'Back.easeOut',
                     });
+
+                    // Add subtle glow or particle if possible
+                    this.feedbackService.triggerFeedback(FeedbackType.CORRECT_MATCH);
                 });
             }
         }

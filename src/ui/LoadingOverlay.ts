@@ -1,10 +1,10 @@
-import { GAME_CONFIG, COLORS, Z_INDEX } from '@constants/index';
+import { GAME_CONFIG, COLORS, Z_INDEX, FONTS } from '@constants/index';
 
 /**
- * LoadingOverlay displays a progress bar during asset loading
+ * LoadingOverlay displays a premium progress bar during asset loading
  */
 export class LoadingOverlay extends Phaser.GameObjects.Container {
-    private background: Phaser.GameObjects.Rectangle;
+    private background: Phaser.GameObjects.Graphics;
     private progressBarBg: Phaser.GameObjects.Graphics;
     private progressBar: Phaser.GameObjects.Graphics;
     private loadingText: Phaser.GameObjects.Text;
@@ -13,56 +13,69 @@ export class LoadingOverlay extends Phaser.GameObjects.Container {
     constructor(scene: Phaser.Scene) {
         super(scene, 0, 0);
 
-        // Semi-transparent background
-        this.background = scene.add.rectangle(
-            GAME_CONFIG.WIDTH / 2,
-            GAME_CONFIG.HEIGHT / 2,
-            GAME_CONFIG.WIDTH,
-            GAME_CONFIG.HEIGHT,
-            0x000000,
-            0.7
+        // Premium Background (Deep Space Fade)
+        this.background = scene.add.graphics();
+        this.background.fillGradientStyle(
+            0x0F0F1A, 0x0F0F1A, 0x1A1A2E, 0x1A1A2E, 0.95
         );
+        this.background.fillRect(0, 0, GAME_CONFIG.WIDTH, GAME_CONFIG.HEIGHT);
         this.add(this.background);
 
-        // Loading text
+        const centerX = GAME_CONFIG.WIDTH / 2;
+        const centerY = GAME_CONFIG.HEIGHT / 2;
+
+        // Loading text with Outfit font
         this.loadingText = scene.add.text(
-            GAME_CONFIG.WIDTH / 2,
-            GAME_CONFIG.HEIGHT / 2 - 60,
+            centerX,
+            centerY - 80,
             'Yükleniyor...',
             {
-                fontSize: '32px',
+                fontSize: '42px',
                 color: COLORS.TEXT_LIGHT,
-                fontFamily: 'Arial, sans-serif',
-                fontStyle: 'bold',
+                fontFamily: FONTS.PRIMARY,
+                fontStyle: '800',
             }
         );
         this.loadingText.setOrigin(0.5);
         this.add(this.loadingText);
 
-        // Progress bar background
-        const barWidth = 400;
-        const barHeight = 30;
-        const barX = GAME_CONFIG.WIDTH / 2 - barWidth / 2;
-        const barY = GAME_CONFIG.HEIGHT / 2;
+        // Add pulse animation
+        scene.tweens.add({
+            targets: this.loadingText,
+            alpha: 0.5,
+            duration: 800,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut'
+        });
+
+        // Progress bar container (Glassy)
+        const barWidth = 450;
+        const barHeight = 25;
+        const barX = centerX - barWidth / 2;
+        const barY = centerY;
 
         this.progressBarBg = scene.add.graphics();
-        this.progressBarBg.fillStyle(0x222222, 0.8);
-        this.progressBarBg.fillRect(barX, barY, barWidth, barHeight);
+        this.progressBarBg.fillStyle(0xffffff, 0.05);
+        this.progressBarBg.fillRoundedRect(barX, barY, barWidth, barHeight, 12);
+        this.progressBarBg.lineStyle(2, 0xffffff, 0.1);
+        this.progressBarBg.strokeRoundedRect(barX, barY, barWidth, barHeight, 12);
         this.add(this.progressBarBg);
 
-        // Progress bar
+        // Progress bar (Primary Gradient)
         this.progressBar = scene.add.graphics();
         this.add(this.progressBar);
 
         // Percentage text
         this.percentText = scene.add.text(
-            GAME_CONFIG.WIDTH / 2,
-            GAME_CONFIG.HEIGHT / 2 + 50,
+            centerX,
+            centerY + 60,
             '0%',
             {
-                fontSize: '24px',
+                fontSize: '28px',
                 color: COLORS.TEXT_LIGHT,
-                fontFamily: 'Arial, sans-serif',
+                fontFamily: FONTS.SECONDARY,
+                fontStyle: 'bold'
             }
         );
         this.percentText.setOrigin(0.5);
@@ -70,11 +83,7 @@ export class LoadingOverlay extends Phaser.GameObjects.Container {
 
         // Set depth
         this.setDepth(Z_INDEX.OVERLAY);
-
-        // Initially hidden
         this.setVisible(false);
-
-        // Add to scene
         scene.add.existing(this);
     }
 
@@ -82,41 +91,37 @@ export class LoadingOverlay extends Phaser.GameObjects.Container {
      * Updates the progress bar
      */
     public updateProgress(progress: number): void {
-        const barWidth = 400;
-        const barHeight = 30;
-        const barX = GAME_CONFIG.WIDTH / 2 - barWidth / 2;
-        const barY = GAME_CONFIG.HEIGHT / 2;
+        const barWidth = 450;
+        const barHeight = 25;
+        const centerX = GAME_CONFIG.WIDTH / 2;
+        const centerY = GAME_CONFIG.HEIGHT / 2;
+        const barX = centerX - barWidth / 2;
+        const barY = centerY;
 
-        // Clamp progress between 0 and 1
         const clampedProgress = Math.max(0, Math.min(1, progress));
 
-        // Update progress bar
         this.progressBar.clear();
-        this.progressBar.fillStyle(parseInt(COLORS.PRIMARY.replace('#', ''), 16), 1);
-        this.progressBar.fillRect(barX, barY, barWidth * clampedProgress, barHeight);
+        if (clampedProgress > 0) {
+            this.progressBar.fillStyle(Phaser.Display.Color.HexStringToColor(COLORS.PRIMARY).color, 1);
+            this.progressBar.fillRoundedRect(barX, barY, barWidth * clampedProgress, barHeight, 12);
 
-        // Update percentage text
+            // Inner highlight
+            this.progressBar.fillStyle(0xffffff, 0.15);
+            this.progressBar.fillRoundedRect(barX, barY, barWidth * clampedProgress, barHeight / 2, { tl: 12, tr: 12, bl: 0, br: 0 });
+        }
+
         this.percentText.setText(`${Math.round(clampedProgress * 100)}%`);
     }
 
-    /**
-     * Shows the loading overlay
-     */
     public show(): void {
         this.setVisible(true);
         this.updateProgress(0);
     }
 
-    /**
-     * Hides the loading overlay
-     */
     public hide(): void {
         this.setVisible(false);
     }
 
-    /**
-     * Cleanup
-     */
     public override destroy(fromScene?: boolean): void {
         this.progressBar.destroy();
         this.progressBarBg.destroy();

@@ -1,26 +1,29 @@
-import { COLORS, Z_INDEX } from '@constants/index';
+import { COLORS, Z_INDEX, FONTS } from '@constants/index';
 
 /**
- * StatsPanel displays game statistics in a compact, visual format
+ * StatsPanel displays game statistics in a premium, visual format
  */
 export class StatsPanel extends Phaser.GameObjects.Container {
     private background: Phaser.GameObjects.Graphics;
     private statsTexts: Phaser.GameObjects.Text[] = [];
 
-    constructor(scene: Phaser.Scene, x: number, y: number, width: number = 400) {
+    constructor(scene: Phaser.Scene, x: number, y: number, width: number = 420) {
         super(scene, x, y);
 
-        // Background with rounded corners
+        // Background (Glassy Plate)
         this.background = scene.add.graphics();
-        this.background.fillStyle(parseInt(COLORS.CARD_BACK.replace('#', ''), 16), 0.9);
-        this.background.fillRoundedRect(0, 0, width, 160, 12);
-        this.background.lineStyle(3, parseInt(COLORS.PRIMARY.replace('#', ''), 16), 1);
-        this.background.strokeRoundedRect(0, 0, width, 160, 12);
+        // Shadow
+        this.background.fillStyle(0x000000, 0.4);
+        this.background.fillRoundedRect(5, 5, width, 180, 20);
+        // Body
+        this.background.fillStyle(0x1A1A2E, 0.9);
+        this.background.fillRoundedRect(0, 0, width, 180, 20);
+        // Stroke
+        this.background.lineStyle(2, 0xffffff, 0.15);
+        this.background.strokeRoundedRect(0, 0, width, 180, 20);
         this.add(this.background);
 
         this.setDepth(Z_INDEX.UI);
-
-        // Add to scene
         scene.add.existing(this);
     }
 
@@ -36,13 +39,19 @@ export class StatsPanel extends Phaser.GameObjects.Container {
         totalCategories: number;
         currentStreak: number;
     }): void {
-        // Clear existing texts
         this.statsTexts.forEach(text => text.destroy());
         this.statsTexts = [];
 
-        const padding = 20;
-        const lineHeight = 35;
+        const padding = 25;
+        const lineHeight = 40;
         let yOffset = padding;
+
+        const textStyle = {
+            fontSize: '20px',
+            color: COLORS.TEXT_LIGHT,
+            fontFamily: FONTS.SECONDARY,
+            fontStyle: '600'
+        };
 
         // Stars
         const starsText = this.scene.add.text(
@@ -50,10 +59,11 @@ export class StatsPanel extends Phaser.GameObjects.Container {
             yOffset,
             `⭐ ${stats.totalStars} / ${stats.maxStars} Yıldız`,
             {
-                fontSize: '20px',
+                ...textStyle,
+                fontSize: '22px',
                 color: COLORS.WARNING,
-                fontFamily: 'Arial, sans-serif',
-                fontStyle: 'bold',
+                fontFamily: FONTS.PRIMARY,
+                fontStyle: '800'
             }
         );
         this.add(starsText);
@@ -64,12 +74,8 @@ export class StatsPanel extends Phaser.GameObjects.Container {
         const levelsText = this.scene.add.text(
             padding,
             yOffset,
-            `🎯 ${stats.levelsCompleted} / ${stats.totalLevels} Seviye Tamamlandı`,
-            {
-                fontSize: '18px',
-                color: COLORS.TEXT_LIGHT,
-                fontFamily: 'Arial, sans-serif',
-            }
+            `🎯 ${stats.levelsCompleted} / ${stats.totalLevels} Seviye`,
+            textStyle
         );
         this.add(levelsText);
         this.statsTexts.push(levelsText);
@@ -79,12 +85,8 @@ export class StatsPanel extends Phaser.GameObjects.Container {
         const categoriesText = this.scene.add.text(
             padding,
             yOffset,
-            `📚 ${stats.categoriesUnlocked} / ${stats.totalCategories} Kategori Açıldı`,
-            {
-                fontSize: '18px',
-                color: COLORS.TEXT_LIGHT,
-                fontFamily: 'Arial, sans-serif',
-            }
+            `📚 ${stats.categoriesUnlocked} / ${stats.totalCategories} Kategori`,
+            textStyle
         );
         this.add(categoriesText);
         this.statsTexts.push(categoriesText);
@@ -97,20 +99,18 @@ export class StatsPanel extends Phaser.GameObjects.Container {
                 yOffset,
                 `🔥 ${stats.currentStreak} Günlük Seri`,
                 {
-                    fontSize: '18px',
+                    ...textStyle,
                     color: COLORS.ACCENT,
-                    fontFamily: 'Arial, sans-serif',
-                    fontStyle: 'bold',
+                    fontStyle: '800'
                 }
             );
             this.add(streakText);
             this.statsTexts.push(streakText);
 
-            // Pulsing animation for streak
             this.scene.tweens.add({
                 targets: streakText,
-                scale: 1.1,
-                duration: 500,
+                scale: 1.05,
+                duration: 600,
                 yoyo: true,
                 repeat: -1,
                 ease: 'Sine.easeInOut',
@@ -118,41 +118,33 @@ export class StatsPanel extends Phaser.GameObjects.Container {
         }
     }
 
-    /**
-     * Shows the panel with slide-in animation
-     */
     public show(): void {
         this.setAlpha(0);
+        this.setScale(0.95);
         this.setVisible(true);
 
         this.scene.tweens.add({
             targets: this,
             alpha: 1,
-            y: this.y + 20,
+            scale: 1,
             duration: 400,
-            ease: 'Back.out',
+            ease: 'Cubic.easeOut',
         });
     }
 
-    /**
-     * Hides the panel with slide-out animation
-     */
     public hide(): void {
         this.scene.tweens.add({
             targets: this,
             alpha: 0,
-            y: this.y - 20,
+            scale: 0.95,
             duration: 300,
-            ease: 'Power2',
+            ease: 'Cubic.easeIn',
             onComplete: () => {
                 this.setVisible(false);
             },
         });
     }
 
-    /**
-     * Cleanup
-     */
     public override destroy(fromScene?: boolean): void {
         this.background.destroy();
         this.statsTexts.forEach(text => text.destroy());

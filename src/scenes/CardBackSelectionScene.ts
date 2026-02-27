@@ -40,19 +40,40 @@ export class CardBackSelectionScene extends Scene {
             const footerHeight = 100;
             const bodyHeight = height - headerHeight - footerHeight;
 
-            // Background
-            this.cameras.main.setBackgroundColor(GAME_CONFIG.BACKGROUND_COLOR);
+            // Background Gradient with Grid Pattern
+            const bgGraphics = this.add.graphics();
+            bgGraphics.fillGradientStyle(
+                Phaser.Display.Color.HexStringToColor(COLORS.BACKGROUND).color,
+                Phaser.Display.Color.HexStringToColor(COLORS.BACKGROUND).color,
+                Phaser.Display.Color.HexStringToColor('#0F0F1A').color,
+                Phaser.Display.Color.HexStringToColor('#0F0F1A').color,
+                1
+            );
+            bgGraphics.fillRect(0, 0, width, height);
 
-            // --- HEADER ---
-            const headerBg = this.add.rectangle(0, 0, width, headerHeight, 0x2c3e50);
-            headerBg.setOrigin(0, 0);
+            // Subtly overlay a grid pattern
+            const grid = this.add.grid(width / 2, height / 2, width, height, 40, 40, 0xffffff, 0.02);
+            grid.setAlpha(0.2);
+
+            // --- HEADER (Premium Glassmorphism) ---
+            const headerBg = this.add.graphics();
+            // Shadow
+            headerBg.fillStyle(0x000000, 0.4);
+            headerBg.fillRect(0, 0, width, headerHeight + 5);
+            // Body
+            headerBg.fillStyle(Phaser.Display.Color.HexStringToColor(COLORS.PRIMARY).color, 0.95);
+            headerBg.fillRect(0, 0, width, headerHeight);
+            // Glass Highlight
+            headerBg.fillStyle(0xffffff, 0.1);
+            headerBg.fillRect(0, 0, width, headerHeight / 2);
             headerBg.setDepth(Z_INDEX.UI + 10);
 
             const title = this.add.text(width / 2, headerHeight / 2, this.localizationService.translate('cardBack.title'), {
-                fontSize: '42px',
+                fontSize: '48px',
                 color: COLORS.TEXT_LIGHT,
-                fontFamily: 'Arial, sans-serif',
-                fontStyle: 'bold',
+                fontFamily: 'Outfit, sans-serif',
+                fontStyle: '900',
+                shadow: { offsetX: 2, offsetY: 2, color: '#000000', blur: 5, fill: true }
             });
             title.setOrigin(0.5);
             title.setDepth(Z_INDEX.UI + 11);
@@ -105,16 +126,19 @@ export class CardBackSelectionScene extends Scene {
                 }, 50);
             });
 
-            // --- FOOTER ---
-            const footerBg = this.add.rectangle(0, height - footerHeight, width, footerHeight, 0x1a252f);
-            footerBg.setOrigin(0, 0);
+            // --- FOOTER (Premium Glassmorphism) ---
+            const footerBg = this.add.graphics();
+            footerBg.fillStyle(0x0f0f1a, 0.95);
+            footerBg.fillRect(0, height - footerHeight, width, footerHeight);
+            footerBg.lineStyle(2, 0xffffff, 0.1);
+            footerBg.strokeLineShape(new Phaser.Geom.Line(0, height - footerHeight, width, height - footerHeight));
             footerBg.setDepth(Z_INDEX.UI + 10);
 
             // Back button
             new Button(this, {
-                x: 100,
+                x: 120,
                 y: height - footerHeight / 2,
-                width: 150,
+                width: 180,
                 height: 60,
                 text: this.localizationService.translate('menu.back'),
                 backgroundColor: COLORS.ACCENT,
@@ -162,19 +186,27 @@ export class CardBackSelectionScene extends Scene {
         if (this.starsText) {
             this.starsText.setText(`⭐ ${progress.totalStars}`);
         } else {
+            // Star Chip Background
+            const starBg = this.add.graphics();
+            starBg.fillStyle(0xffffff, 0.05);
+            starBg.fillRoundedRect(width - 250, height - footerHeight / 2 - 35, 220, 70, 35);
+            starBg.lineStyle(2, Phaser.Display.Color.HexStringToColor(COLORS.WARNING).color, 0.3);
+            starBg.strokeRoundedRect(width - 250, height - footerHeight / 2 - 35, 220, 70, 35);
+            starBg.setDepth(Z_INDEX.UI + 11);
+
             this.starsText = this.add.text(
-                width - 120,
+                width - 140,
                 height - footerHeight / 2,
                 `⭐ ${progress.totalStars}`,
                 {
-                    fontSize: '32px',
+                    fontSize: '34px',
                     color: COLORS.WARNING,
-                    fontFamily: 'Arial, sans-serif',
+                    fontFamily: 'Outfit, sans-serif',
                     fontStyle: 'bold',
                 }
             );
             this.starsText.setOrigin(0.5);
-            this.starsText.setDepth(Z_INDEX.UI + 11);
+            this.starsText.setDepth(Z_INDEX.UI + 12);
         }
     }
 
@@ -224,45 +256,57 @@ export class CardBackSelectionScene extends Scene {
         const container = this.add.container(x, y);
         this.scrollContainer?.add(container);
 
-        // Card background
-        const bg = this.add.rectangle(0, 0, width, height, isSelected ? 0xecf0f1 : 0xffffff);
-        bg.setStrokeStyle(isSelected ? 6 : 2, isSelected ? 0x2ecc71 : 0xbdc3c7);
-        bg.setInteractive({ useHandCursor: true });
-        container.add(bg);
+        // Premium card background
+        const cardBg = this.add.graphics();
+        const mainCardCol = isUnlocked ? (isSelected ? 0x252545 : 0x1A1A2E) : 0x0F0F1A;
+        const bColVal = isSelected ? 0x24fbff : (isUnlocked ? Phaser.Display.Color.HexStringToColor(COLORS.PRIMARY).color : 0x2C3E50);
+
+        // Shadow
+        cardBg.fillStyle(0x000000, 0.4);
+        cardBg.fillRoundedRect(-width / 2 + 8, -height / 2 + 8, width, height, 25);
+        // Body
+        cardBg.fillStyle(mainCardCol, 0.95);
+        cardBg.fillRoundedRect(-width / 2, -height / 2, width, height, 25);
+        // Highlight
+        cardBg.fillStyle(0xffffff, 0.03);
+        cardBg.fillRoundedRect(-width / 2, -height / 2, width, height / 2, { tl: 25, tr: 25, bl: 0, br: 0 });
+        // Border
+        cardBg.lineStyle(isSelected ? 4 : 3, bColVal, isUnlocked ? 0.8 : 0.3);
+        cardBg.strokeRoundedRect(-width / 2, -height / 2, width, height, 25);
+
+        container.add(cardBg);
 
         // Card back preview image
-        // We use the key loaded in BootScene which is 'card-back-' + id
         const imgKey = `card-back-${cb.id}`;
         const preview = this.add.image(0, -50, imgKey);
-        // Scale to fit half of the card
-        const imgScale = (width * 0.6) / preview.width;
+        const imgScale = (width * 0.7) / preview.width;
         preview.setScale(imgScale);
         container.add(preview);
 
         // Name
-        const name = this.add.text(0, height / 2 - 75, this.localizationService.translate(cb.nameKey), {
-            fontSize: '22px',
-            color: COLORS.TEXT_DARK,
-            fontFamily: 'Arial, sans-serif',
-            fontStyle: 'bold'
+        const nameText = this.add.text(0, height / 2 - 80, this.localizationService.translate(cb.nameKey), {
+            fontSize: '26px',
+            color: COLORS.TEXT_LIGHT,
+            fontFamily: 'Outfit, sans-serif',
+            fontStyle: '900'
         }).setOrigin(0.5);
-        container.add(name);
+        container.add(nameText);
 
         // Interaction
         if (isSelected) {
-            const label = this.add.text(0, height / 2 - 30, this.localizationService.translate('cardBack.selected'), {
-                fontSize: '20px',
-                color: '#2ecc71',
-                fontFamily: 'Arial, sans-serif',
-                fontStyle: 'bold'
+            const labelText = this.add.text(0, height / 2 - 35, this.localizationService.translate('cardBack.selected'), {
+                fontSize: '22px',
+                color: '#24fbff', // Cyan highlight
+                fontFamily: 'Outfit, sans-serif',
+                fontStyle: '800'
             }).setOrigin(0.5);
-            container.add(label);
+            container.add(labelText);
         } else if (isUnlocked) {
-            const btn = new Button(this, {
+            const actBtn = new Button(this, {
                 x: 0,
-                y: height / 2 - 30,
-                width: width - 40,
-                height: 40,
+                y: height / 2 - 35,
+                width: width - 60,
+                height: 45,
                 text: this.localizationService.translate('cardBack.select'),
                 backgroundColor: COLORS.PRIMARY,
                 fontSize: 18,
@@ -273,13 +317,13 @@ export class CardBackSelectionScene extends Scene {
                     this.scene.restart(); // Refresh all
                 }
             });
-            container.add(btn);
+            container.add(actBtn);
         } else {
-            const btn = new Button(this, {
+            const unlockBtn = new Button(this, {
                 x: 0,
-                y: height / 2 - 30,
-                width: width - 40,
-                height: 40,
+                y: height / 2 - 35,
+                width: width - 60,
+                height: 45,
                 text: this.localizationService.translate('cardBack.unlock', { stars: cb.unlockCost.toString() }),
                 backgroundColor: COLORS.SECONDARY,
                 fontSize: 18,
@@ -292,32 +336,44 @@ export class CardBackSelectionScene extends Scene {
                         this.scene.restart();
                     } else {
                         this.audioService.playSound('wrong-match');
-                        // Show "not enough stars" briefly
-                        const error = this.add.text(0, -150, this.localizationService.translate('cardBack.notEnoughStars'), {
+                        const errText = this.add.text(0, -150, this.localizationService.translate('cardBack.notEnoughStars'), {
                             fontSize: '24px',
-                            color: '#e74c3c',
-                            fontFamily: 'Arial, sans-serif',
-                            fontStyle: 'bold',
-                            backgroundColor: '#ffffffaa',
-                            padding: { x: 10, y: 5 }
-                        }).setOrigin(0.5);
+                            color: '#ff4d4d',
+                            fontFamily: 'Outfit, sans-serif',
+                            fontStyle: '900',
+                            backgroundColor: '#000000aa',
+                            padding: { x: 15, y: 8 }
+                        }).setOrigin(0.5).setDepth(100);
                         this.tweens.add({
-                            targets: error,
+                            targets: errText,
                             alpha: 0,
                             y: -200,
-                            delay: 1000,
+                            delay: 1500,
                             duration: 500,
-                            onComplete: () => error.destroy()
+                            onComplete: () => errText.destroy()
                         });
                     }
                 }
             });
-            container.add(btn);
+            container.add(unlockBtn);
 
-            // Lock icon
-            const lockIcon = this.add.text(0, -30, '🔒', { fontSize: '48px' }).setOrigin(0.5);
-            container.add(lockIcon);
-            preview.setAlpha(0.3);
+            // Lock icon (Premium)
+            const lockIconObj = this.add.text(0, -35, '🔒', { fontSize: '48px' }).setOrigin(0.5);
+            container.add(lockIconObj);
+            preview.setAlpha(0.25);
         }
+
+        // Interactive hit area
+        const itemHitArea = new Phaser.Geom.Rectangle(-width / 2, -height / 2, width, height);
+        container.setInteractive(itemHitArea, Phaser.Geom.Rectangle.Contains);
+        if (container.input) container.input.cursor = 'pointer';
+
+        // Hover effects
+        container.on('pointerover', () => {
+            this.tweens.add({ targets: container, scale: 1.05, duration: 250, ease: 'Cubic.easeOut' });
+        });
+        container.on('pointerout', () => {
+            this.tweens.add({ targets: container, scale: 1, duration: 250, ease: 'Cubic.easeOut' });
+        });
     }
 }
