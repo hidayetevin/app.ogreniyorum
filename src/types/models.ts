@@ -123,6 +123,7 @@ export interface ILevelProgress {
  */
 export interface IProgress {
     totalStars: number;
+    lifetimeStars: number; // Accumulates forever, used for category/feature unlocks
     levelsCompleted: number;
     levelProgress: Record<string, ILevelProgress>; // levelId -> progress
     unlockedCategories: string[]; // category IDs

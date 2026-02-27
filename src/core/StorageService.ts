@@ -121,6 +121,11 @@ export class StorageService implements IStorageService {
             progress.selectedCardBack = 'default';
             needsSave = true;
         }
+        // Backward compat: init lifetimeStars from totalStars for existing users
+        if (typeof (progress as IProgress & { lifetimeStars?: number }).lifetimeStars !== 'number') {
+            (progress as IProgress & { lifetimeStars?: number }).lifetimeStars = progress.totalStars;
+            needsSave = true;
+        }
 
         if (needsSave) {
             this.saveProgress(progress);
@@ -136,14 +141,27 @@ export class StorageService implements IStorageService {
         const progress = this.loadProgress();
         progress.levelProgress[levelProgress.levelId] = levelProgress;
 
-        // Update total stats
+        // Update completed count only
         const completedLevels = Object.values(progress.levelProgress).filter((lp) => lp.completed);
         progress.levelsCompleted = completedLevels.length;
-        progress.totalStars = completedLevels.reduce((sum, lp) => sum + lp.stars, 0);
+        // NOTE: totalStars is NOT recalculated here anymore.
+        // Stars are credited via addStars() when a level is completed.
 
         // Update streak
         this.updateStreak(progress);
 
+        this.saveProgress(progress);
+    }
+
+    /**
+     * Adds stars to the player's balance.
+     * Both totalStars (spendable) and lifetimeStars (progression) are incremented.
+     */
+    public addStars(amount: number): void {
+        if (amount <= 0) return;
+        const progress = this.loadProgress();
+        progress.totalStars += amount;
+        progress.lifetimeStars = (progress.lifetimeStars ?? 0) + amount;
         this.saveProgress(progress);
     }
 

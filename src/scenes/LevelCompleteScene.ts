@@ -24,6 +24,7 @@ export class LevelCompleteScene extends Scene {
     private moves: number = 0;
     private stars: number = 0;
     private hasWatched2xAd: boolean = false;
+    private starObjects: Phaser.GameObjects.Text[] = [];
 
     constructor() {
         super({ key: SCENE_KEYS.LEVEL_COMPLETE });
@@ -44,7 +45,12 @@ export class LevelCompleteScene extends Scene {
         this.stars = data.stars;
         this.hasWatched2xAd = false; // Reset on new scene initialization
 
-        // Save progress
+        // Credit base stars to the player's account immediately
+        if (this.stars > 0) {
+            this.storageService.addStars(this.stars);
+        }
+
+        // Save level metadata (best moves, completion, etc.)
         this.saveProgress();
     }
 
@@ -270,11 +276,17 @@ export class LevelCompleteScene extends Scene {
      * Displays star rating
      */
     private displayStars(x: number, y: number): void {
-        const starSize = 60;
-        const starSpacing = 80;
-        const startX = x - starSpacing;
+        // Clear existing stars if any
+        this.starObjects.forEach(star => star.destroy());
+        this.starObjects = [];
 
-        for (let i = 0; i < 3; i++) {
+        const starSize = 50;
+        // If we have 6 stars, we should space them tighter
+        const maxStars = Math.max(3, this.stars);
+        const starSpacing = maxStars > 3 ? 55 : 80;
+        const startX = x - ((maxStars - 1) * starSpacing) / 2;
+
+        for (let i = 0; i < maxStars; i++) {
             const starX = startX + i * starSpacing;
             const isFilled = i < this.stars;
 
@@ -283,10 +295,11 @@ export class LevelCompleteScene extends Scene {
                 padding: { top: 10, bottom: 10 },
             });
             star.setOrigin(0.5);
+            this.starObjects.push(star);
 
             // Animate filled stars
             if (isFilled) {
-                this.time.delayedCall(i * 200, () => {
+                this.time.delayedCall(i * (maxStars > 3 ? 100 : 200), () => {
                     this.tweens.add({
                         targets: star,
                         scale: 1.3,
@@ -309,7 +322,7 @@ export class LevelCompleteScene extends Scene {
             levelId: this.levelId,
             categoryId: this.categoryId,
             completed: true,
-            stars: this.stars,
+            stars: existingProgress ? Math.max(this.stars, existingProgress.stars) : this.stars,
             bestMoves: existingProgress?.bestMoves
                 ? Math.min(this.moves, existingProgress.bestMoves)
                 : this.moves,
@@ -441,20 +454,23 @@ export class LevelCompleteScene extends Scene {
             if (earnedReward) {
                 this.hasWatched2xAd = true; // Flag to prevent interstitial ad next
 
-                const extraStars = this.stars;
-                this.stars *= 2;
+                const bonusStars = this.stars; // Earn the same amount again as bonus
+                this.stars *= 2; // Double for visual display only
 
-                // Save the new doubled stars amount
-                this.saveProgress();
+                // Credit only the bonus stars (base was already credited in init)
+                this.storageService.addStars(bonusStars);
 
                 // Show visual feedback animation (+X Yıldız!)
                 const centerX = GAME_CONFIG.WIDTH / 2;
                 const centerY = GAME_CONFIG.HEIGHT / 2;
 
+                // Visually update the stars on screen
+                this.displayStars(centerX, centerY - 100);
+
                 const rewardText = this.add.text(
                     centerX,
                     centerY + 85,
-                    this.localizationService.translate('game.rewardReceived', { count: extraStars.toString() }),
+                    this.localizationService.translate('game.rewardReceived', { count: bonusStars.toString() }),
                     { fontSize: '32px', color: COLORS.SUCCESS, fontStyle: 'bold' }
                 ).setOrigin(0.5).setDepth(100);
 

@@ -125,6 +125,7 @@ export const DEFAULT_SETTINGS = {
  */
 export const DEFAULT_PROGRESS = {
     totalStars: 0,
+    lifetimeStars: 0,
     levelsCompleted: 0,
     levelProgress: {},
     unlockedCategories: [] as string[],

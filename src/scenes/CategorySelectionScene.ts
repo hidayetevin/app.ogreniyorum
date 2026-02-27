@@ -91,7 +91,7 @@ export class CategorySelectionScene extends Scene {
             const progress = this.storageService.loadProgress();
 
             // Create cards inside container
-            this.createScrollableContent(categories, progress.totalStars);
+            this.createScrollableContent(categories, progress.lifetimeStars ?? progress.totalStars);
 
             // --- GLOBAL SCROLL LOGIC (Scene Level to avoid blocking) ---
             this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
