@@ -51,6 +51,12 @@ export class BatteryOptimizer {
         console.log('[BatteryOptimizer] App in foreground, restoring FPS');
         this.game.loop.targetFps = this.originalFPS;
 
+        // Force a step to clear any massive accumulated delta time 
+        // to prevent a huge frame jump/stutter when returning from background
+        if (this.game.loop) {
+            this.game.loop.wake();
+        }
+
         // Resume audio
         this.game.sound.resumeAll();
     }

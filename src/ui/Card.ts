@@ -58,6 +58,35 @@ export class Card extends Phaser.GameObjects.Container {
         // Setup interactivity
         this.setupInteractivity();
 
+        // **PRE-RENDER PERFORMANCE OPTIMIZATION:** 
+        // Create front components immediately but keep them hidden. 
+        // Text rendering in WebGL is extremely expensive and causes stutter if done during animation.
+        this.frontImage = scene.add.image(0, 0, this.imagePath);
+        this.frontImage.setDisplaySize(size - 20, size - 20);
+        this.frontImage.setVisible(false);
+        this.add(this.frontImage);
+
+        // Add text (label) with a semi-transparent background for readability
+        const textBg = scene.add.rectangle(0, size / 2 - 20, size - 10, 30, 0xffffff, 0.8);
+        textBg.setOrigin(0.5);
+        textBg.setVisible(false);
+
+        this.textObj = scene.add.text(0, size / 2 - 20, this.label, {
+            fontSize: '16px',
+            color: '#000000',
+            fontFamily: 'Arial',
+            fontStyle: 'bold',
+            align: 'center',
+            wordWrap: { width: size - 20 }
+        });
+        this.textObj.setOrigin(0.5);
+        this.textObj.setVisible(false);
+
+        // Store reference to background to toggle visibility
+        this.textObj.setData('bg', textBg);
+        this.add(textBg);
+        this.add(this.textObj);
+
         // Add to scene
         scene.add.existing(this);
         this.setDepth(Z_INDEX.CARDS);
@@ -127,41 +156,6 @@ export class Card extends Phaser.GameObjects.Container {
 
         this.isFlipping = true;
         this.cardState = CardState.FACE_UP;
-
-        // Load image if not already loaded
-        if (this.frontImage === null) {
-            // Add image
-            this.frontImage = this.scene.add.image(0, 0, this.imagePath);
-            const size = this.backBg.width;
-
-            // Limit image size
-            this.frontImage.setDisplaySize(size - 20, size - 20);
-            this.frontImage.setVisible(false);
-            this.add(this.frontImage);
-
-            // Add text (label) at the bottom or center
-            // Use a semi-transparent background for readability
-            const textBg = this.scene.add.rectangle(0, size / 2 - 20, size - 10, 30, 0xffffff, 0.8);
-            textBg.setOrigin(0.5);
-
-            this.textObj = this.scene.add.text(0, size / 2 - 20, this.label, {
-                fontSize: '16px',
-                color: '#000000',
-                fontFamily: 'Arial',
-                fontStyle: 'bold',
-                align: 'center',
-                wordWrap: { width: size - 20 }
-            });
-            this.textObj.setOrigin(0.5);
-
-            this.textObj.setVisible(false);
-            textBg.setVisible(false);
-
-            // Store reference to background to toggle visibility
-            this.textObj.setData('bg', textBg);
-            this.add(textBg);
-            this.add(this.textObj);
-        }
 
         // Flip animation
         await this.playFlipAnimation(true);
