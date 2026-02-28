@@ -102,7 +102,7 @@ export class SettingsPanel extends Phaser.GameObjects.Container {
             y: panelY + 30,
             width: 320,
             height: 60,
-            text: 'Gizlilik Politikası',
+            text: this.localizationService.translate('settings.privacy'),
             backgroundColor: COLORS.PRIMARY,
             fontSize: 24,
             onClick: () => {
@@ -118,7 +118,7 @@ export class SettingsPanel extends Phaser.GameObjects.Container {
             y: panelY + 160,
             width: 200,
             height: 60,
-            text: 'Kapat',
+            text: this.localizationService.translate('settings.close'),
             backgroundColor: COLORS.WARNING,
             onClick: () => this.hide()
         });
@@ -161,8 +161,8 @@ export class SettingsPanel extends Phaser.GameObjects.Container {
     }
 
     private getSoundText(): string {
-        const status = this.audioService.isSoundEnabled() ? 'AÇIK' : 'KAPALI';
-        return `Ses Efektleri: ${status}`;
+        const status = this.audioService.isSoundEnabled() ? this.localizationService.translate('common.on') : this.localizationService.translate('common.off');
+        return `${this.localizationService.translate('settings.sound')}: ${status}`;
     }
 
     private refreshState(): void {

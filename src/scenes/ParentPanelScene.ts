@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
 import { SCENE_KEYS, GAME_CONFIG, COLORS } from '@constants/index';
+import { LocalizationService } from '@core/LocalizationService';
 import { Button } from '@ui/Button';
 import { StorageService } from '@core/StorageService';
 import { LevelService } from '@core/LevelService';
@@ -14,6 +15,7 @@ export class ParentPanelScene extends Scene {
     private levelService: LevelService;
     private achievementService: AchievementService;
     private adService: AdService;
+    private localizationService: LocalizationService;
 
     constructor() {
         super({ key: SCENE_KEYS.PARENT_PANEL });
@@ -21,6 +23,7 @@ export class ParentPanelScene extends Scene {
         this.levelService = LevelService.getInstance();
         this.achievementService = AchievementService.getInstance();
         this.adService = AdService.getInstance();
+        this.localizationService = LocalizationService.getInstance();
     }
 
     /**
@@ -67,7 +70,7 @@ export class ParentPanelScene extends Scene {
             const title = this.add.text(
                 width / 2,
                 headerHeight / 2,
-                '📊 EBEVEYN PANELİ', // Fixed spelling (EBEVEYN)
+                `📊 ${this.localizationService.translate('parent.title').toUpperCase()}`,
                 {
                     fontSize: '48px',
                     color: COLORS.TEXT_LIGHT,
@@ -112,7 +115,7 @@ export class ParentPanelScene extends Scene {
                 y: height - 190,
                 width: 380,
                 height: 70,
-                text: '🗑️ İLERLEMEYİ SIFIRLA',
+                text: `🗑️ ${this.localizationService.translate('parent.resetProgress').toUpperCase()}`,
                 backgroundColor: COLORS.ACCENT,
                 fontSize: 24,
                 onClick: () => {
@@ -126,7 +129,7 @@ export class ParentPanelScene extends Scene {
                 y: height - 100,
                 width: 380,
                 height: 70,
-                text: '← ANA MENÜ',
+                text: `← ${this.localizationService.translate('menu.mainMenu').toUpperCase()}`,
                 backgroundColor: COLORS.SECONDARY,
                 fontSize: 24,
                 onClick: () => {
@@ -140,7 +143,7 @@ export class ParentPanelScene extends Scene {
             const centerX = GAME_CONFIG.WIDTH / 2;
             const centerY = GAME_CONFIG.HEIGHT / 2;
 
-            this.add.text(centerX, centerY, 'Bir hata oluştu.', {
+            this.add.text(centerX, centerY, this.localizationService.translate('error.unknown'), {
                 fontSize: '32px',
                 color: '#ff0000',
                 backgroundColor: '#000000'
@@ -151,7 +154,7 @@ export class ParentPanelScene extends Scene {
                 y: centerY + 100,
                 width: 200,
                 height: 60,
-                text: 'Ana Menü',
+                text: this.localizationService.translate('menu.mainMenu'),
                 backgroundColor: COLORS.ACCENT,
                 fontSize: 24,
                 onClick: () => {
@@ -199,13 +202,14 @@ export class ParentPanelScene extends Scene {
         let yOffset = y + padding;
 
         // Stats
+        const t = this.localizationService;
         const statsData = [
-            { icon: '⭐', text: `Yıldızlar: ${stats.totalStars} / ${stats.maxStars}` },
-            { icon: '🎯', text: `Seviyeler: ${stats.levelsCompleted} / ${stats.totalLevels}` },
-            { icon: '📚', text: `Kategoriler: ${stats.categoriesUnlocked} / ${stats.totalCategories}` },
-            { icon: '🏆', text: `Başarılar: ${stats.achievementsUnlocked} / ${stats.totalAchievements}` },
-            { icon: '🔥', text: `Seri: ${stats.currentStreak} gün` },
-            { icon: '⏱️', text: `Toplam Süre: ${stats.playTime}` },
+            { icon: '⭐', text: t.translate('parent.stats.stars', { current: stats.totalStars.toString(), total: stats.maxStars.toString() }) },
+            { icon: '🎯', text: t.translate('parent.stats.levels', { current: stats.levelsCompleted.toString(), total: stats.totalLevels.toString() }) },
+            { icon: '📚', text: t.translate('parent.stats.categories', { current: stats.categoriesUnlocked.toString(), total: stats.totalCategories.toString() }) },
+            { icon: '🏆', text: t.translate('parent.stats.achievements', { current: stats.achievementsUnlocked.toString(), total: stats.totalAchievements.toString() }) },
+            { icon: '🔥', text: t.translate('parent.stats.streak', { days: stats.currentStreak.toString() }) },
+            { icon: '⏱️', text: t.translate('parent.stats.time', { time: stats.playTime }) },
         ];
 
         statsData.forEach(stat => {
@@ -235,7 +239,7 @@ export class ParentPanelScene extends Scene {
         const titleText = this.add.text(
             x,
             y - 20,
-            'KATEGORİ PERFORMANSI',
+            this.localizationService.translate('parent.performance').toUpperCase(),
             {
                 fontSize: '28px',
                 color: COLORS.WARNING,
@@ -261,7 +265,7 @@ export class ParentPanelScene extends Scene {
             this.add.text(
                 x - panelWidth / 2 + 30,
                 yOffset,
-                category.name,
+                this.localizationService.translate(category.id),
                 {
                     fontSize: '20px',
                     color: COLORS.TEXT_LIGHT,
@@ -340,7 +344,7 @@ export class ParentPanelScene extends Scene {
         const warningText = this.add.text(
             GAME_CONFIG.WIDTH / 2,
             panelY + 60,
-            '⚠️ UYARI',
+            this.localizationService.translate('parent.warning').toUpperCase(),
             {
                 fontSize: '38px', // Slightly larger
                 color: COLORS.ACCENT,
@@ -355,7 +359,7 @@ export class ParentPanelScene extends Scene {
         const confirmText = this.add.text(
             GAME_CONFIG.WIDTH / 2,
             panelY + 120,
-            'Tüm ilerleme silinecek.\nEmin misiniz?',
+            this.localizationService.translate('parent.resetConfirm'),
             {
                 fontSize: '22px',
                 color: COLORS.TEXT_LIGHT,
@@ -377,7 +381,7 @@ export class ParentPanelScene extends Scene {
             y: panelY + 190,
             width: 120,
             height: 50,
-            text: 'Evet',
+            text: this.localizationService.translate('common.yes'),
             backgroundColor: COLORS.ACCENT,
             fontSize: 20,
             onClick: () => {
@@ -398,7 +402,7 @@ export class ParentPanelScene extends Scene {
             y: panelY + 190,
             width: 120,
             height: 50,
-            text: 'Hayır',
+            text: this.localizationService.translate('common.no'),
             backgroundColor: COLORS.SECONDARY,
             fontSize: 20,
             onClick: () => {
@@ -424,7 +428,7 @@ export class ParentPanelScene extends Scene {
         const successText = this.add.text(
             GAME_CONFIG.WIDTH / 2,
             GAME_CONFIG.HEIGHT / 2,
-            '✅ İlerleme Sıfırlandı',
+            this.localizationService.translate('parent.success'),
             {
                 fontSize: '44px',
                 color: '#2ecc71', // SUCCESS color hex
