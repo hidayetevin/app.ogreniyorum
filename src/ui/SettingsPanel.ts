@@ -49,7 +49,11 @@ export class SettingsPanel extends Phaser.GameObjects.Container {
         // 1. Semi-transparent background (Blocker)
         const blocker = this.scene.add.rectangle(0, 0, width, height, 0x000000, 0.7);
         blocker.setOrigin(0, 0);
-        blocker.setInteractive(); // Blocks clicks below
+        // Important: Stop propagation so clicks don't reach the UI underneath
+        blocker.setInteractive();
+        blocker.on('pointerdown', (_pointer: Phaser.Input.Pointer, _localX: number, _localY: number, event: Phaser.Types.Input.EventData) => {
+            event.stopPropagation();
+        });
         this.add(blocker);
 
         // 2. Panel Background (Premium Glassmorphism)

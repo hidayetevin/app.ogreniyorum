@@ -25,11 +25,22 @@ export class ParentGate extends Phaser.GameObjects.Container {
         this.onSuccess = onSuccess;
         this.onFail = onFail;
 
+        this.setDepth(Z_INDEX.MODAL);
+        this.setVisible(false);
+
         // Full screen overlay
         this.overlay = scene.add.graphics();
         this.overlay.fillStyle(0x000000, 0.7);
         this.overlay.fillRect(0, 0, GAME_CONFIG.WIDTH, GAME_CONFIG.HEIGHT);
+        // Important: Stop propagation so clicks don't reach the UI underneath
+        const blockerZone = scene.add.zone(0, 0, GAME_CONFIG.WIDTH, GAME_CONFIG.HEIGHT);
+        blockerZone.setOrigin(0, 0);
+        blockerZone.setInteractive();
+        blockerZone.on('pointerdown', (_pointer: Phaser.Input.Pointer, _localX: number, _localY: number, event: Phaser.Types.Input.EventData) => {
+            event.stopPropagation();
+        });
         this.add(this.overlay);
+        this.add(blockerZone);
 
         // Panel background
         const panelWidth = 500;

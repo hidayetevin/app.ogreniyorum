@@ -166,6 +166,7 @@ export class Button extends Phaser.GameObjects.Container {
      * Press end effect and trigger callback
      */
     private onPressEnd(): void {
+        if (!this.isPressed) return;
         this.isPressed = false;
         this.drawBackground(this.config.backgroundColor ?? COLORS.PRIMARY, false);
 
