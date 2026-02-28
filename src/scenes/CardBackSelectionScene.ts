@@ -156,7 +156,7 @@ export class CardBackSelectionScene extends Scene {
             const centerX = GAME_CONFIG.WIDTH / 2;
             const centerY = GAME_CONFIG.HEIGHT / 2;
 
-            this.add.text(centerX, centerY, 'Bir hata oluştu.', {
+            this.add.text(centerX, centerY, this.localizationService.translate('error.unknown'), {
                 fontSize: '32px',
                 color: '#ff0000',
                 backgroundColor: '#000000'
@@ -167,7 +167,7 @@ export class CardBackSelectionScene extends Scene {
                 y: centerY + 100,
                 width: 200,
                 height: 60,
-                text: 'Ana Menü',
+                text: this.localizationService.translate('menu.mainMenu'),
                 backgroundColor: COLORS.ACCENT,
                 fontSize: 24,
                 onClick: () => {

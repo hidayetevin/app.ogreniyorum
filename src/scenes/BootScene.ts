@@ -42,8 +42,12 @@ export class BootScene extends Scene {
         const centerX = GAME_CONFIG.WIDTH / 2;
         const centerY = GAME_CONFIG.HEIGHT / 2;
 
+        const appSettingsStr = localStorage.getItem('app_settings');
+        const language = appSettingsStr ? JSON.parse(appSettingsStr).language : 'tr';
+        const loadingStr = language === 'en' ? 'Loading...' : 'Yükleniyor...';
+
         // Loading text
-        this.loadingText = this.add.text(centerX, centerY - 50, 'Yükleniyor...', {
+        this.loadingText = this.add.text(centerX, centerY - 50, loadingStr, {
             fontSize: '32px',
             color: '#FFFFFF',
             fontFamily: 'Arial, sans-serif',
@@ -89,8 +93,12 @@ export class BootScene extends Scene {
             progressBarHeight
         );
 
+        const appSettingsStr = localStorage.getItem('app_settings');
+        const language = appSettingsStr ? JSON.parse(appSettingsStr).language : 'tr';
+        const loadingStr = language === 'en' ? 'Loading...' : 'Yükleniyor...';
+
         if (this.loadingText !== null) {
-            this.loadingText.setText(`Yükleniyor... ${Math.round(progress * 100)}%`);
+            this.loadingText.setText(`${loadingStr} ${Math.round(progress * 100)}%`);
         }
     }
 
@@ -212,8 +220,12 @@ export class BootScene extends Scene {
             this.scene.start(SCENE_KEYS.MAIN_MENU);
         } catch (error) {
             console.error('Failed to initialize services:', error);
+            const appSettingsStr = localStorage.getItem('app_settings');
+            const language = appSettingsStr ? JSON.parse(appSettingsStr).language : 'tr';
+            const errorStr = language === 'en' ? 'Loading Failed' : 'Yükleme Hatası';
+
             // Show error message
-            this.add.text(GAME_CONFIG.WIDTH / 2, GAME_CONFIG.HEIGHT / 2, 'Yükleme Hatası', {
+            this.add.text(GAME_CONFIG.WIDTH / 2, GAME_CONFIG.HEIGHT / 2, errorStr, {
                 fontSize: '32px',
                 color: '#FF0000',
             }).setOrigin(0.5);

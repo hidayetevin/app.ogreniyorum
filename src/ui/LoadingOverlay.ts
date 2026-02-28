@@ -1,4 +1,5 @@
 import { GAME_CONFIG, COLORS, Z_INDEX, FONTS } from '@constants/index';
+import { LocalizationService } from '@core/LocalizationService';
 
 /**
  * LoadingOverlay displays a premium progress bar during asset loading
@@ -25,10 +26,11 @@ export class LoadingOverlay extends Phaser.GameObjects.Container {
         const centerY = GAME_CONFIG.HEIGHT / 2;
 
         // Loading text with Outfit font
+        const t = LocalizationService.getInstance();
         this.loadingText = scene.add.text(
             centerX,
             centerY - 80,
-            'Yükleniyor...',
+            t.translate('common.loading'),
             {
                 fontSize: '42px',
                 color: COLORS.TEXT_LIGHT,

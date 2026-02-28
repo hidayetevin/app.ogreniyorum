@@ -123,7 +123,7 @@ export class GamePlayScene extends Scene {
             const centerX = GAME_CONFIG.WIDTH / 2;
             const centerY = GAME_CONFIG.HEIGHT / 2;
 
-            this.add.text(centerX, centerY, 'Oyun oluşturulurken hata oluştu.', {
+            this.add.text(centerX, centerY, this.localizationService.translate('error.gameCreation'), {
                 fontSize: '32px',
                 color: '#ff0000',
                 backgroundColor: '#000000'
@@ -134,7 +134,7 @@ export class GamePlayScene extends Scene {
                 y: centerY + 100,
                 width: 250,
                 height: 60,
-                text: 'Kategori Seç',
+                text: this.localizationService.translate('menu.selectCategory'),
                 backgroundColor: COLORS.ACCENT,
                 fontSize: 24,
                 onClick: () => {

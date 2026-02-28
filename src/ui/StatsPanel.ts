@@ -1,4 +1,5 @@
 import { COLORS, Z_INDEX, FONTS } from '@constants/index';
+import { LocalizationService } from '@core/LocalizationService';
 
 /**
  * StatsPanel displays game statistics in a premium, visual format
@@ -53,11 +54,13 @@ export class StatsPanel extends Phaser.GameObjects.Container {
             fontStyle: '600'
         };
 
+        const t = LocalizationService.getInstance();
+
         // Stars
         const starsText = this.scene.add.text(
             padding,
             yOffset,
-            `⭐ ${stats.totalStars} / ${stats.maxStars} Yıldız`,
+            `⭐ ${t.translate('stats.panel.stars', { current: stats.totalStars.toString(), total: stats.maxStars.toString() })}`,
             {
                 ...textStyle,
                 fontSize: '22px',
@@ -74,7 +77,7 @@ export class StatsPanel extends Phaser.GameObjects.Container {
         const levelsText = this.scene.add.text(
             padding,
             yOffset,
-            `🎯 ${stats.levelsCompleted} / ${stats.totalLevels} Seviye`,
+            `🎯 ${t.translate('stats.panel.levels', { current: stats.levelsCompleted.toString(), total: stats.totalLevels.toString() })}`,
             textStyle
         );
         this.add(levelsText);
@@ -85,7 +88,7 @@ export class StatsPanel extends Phaser.GameObjects.Container {
         const categoriesText = this.scene.add.text(
             padding,
             yOffset,
-            `📚 ${stats.categoriesUnlocked} / ${stats.totalCategories} Kategori`,
+            `📚 ${t.translate('stats.panel.categories', { current: stats.categoriesUnlocked.toString(), total: stats.totalCategories.toString() })}`,
             textStyle
         );
         this.add(categoriesText);
@@ -97,7 +100,7 @@ export class StatsPanel extends Phaser.GameObjects.Container {
             const streakText = this.scene.add.text(
                 padding,
                 yOffset,
-                `🔥 ${stats.currentStreak} Günlük Seri`,
+                `🔥 ${t.translate('stats.panel.streak', { days: stats.currentStreak.toString() })}`,
                 {
                     ...textStyle,
                     color: COLORS.ACCENT,

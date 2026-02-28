@@ -1,5 +1,6 @@
 import { GAME_CONFIG, COLORS, Z_INDEX, FONTS } from '@constants/index';
 import type { IAchievement } from '../types/models';
+import { LocalizationService } from '@core/LocalizationService';
 
 /**
  * AchievementNotification displays a premium popup when an achievement is unlocked
@@ -37,7 +38,8 @@ export class AchievementNotification extends Phaser.GameObjects.Container {
         this.add(this.background);
 
         // Header text with Outfit
-        const headerText = scene.add.text(0, 20, '🎉 YENİ BAŞARI!', {
+        const t = LocalizationService.getInstance();
+        const headerText = scene.add.text(0, 20, t.translate('achievement.new'), {
             fontSize: '28px',
             color: COLORS.WARNING,
             fontFamily: FONTS.PRIMARY,
@@ -90,10 +92,11 @@ export class AchievementNotification extends Phaser.GameObjects.Container {
     }
 
     public show(achievement: IAchievement, achievementName: string, achievementDescription: string): void {
+        const t = LocalizationService.getInstance();
         this.iconText.setText(achievement.iconEmoji);
         this.titleText.setText(achievementName);
         this.descriptionText.setText(achievementDescription);
-        this.rewardText.setText(`+${achievement.reward} Bonus Yıldız ⭐`);
+        this.rewardText.setText(t.translate('achievement.reward', { reward: achievement.reward.toString() }));
         this.setVisible(true);
 
         this.scene.tweens.add({

@@ -1,4 +1,5 @@
 import { GAME_CONFIG, COLORS, Z_INDEX } from '@constants/index';
+import { LocalizationService } from '@core/LocalizationService';
 
 /**
  * ParentGate - Math-based security to prevent children from accessing parent panel
@@ -44,10 +45,11 @@ export class ParentGate extends Phaser.GameObjects.Container {
         this.add(this.background);
 
         // Title
+        const t = LocalizationService.getInstance();
         const titleText = scene.add.text(
             GAME_CONFIG.WIDTH / 2,
             panelY + 40,
-            '🔒 EBEVEYN PANELİ',
+            `🔒 ${t.translate('parent.title').toUpperCase()}`,
             {
                 fontSize: '32px',
                 color: COLORS.WARNING,
@@ -62,7 +64,7 @@ export class ParentGate extends Phaser.GameObjects.Container {
         const instructionText = scene.add.text(
             GAME_CONFIG.WIDTH / 2,
             panelY + 90,
-            'Lütfen soruyu cevaplayın:',
+            t.translate('parent.instruction'),
             {
                 fontSize: '20px',
                 color: COLORS.TEXT_LIGHT,
@@ -220,7 +222,8 @@ export class ParentGate extends Phaser.GameObjects.Container {
         bg.fillRoundedRect(-60, -25, 120, 50, 8);
         container.add(bg);
 
-        const text = this.scene.add.text(0, 0, 'İptal', {
+        const t = LocalizationService.getInstance();
+        const text = this.scene.add.text(0, 0, t.translate('common.cancel'), {
             fontSize: '20px',
             color: COLORS.TEXT_LIGHT,
             fontFamily: 'Arial, sans-serif',
