@@ -193,7 +193,7 @@ export class MainMenuScene extends Scene {
             footerBg.lineStyle(2, 0xffffff, 0.1);
             footerBg.strokeRoundedRect(40, GAME_CONFIG.HEIGHT - 140, GAME_CONFIG.WIDTH - 80, 90, 25);
 
-            this.add.text(centerX, GAME_CONFIG.HEIGHT - 80, 'v2.0.0 - EvnLabs', {
+            this.add.text(centerX, GAME_CONFIG.HEIGHT - 80, 'v2.0.1 - EvnLabs', {
                 fontSize: '18px',
                 color: '#888888',
                 fontFamily: FONTS.SECONDARY
