@@ -224,11 +224,15 @@ export class GamePlayScene extends Scene {
 
                 // Show rewarded ad
                 this.adService.showRewardedAd().then(() => {
-                    // Ad Complete/Success -> Use Hint
-                    this.useHint().finally(() => {
-                        isHinting = false;
-                        this.isInputLocked = false;
-                    });
+                    // Use browser setTimeout instead of Phaser's time system.
+                    // Phaser timers may be frozen while native AdMob overlay closes.
+                    // setTimeout runs on the JS event loop regardless of Phaser state.
+                    setTimeout(() => {
+                        this.useHint().finally(() => {
+                            isHinting = false;
+                            this.isInputLocked = false;
+                        });
+                    }, 500);
                 }).catch((error) => {
                     console.error('Hint ad failed:', error);
                     isHinting = false;
