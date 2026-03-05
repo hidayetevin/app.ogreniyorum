@@ -210,10 +210,11 @@ export class GamePlayScene extends Scene {
             x: GAME_CONFIG.WIDTH - 120,
             y: 115, // Aligned with stars
             width: 180,
-            height: 70,
+            height: 80,
             text: this.localizationService.translate('game.hint'),
+            adLabel: '🎬 İzle & Kazan',
             backgroundColor: COLORS.WARNING,
-            fontSize: 26,
+            fontSize: 22,
             onClick: () => {
                 if (isHinting || this.isInputLocked) return;
 

@@ -1,8 +1,11 @@
 ## 2.0.1
 Version Code: 6 - Not Published
+🛡️ Google Play Aileler Politikası "Net Olmayan Reklam" ihlali düzeltildi.
+🏷️ Reklam içeren butonlara (İzle 2x Kazan, İpucu) küçük punto ile "🎬 Reklam İzleyeceksin" etiketi eklendi.
+🎬 "İzle 2x Kazan" reklamı izlenince diğer butonlarda interstitial reklam gösterilmiyor.
 🌍 Ebeveyn ve Ayarlar panellerine tam Türkçe/İngilizce dil desteği eklendi.
 🐛 Açılan pencerelerin arka plandaki dokunmaları (tıklamaları) geçirme hatası giderildi.
-�️ Buton tıklama hassasiyeti ve mekaniği iyileştirildi.
+🖱️ Buton tıklama hassasiyeti ve mekaniği iyileştirildi.
 
 ## 2.0.0
 Version Code: 5 - Published

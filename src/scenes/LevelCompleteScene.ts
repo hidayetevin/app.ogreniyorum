@@ -161,10 +161,11 @@ export class LevelCompleteScene extends Scene {
                     x: centerX,
                     y: centerY + 40, // Reduced Y to fit other buttons below
                     width: 540,
-                    height: 70,
+                    height: 80,
                     text: this.localizationService.translate('game.doubleReward'),
+                    adLabel: '🎬 Reklam İzleyeceksin',
                     backgroundColor: COLORS.WARNING,
-                    fontSize: 32,
+                    fontSize: 28,
                     onClick: () => {
                         void this.handleDoubleReward(doubleRewardBtn);
                     }
@@ -470,9 +471,11 @@ export class LevelCompleteScene extends Scene {
         try {
             const earnedReward = await this.adService.showRewardedAd();
 
-            if (earnedReward) {
-                this.hasWatched2xAd = true; // Flag to prevent interstitial ad next
+            // User watched the ad to completion → skip interstitial on navigation
+            // Set regardless of earnedReward so any completed ad view protects the user
+            this.hasWatched2xAd = true;
 
+            if (earnedReward) {
                 const bonusStars = this.stars; // Earn the same amount again as bonus
                 this.stars *= 2; // Double for visual display only
 
@@ -493,14 +496,15 @@ export class LevelCompleteScene extends Scene {
                     { fontSize: '32px', color: COLORS.SUCCESS, fontStyle: 'bold' }
                 ).setOrigin(0.5).setDepth(100);
 
-                this.tweens.add({
-                    targets: rewardText,
-                    y: centerY + 30, // Float up
-                    alpha: 0,
-                    duration: 2000,
-                    ease: 'Power2',
-                    onComplete: () => rewardText.destroy()
-                });
+                this.tweens.add(
+                    {
+                        targets: rewardText,
+                        y: centerY + 30, // Float up
+                        alpha: 0,
+                        duration: 2000,
+                        ease: 'Power2',
+                        onComplete: () => rewardText.destroy()
+                    });
             }
         } catch (error) {
             console.error('Error handling double reward:', error);

@@ -10,6 +10,7 @@ export interface IButtonConfig {
     width: number;
     height: number;
     text: string;
+    adLabel?: string;       // Optional ad badge shown below text (e.g. '🎬 İzle & Kazan')
     backgroundColor?: string;
     textColor?: string;
     fontSize?: number;
@@ -37,19 +38,34 @@ export class Button extends Phaser.GameObjects.Container {
         this.background = scene.add.graphics();
         this.drawBackground(config.backgroundColor ?? COLORS.PRIMARY);
 
+        // If adLabel is provided, shift main text up to make room for the badge
+        const labelY = config.adLabel ? -9 : 0;
+
         // Create text label with modern font
-        this.label = scene.add.text(0, 0, config.text, {
+        this.label = scene.add.text(0, labelY, config.text, {
             fontSize: `${config.fontSize ?? 26}px`,
             color: config.textColor ?? COLORS.TEXT_LIGHT,
             fontFamily: FONTS.PRIMARY,
             fontStyle: 'bold',
         });
-
         this.label.setOrigin(0.5);
 
         // Add to container
         this.add(this.background);
         this.add(this.label);
+
+        // Ad badge label (clearly labels the button as ad-backed)
+        if (config.adLabel) {
+            const badgeSize = Math.max(13, (config.fontSize ?? 26) - 11);
+            const badge = scene.add.text(0, labelY + (config.fontSize ?? 26) * 0.75, config.adLabel, {
+                fontSize: `${badgeSize}px`,
+                color: '#FFE566',
+                fontFamily: FONTS.SECONDARY,
+            });
+            badge.setOrigin(0.5);
+            badge.setAlpha(0.92);
+            this.add(badge);
+        }
 
         // Setup interactivity
         this.setupInteractivity();
